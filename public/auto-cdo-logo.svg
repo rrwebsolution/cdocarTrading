@@ -1,0 +1,29 @@
+<svg width="945" height="764" viewBox="0 0 945 764" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="945" height="764" fill="#1d1f24"/>
+  <rect width="945" height="764" fill="url(#bg)"/>
+  <g filter="url(#shadow)">
+    <path d="M113 322c33-49 82-83 148-102 69-20 152-25 248-14 72 8 132 24 181 49 43 22 70 50 82 84 3 9-4 19-14 19H134c-21 0-31-16-21-36Z" fill="#fb1f2c"/>
+    <path d="M148 323c31-34 82-58 151-72 82-17 159-16 231 2 44 11 82 31 117 59 6 5 2 15-6 15H154c-3 0-5-2-6-4Z" fill="#17191e"/>
+    <path d="M103 365h703c17 0 28 17 21 33l-22 53c-8 18-25 30-45 30H151c-25 0-47-17-53-42l-14-49c-4-14 6-25 19-25Z" fill="#d90f1d"/>
+    <path d="M188 481c0-56 45-101 101-101s101 45 101 101h-55c0-26-21-47-46-47-26 0-47 21-47 47h-54Z" fill="#1d1f24"/>
+    <path d="M593 481c0-56 45-101 101-101s101 45 101 101h-55c0-26-21-47-46-47-26 0-47 21-47 47h-54Z" fill="#1d1f24"/>
+    <path d="M186 349c150-31 298-26 444 16" stroke="#ff6168" stroke-width="12" stroke-linecap="round"/>
+    <path d="M267 282c75-42 176-57 302-35" stroke="#ff6168" stroke-width="11" stroke-linecap="round"/>
+  </g>
+  <g filter="url(#textShadow)">
+    <text x="472.5" y="555" text-anchor="middle" fill="#f4f4f4" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="112" font-weight="900" letter-spacing="3">AUTO CDO</text>
+    <text x="472.5" y="644" text-anchor="middle" fill="#ff2d36" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="61" font-weight="900" letter-spacing="18">CAR TRADING</text>
+  </g>
+  <defs>
+    <radialGradient id="bg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(439 200) rotate(90) scale(560 710)">
+      <stop stop-color="#2a2c32"/>
+      <stop offset="1" stop-color="#15171b"/>
+    </radialGradient>
+    <filter id="shadow" x="55" y="171" width="807" height="334" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+    <filter id="textShadow" x="73" y="454" width="800" height="221" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#000000" flood-opacity="0.72"/>
+    </filter>
+  </defs>
+</svg>
