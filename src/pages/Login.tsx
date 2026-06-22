@@ -112,19 +112,19 @@ function Login({ onLogin, onNavigate }: LoginProps) {
 
             <div className="grid grid-cols-3 gap-3">
               <div className="rounded-lg border border-primary-foreground/20 bg-background/70 p-4 backdrop-blur-md">
-                <strong className="block text-3xl leading-none">148</strong>
+                <strong className="block text-3xl leading-none">0</strong>
                 <span className="mt-2 block text-sm leading-5 text-primary-foreground/70">
                   Vehicles Tracked
                 </span>
               </div>
               <div className="rounded-lg border border-primary-foreground/20 bg-background/70 p-4 backdrop-blur-md">
-                <strong className="block text-3xl leading-none">24/7</strong>
+                <strong className="block text-3xl leading-none">Live</strong>
                 <span className="mt-2 block text-sm leading-5 text-primary-foreground/70">
                   Web and Mobile Access
                 </span>
               </div>
               <div className="rounded-lg border border-primary-foreground/20 bg-background/70 p-4 backdrop-blur-md">
-                <strong className="block text-3xl leading-none">8</strong>
+                <strong className="block text-3xl leading-none">0</strong>
                 <span className="mt-2 block text-sm leading-5 text-primary-foreground/70">
                   Live Operations
                 </span>

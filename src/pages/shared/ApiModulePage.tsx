@@ -30,6 +30,16 @@ type VehicleRecord = {
   year?: number
 }
 
+type ApiDocumentRecord = {
+  customer?: RelatedName
+  owner_name?: string
+  reference?: string
+  status?: string
+  title?: string
+  type?: string
+  uploaded_at?: string
+}
+
 type SummaryReport = {
   inventory?: Record<string, number>
   operations?: Record<string, number>
@@ -45,6 +55,22 @@ const liveModules: Record<
     toRecords: (data: unknown) => Record<string, string>[]
   }
 > = {
+  "activity-logs": {
+    endpoint: "/api/activity-logs",
+    toRecords: (data) =>
+      (data as Array<{
+        action?: string
+        actor_name?: string
+        logged_at?: string
+        module?: string
+        status?: string
+      }>).map((log) => ({
+        Time: formatDateTime(log.logged_at),
+        User: log.actor_name ?? "System",
+        Module: log.module ?? "N/A",
+        Action: log.action ?? "N/A",
+      })),
+  },
   customers: {
     endpoint: "/api/customers",
     toRecords: (data) =>
@@ -56,6 +82,39 @@ const liveModules: Record<
           Status: titleCase(customer.status),
         }),
       ),
+  },
+  documents: {
+    endpoint: "/api/system-documents",
+    toRecords: (data) =>
+      (data as ApiDocumentRecord[]).map((document) => ({
+        Document: document.title ?? "N/A",
+        Owner: document.owner_name ?? document.customer?.name ?? "N/A",
+        Reference: document.reference ?? "N/A",
+        Type: document.type ?? "N/A",
+        Uploaded: document.uploaded_at ?? "N/A",
+        Status: titleCase(document.status),
+      })),
+  },
+  financing: {
+    endpoint: "/api/financing-records",
+    toRecords: (data) =>
+      (data as Array<{
+        approved_amount?: string
+        customer?: RelatedName
+        down_payment?: string
+        financing_company?: string
+        reference?: string
+        status?: string
+        vehicle?: RelatedName
+      }>).map((record) => ({
+        Reference: record.reference ?? "N/A",
+        Customer: record.customer?.name ?? "N/A",
+        Vehicle: record.vehicle?.name ?? "N/A",
+        "Financing Company": record.financing_company ?? "N/A",
+        "Approved Amount": formatPeso(record.approved_amount),
+        "Down Payment": formatPeso(record.down_payment),
+        Status: titleCase(record.status),
+      })),
   },
   "job-orders": {
     endpoint: "/api/job-orders",
@@ -176,6 +235,27 @@ const liveModules: Record<
         Status: titleCase(request.status),
       })),
   },
+  "pre-sale-repairs": {
+    endpoint: "/api/pre-sale-repairs",
+    toRecords: (data) =>
+      (data as Array<{
+        action_taken?: string
+        affected_part?: string
+        cost?: string
+        issue?: string
+        reference?: string
+        status?: string
+        vehicle?: RelatedName
+      }>).map((repair) => ({
+        Record: repair.reference ?? "N/A",
+        Vehicle: repair.vehicle?.name ?? "N/A",
+        Issue: repair.issue ?? "N/A",
+        "Affected Part": repair.affected_part ?? "N/A",
+        Action: repair.action_taken ?? "N/A",
+        Cost: formatPeso(repair.cost),
+        Status: titleCase(repair.status),
+      })),
+  },
   vehicles: {
     endpoint: "/api/vehicles",
     toRecords: (data) =>
@@ -203,6 +283,25 @@ const liveModules: Record<
         Location: vehicle.location ?? "N/A",
         Condition: vehicle.status ?? "N/A",
         Status: titleCase(vehicle.status),
+      })),
+  },
+  "vehicle-release": {
+    endpoint: "/api/vehicle-releases",
+    toRecords: (data) =>
+      (data as Array<{
+        checklist_status?: string
+        customer?: RelatedName
+        document_status?: string
+        reference?: string
+        status?: string
+        vehicle?: RelatedName
+      }>).map((release) => ({
+        Release: release.reference ?? "N/A",
+        Customer: release.customer?.name ?? "N/A",
+        Vehicle: release.vehicle?.name ?? "N/A",
+        Checklist: titleCase(release.checklist_status),
+        Documents: titleCase(release.document_status),
+        Status: titleCase(release.status),
       })),
   },
 }
@@ -284,6 +383,17 @@ function formatPeso(value?: number | string | null) {
   const amount = Number(value ?? 0)
 
   return `PHP ${amount.toLocaleString()}`
+}
+
+function formatDateTime(value?: string | null) {
+  if (!value) {
+    return "N/A"
+  }
+
+  return new Intl.DateTimeFormat("en-PH", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(value))
 }
 
 function titleCase(value?: string | null) {

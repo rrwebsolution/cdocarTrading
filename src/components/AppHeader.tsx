@@ -40,11 +40,7 @@ const themeOptions = [
   { icon: Monitor, label: "System", value: "system" },
 ] as const
 
-const initialNotifications = [
-  { id: 1, label: "Reservation RSV-2041 needs review", read: false, type: "Pending" },
-  { id: 2, label: "Job Order JO-2026-033 is in progress", read: false, type: "Service" },
-  { id: 3, label: "Payment PAY-1092 awaiting confirmation", read: false, type: "Finance" },
-]
+const initialNotifications: { id: number; label: string; read: boolean; type: string }[] = []
 
 const routeLabels: Record<string, string> = {
   admin: "Admin",

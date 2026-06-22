@@ -1,4 +1,5 @@
 import AdminLayout from "./admin/AdminLayout"
+import ActivityLogs from "./admin/ActivityLogs"
 import Customers from "./admin/Customers"
 import Dashboard from "./admin/Dashboard"
 import JobOrdersMaintenance from "./admin/JobOrdersMaintenance"
@@ -19,6 +20,7 @@ type AdminProps = {
 }
 
 const adminPages = {
+  "admin/activity-logs": <ActivityLogs />,
   "admin/customers": <Customers />,
   "admin/dashboard": <Dashboard />,
   "admin/job-orders-maintenance": <JobOrdersMaintenance />,

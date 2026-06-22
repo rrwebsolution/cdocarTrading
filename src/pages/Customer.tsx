@@ -1,5 +1,6 @@
 import AdminLayout from "./admin/AdminLayout"
 import CustomerDashboard from "./customer/CustomerDashboard"
+import CustomerDocuments from "./customer/CustomerDocuments"
 import CustomerPayments from "./customer/CustomerPayments"
 import CustomerProfile from "./customer/CustomerProfile"
 import CustomerReservations from "./customer/CustomerReservations"
@@ -17,6 +18,7 @@ type CustomerProps = {
 
 const customerPages = {
   "customer/dashboard": <CustomerDashboard />,
+  "customer/documents": <CustomerDocuments />,
   "customer/payments": <CustomerPayments />,
   "customer/profile": <CustomerProfile />,
   "customer/reservations": <CustomerReservations />,

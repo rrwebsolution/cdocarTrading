@@ -1,6 +1,7 @@
 import AdminLayout from "./admin/AdminLayout"
 import MechanicDashboard from "./mechanic/MechanicDashboard"
 import MechanicJobOrders from "./mechanic/MechanicJobOrders"
+import MechanicPreSaleRepairs from "./mechanic/MechanicPreSaleRepairs"
 import MechanicVehicleStatus from "./mechanic/MechanicVehicleStatus"
 import { mechanicSidebarGroups } from "./mechanic/mechanicData"
 
@@ -15,6 +16,7 @@ type MechanicProps = {
 const mechanicPages = {
   "mechanic/dashboard": <MechanicDashboard />,
   "mechanic/job-orders": <MechanicJobOrders />,
+  "mechanic/pre-sale-repairs": <MechanicPreSaleRepairs />,
   "mechanic/vehicle-status": <MechanicVehicleStatus />,
 }
 

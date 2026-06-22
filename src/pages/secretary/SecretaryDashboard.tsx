@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { BadgeDollarSign, CalendarCheck, Car, Users } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
 import {
   Card,
   CardContent,
@@ -20,25 +19,25 @@ const secretaryCards = [
     color: "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-200",
     icon: Car,
     label: "Available Vehicles",
-    value: "82",
+    value: "0",
   },
   {
     color: "bg-cyan-50 text-cyan-700 dark:bg-cyan-950/30 dark:text-cyan-200",
     icon: Users,
     label: "Customer Records",
-    value: "326",
+    value: "0",
   },
   {
     color: "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-200",
     icon: CalendarCheck,
     label: "Pending Reservations",
-    value: "11",
+    value: "0",
   },
   {
     color: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-200",
     icon: BadgeDollarSign,
     label: "Payments Today",
-    value: "PHP 420K",
+    value: "0",
   },
 ]
 
@@ -46,32 +45,32 @@ const secretaryCharts = {
   bar: {
     description: "Daily front office transactions this week.",
     items: [
-      { label: "Mon", value: 18 },
-      { label: "Tue", value: 24 },
-      { label: "Wed", value: 20 },
-      { label: "Thu", value: 29 },
-      { label: "Fri", value: 34 },
-      { label: "Sat", value: 22 },
+      { label: "Mon", value: 0 },
+      { label: "Tue", value: 0 },
+      { label: "Wed", value: 0 },
+      { label: "Thu", value: 0 },
+      { label: "Fri", value: 0 },
+      { label: "Sat", value: 0 },
     ],
     title: "Processed Transactions",
   },
   pie: {
     description: "Reservation workload by current status.",
     items: [
-      { color: "#f59e0b", label: "For Approval", value: 11 },
-      { color: "#10b981", label: "Approved", value: 34 },
-      { color: "#ef4444", label: "Cancelled", value: 4 },
+      { color: "#f59e0b", label: "For Approval", value: 0 },
+      { color: "#10b981", label: "Approved", value: 0 },
+      { color: "#ef4444", label: "Cancelled", value: 0 },
     ],
     title: "Reservation Status",
   },
   radar: {
     description: "Front office activity health score.",
     items: [
-      { label: "Vehicles", value: 84 },
-      { label: "Customers", value: 92 },
-      { label: "Reservations", value: 78 },
-      { label: "Payments", value: 86 },
-      { label: "Reports", value: 74 },
+      { label: "Vehicles", value: 0 },
+      { label: "Customers", value: 0 },
+      { label: "Reservations", value: 0 },
+      { label: "Payments", value: 0 },
+      { label: "Reports", value: 0 },
     ],
     title: "Office Performance",
   },
@@ -139,19 +138,9 @@ function SecretaryDashboard() {
             <CardTitle>Today's Tasks</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-3">
-            {[
-              ["Process 11 pending reservations", "High"],
-              ["Update 9 vehicle records", "Normal"],
-              ["Generate payment collection report", "Report"],
-            ].map(([label, value]) => (
-              <div
-                className="flex items-center justify-between gap-4 rounded-lg bg-muted p-3 text-sm text-muted-foreground"
-                key={label}
-              >
-                <span>{label}</span>
-                <Badge variant="orange">{value}</Badge>
-              </div>
-            ))}
+            <div className="rounded-lg bg-muted p-3 text-sm font-semibold text-muted-foreground">
+              No live tasks available yet.
+            </div>
           </CardContent>
         </Card>
 
@@ -160,19 +149,9 @@ function SecretaryDashboard() {
             <CardTitle>Recent Front Desk Activity</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-3">
-            {[
-              ["Customer inquiry registered for SUV unit", "5m ago"],
-              ["Receipt OR-10293 generated", "19m ago"],
-              ["Reservation RSV-2042 approved", "42m ago"],
-            ].map(([label, value]) => (
-              <div
-                className="flex items-center justify-between gap-4 rounded-lg bg-muted p-3 text-sm text-muted-foreground"
-                key={label}
-              >
-                <span>{label}</span>
-                <Badge variant="orange">{value}</Badge>
-              </div>
-            ))}
+            <div className="rounded-lg bg-muted p-3 text-sm font-semibold text-muted-foreground">
+              No live front desk activity available yet.
+            </div>
           </CardContent>
         </Card>
       </div>

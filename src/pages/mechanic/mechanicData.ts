@@ -5,6 +5,7 @@ import type { AdminModule, SidebarGroup } from "@/pages/admin/types"
 export const mechanicModules: AdminModule[] = [
   {
     id: "job-orders",
+    actionSet: "mechanic-job-orders",
     route: "mechanic/job-orders",
     title: "Manage Job Orders",
     navLabel: "Job Orders",
@@ -13,9 +14,9 @@ export const mechanicModules: AdminModule[] = [
     icon: ClipboardList,
     primaryAction: "Update Job Order",
     stats: [
-      { label: "Assigned Today", value: "12" },
-      { label: "In Progress", value: "7" },
-      { label: "Completed", value: "18" },
+      { label: "Assigned Today", value: "0" },
+      { label: "In Progress", value: "0" },
+      { label: "Completed", value: "0" },
     ],
     recordsTitle: "Assigned Job Orders",
     recordsDescription:
@@ -30,17 +31,11 @@ export const mechanicModules: AdminModule[] = [
       { label: "Completed", statuses: ["Completed"] },
       { label: "All Assigned" },
     ],
-    records: [
-      { "Job Order": "JO-2026-030", Request: "SR-3002", Vehicle: "Toyota Fortuner 2021", Task: "Maintenance", Findings: "Oil and filter replacement scheduled", Cleaning: "N/A", Status: "Approved" },
-      { "Job Order": "JO-2026-031", Request: "SR-3003", Vehicle: "Toyota Vios 2022", Task: "Inspection", Findings: "Engine bay inspection in progress", Cleaning: "Pending", Status: "Inspection" },
-      { "Job Order": "JO-2026-032", Request: "SR-3004", Vehicle: "Suzuki Ertiga 2023", Task: "Car Wash", Findings: "No repair findings", Cleaning: "Interior and exterior completed", Status: "Completed" },
-      { "Job Order": "JO-2026-033", Request: "SR-3007", Vehicle: "Ford Everest 2019", Task: "Repair", Findings: "Brake pads need replacement", Cleaning: "Pending after repair", Status: "In Progress" },
-      { "Job Order": "JO-2026-034", Request: "SR-3008", Vehicle: "Toyota Hilux 2021", Task: "Inspection", Findings: "Ready for road test", Cleaning: "Completed", Status: "Carwash" },
-      { "Job Order": "JO-2026-035", Request: "SR-3009", Vehicle: "Honda Civic 2020", Task: "Repair", Findings: "Waiting for brake parts", Cleaning: "N/A", Status: "Pending Parts" },
-    ],
+    records: [],
   },
   {
     id: "vehicle-status",
+    actionSet: "vehicle-condition",
     route: "mechanic/vehicle-status",
     title: "Update Vehicle Status",
     navLabel: "Vehicle Status",
@@ -49,18 +44,39 @@ export const mechanicModules: AdminModule[] = [
     icon: Car,
     primaryAction: "Update Status",
     stats: [
-      { label: "Ready For Sale", value: "64" },
-      { label: "Under Maintenance", value: "14" },
-      { label: "For Cleaning", value: "9" },
+      { label: "Ready For Sale", value: "0" },
+      { label: "Under Maintenance", value: "0" },
+      { label: "For Cleaning", value: "0" },
     ],
-    records: [
-      { Vehicle: "Toyota Hilux 2021", Condition: "Excellent", Maintenance: "Completed", Cleaning: "Completed", Status: "Ready" },
-      { Vehicle: "Honda Civic 2020", Condition: "Good", Maintenance: "Inspection", Cleaning: "Completed", Status: "Inspection" },
-      { Vehicle: "Ford Everest 2019", Condition: "Needs repair", Maintenance: "In Progress", Cleaning: "Pending", Status: "Maintenance" },
-      { Vehicle: "Toyota Vios 2022", Condition: "Good", Maintenance: "Completed", Cleaning: "Carwash", Status: "Carwash" },
-      { Vehicle: "Suzuki Ertiga 2023", Condition: "Excellent", Maintenance: "Completed", Cleaning: "Detailing", Status: "Detailing" },
-      { Vehicle: "Mitsubishi Montero 2020", Condition: "For parts", Maintenance: "Pending Parts", Cleaning: "Pending", Status: "Pending Parts" },
+    records: [],
+  },
+  {
+    id: "pre-sale-repairs",
+    actionSet: "vehicle-condition",
+    route: "mechanic/pre-sale-repairs",
+    title: "Pre-Sale Inspection & Repair",
+    navLabel: "Pre-Sale Repair",
+    description:
+      "Document vehicle issues, affected parts, repair actions, costs, and readiness before a unit is displayed or released for sale.",
+    icon: Wrench,
+    primaryAction: "Add Inspection Record",
+    stats: [
+      { label: "For Inspection", value: "0" },
+      { label: "Under Repair", value: "0" },
+      { label: "Ready For Sale", value: "0" },
     ],
+    recordsTitle: "Vehicle Condition and Pre-Sale Repair Records",
+    recordsDescription:
+      "This replaces full parts inventory by tracking only repairs or replacements done before sale.",
+    defaultStatusFilter: "Active Work",
+    statusNavigation: [
+      { label: "Active Work", statuses: ["For Inspection", "Under Repair", "For Review"] },
+      { label: "For Inspection", statuses: ["For Inspection"] },
+      { label: "Under Repair", statuses: ["Under Repair"] },
+      { label: "Ready", statuses: ["Ready For Sale"] },
+      { label: "All Records" },
+    ],
+    records: [],
   },
 ]
 
@@ -96,24 +112,24 @@ export const mechanicDashboardCards = [
     color: "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-200",
     icon: ClipboardList,
     label: "Assigned Job Orders",
-    value: "12",
+    value: "0",
   },
   {
     color: "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-200",
     icon: Wrench,
     label: "In Progress",
-    value: "7",
+    value: "0",
   },
   {
     color: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-200",
     icon: Car,
     label: "Ready For Sale",
-    value: "64",
+    value: "0",
   },
   {
     color: "bg-cyan-50 text-cyan-700 dark:bg-cyan-950/30 dark:text-cyan-200",
     icon: Car,
     label: "For Cleaning",
-    value: "9",
+    value: "0",
   },
 ]

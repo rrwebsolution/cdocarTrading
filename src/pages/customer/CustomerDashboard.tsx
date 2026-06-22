@@ -21,33 +21,33 @@ const customerCharts = {
   bar: {
     description: "Vehicle browsing activity in the customer portal.",
     items: [
-      { label: "Mon", value: 4 },
-      { label: "Tue", value: 7 },
-      { label: "Wed", value: 6 },
-      { label: "Thu", value: 9 },
-      { label: "Fri", value: 12 },
-      { label: "Sat", value: 8 },
+      { label: "Mon", value: 0 },
+      { label: "Tue", value: 0 },
+      { label: "Wed", value: 0 },
+      { label: "Thu", value: 0 },
+      { label: "Fri", value: 0 },
+      { label: "Sat", value: 0 },
     ],
     title: "Viewed Vehicles",
   },
   pie: {
     description: "Customer account activity distribution.",
     items: [
-      { color: "#2563eb", label: "Browsed", value: 12 },
-      { color: "#f59e0b", label: "Reserved", value: 2 },
-      { color: "#10b981", label: "Paid", value: 3 },
-      { color: "#06b6d4", label: "Saved", value: 5 },
+      { color: "#2563eb", label: "Browsed", value: 0 },
+      { color: "#f59e0b", label: "Reserved", value: 0 },
+      { color: "#10b981", label: "Paid", value: 0 },
+      { color: "#06b6d4", label: "Saved", value: 0 },
     ],
     title: "Portal Activity",
   },
   radar: {
     description: "Customer progress from browsing to payment.",
     items: [
-      { label: "Profile", value: 95 },
-      { label: "Browse", value: 88 },
-      { label: "Reserve", value: 62 },
-      { label: "Payment", value: 70 },
-      { label: "History", value: 82 },
+      { label: "Profile", value: 0 },
+      { label: "Browse", value: 0 },
+      { label: "Reserve", value: 0 },
+      { label: "Payment", value: 0 },
+      { label: "History", value: 0 },
     ],
     title: "Account Progress",
   },
@@ -115,19 +115,9 @@ function CustomerDashboard() {
             <CardTitle>Reservation Updates</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-3">
-            {[
-              ["Honda Civic reservation is for approval", "Pending"],
-              ["Toyota Fortuner reservation approved", "Approved"],
-              ["Suzuki Ertiga reservation expiring soon", "Alert"],
-            ].map(([label, value]) => (
-              <div
-                className="flex items-center justify-between gap-4 rounded-lg bg-muted p-3 text-sm text-muted-foreground"
-                key={label}
-              >
-                <span>{label}</span>
-                <Badge variant="orange">{value}</Badge>
-              </div>
-            ))}
+            <div className="rounded-lg bg-muted p-3 text-sm font-semibold text-muted-foreground">
+              No live reservation updates available yet.
+            </div>
           </CardContent>
         </Card>
 
@@ -140,9 +130,9 @@ function CustomerDashboard() {
           </CardHeader>
           <CardContent className="grid gap-3">
             {[
-              ["Total paid across transactions", "PHP 450K"],
-              ["Remaining balance to monitor", "PHP 730K"],
-              ["Proof of payment pending review", "1"],
+              ["Total paid across transactions", "0"],
+              ["Remaining balance to monitor", "0"],
+              ["Proof of payment pending review", "0"],
             ].map(([label, value]) => (
               <div
                 className="flex items-center justify-between gap-4 rounded-lg bg-muted p-3 text-sm text-muted-foreground"

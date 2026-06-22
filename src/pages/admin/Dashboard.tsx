@@ -111,19 +111,11 @@ function Dashboard() {
 
       <div className="grid grid-cols-2 gap-4 max-lg:grid-cols-1">
         <ActivityCard
-          items={[
-            ["Approve 11 pending reservations", "High"],
-            ["Review 23 maintenance requests", "Normal"],
-            ["Confirm PHP 690K outstanding balances", "Finance"],
-          ]}
+          items={[]}
           title="Today's Priority"
         />
         <ActivityCard
-          items={[
-            ["Honda Civic reservation updated", "2m ago"],
-            ["New payment receipt OR-10293 recorded", "18m ago"],
-            ["Ford Everest job order assigned", "41m ago"],
-          ]}
+          items={[]}
           title="Recent Activity"
         />
       </div>
@@ -381,7 +373,7 @@ function ActivityCard({
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-3">
-        {items.map(([label, value]) => (
+        {items.length > 0 ? items.map(([label, value]) => (
           <div
             className="flex items-center justify-between gap-4 rounded-lg bg-muted p-3 text-sm text-muted-foreground"
             key={label}
@@ -389,7 +381,11 @@ function ActivityCard({
             <span>{label}</span>
             <Badge variant="orange">{value}</Badge>
           </div>
-        ))}
+        )) : (
+          <div className="rounded-lg bg-muted p-3 text-sm font-semibold text-muted-foreground">
+            No live activity available yet.
+          </div>
+        )}
       </CardContent>
     </Card>
   )
