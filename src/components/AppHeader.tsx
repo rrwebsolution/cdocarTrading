@@ -131,7 +131,7 @@ function AppHeader({
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 flex min-h-[68px] items-center justify-between gap-4 border-b border-border bg-background/85 px-4 py-3 text-foreground shadow-lg shadow-foreground/5 backdrop-blur-md sm:px-6 lg:px-8">
+    <header className="fixed inset-x-0 top-0 z-40 flex min-h-[70px] items-center justify-between gap-4 border-b border-border bg-background/85 px-4 py-3 text-foreground shadow-lg shadow-foreground/5 backdrop-blur-md sm:px-6 lg:px-8">
       <div className="flex min-w-0 items-center gap-3">
         <img
           alt="Auto CDO logo"

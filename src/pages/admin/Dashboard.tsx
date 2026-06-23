@@ -1,63 +1,86 @@
-import { useEffect, useState } from "react"
-import { BarChart3, Car, ShieldCheck } from "lucide-react"
+import { useEffect, useState } from "react";
+import { BarChart3, Car, ShieldCheck } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { cn } from "@/lib/utils"
-import { getApiObject } from "@/lib/operations"
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { getApiObject } from "@/lib/operations";
 import DashboardHeaderActions, {
   DashboardCardSkeletonGrid,
   DashboardChartsSkeleton,
-} from "@/pages/shared/DashboardHeaderActions"
+} from "@/pages/shared/DashboardHeaderActions";
 
 import {
   dashboardCards,
   monthlySalesData,
   operationsRadarData,
   vehicleStatusData,
-} from "./adminData"
+} from "./adminData";
 
 function Dashboard() {
-  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [summary, setSummary] = useState<{
-    inventory?: Record<string, number>
-    operations?: Record<string, number>
-    payments?: Record<string, number>
-    sales?: Record<string, number>
-  } | null>(null)
+    inventory?: Record<string, number>;
+    operations?: Record<string, number>;
+    payments?: Record<string, number>;
+    sales?: Record<string, number>;
+  } | null>(null);
 
   const loadSummary = async (forceRefresh = false) => {
-    setIsRefreshing(true)
+    setIsRefreshing(true);
 
     try {
-      const data = await getApiObject<typeof summary>("/api/reports/summary", forceRefresh)
-      setSummary(data)
+      const data = await getApiObject<typeof summary>(
+        "/api/reports/summary",
+        forceRefresh,
+      );
+      setSummary(data);
     } finally {
-      setIsRefreshing(false)
+      setIsRefreshing(false);
     }
-  }
-  const refreshData = () => void loadSummary(true)
+  };
+  const refreshData = () => void loadSummary(true);
 
   useEffect(() => {
-    void loadSummary()
-  }, [])
+    void loadSummary();
+  }, []);
 
-  const liveCards = summary ? [
-    { ...dashboardCards[0], value: String(summary.inventory?.total ?? 0) },
-    { ...dashboardCards[1], value: String(summary.inventory?.available ?? 0) },
-    { ...dashboardCards[2], value: String(summary.inventory?.reserved ?? 0) },
-    { ...dashboardCards[3], value: String(summary.inventory?.sold ?? 0) },
-    { ...dashboardCards[4], value: String(summary.operations?.customers ?? 0) },
-    { ...dashboardCards[5], value: `PHP ${Number(summary.sales?.total_amount ?? 0).toLocaleString()}` },
-    { ...dashboardCards[6], value: String(summary.operations?.reservations ?? 0) },
-    { ...dashboardCards[7], value: String(summary.operations?.service_requests ?? 0) },
-  ] : dashboardCards
+  const liveCards = summary
+    ? [
+        { ...dashboardCards[0], value: String(summary.inventory?.total ?? 0) },
+        {
+          ...dashboardCards[1],
+          value: String(summary.inventory?.available ?? 0),
+        },
+        {
+          ...dashboardCards[2],
+          value: String(summary.inventory?.reserved ?? 0),
+        },
+        { ...dashboardCards[3], value: String(summary.inventory?.sold ?? 0) },
+        {
+          ...dashboardCards[4],
+          value: String(summary.operations?.customers ?? 0),
+        },
+        {
+          ...dashboardCards[5],
+          value: `PHP ${Number(summary.sales?.total_amount ?? 0).toLocaleString()}`,
+        },
+        {
+          ...dashboardCards[6],
+          value: String(summary.operations?.reservations ?? 0),
+        },
+        {
+          ...dashboardCards[7],
+          value: String(summary.operations?.service_requests ?? 0),
+        },
+      ]
+    : dashboardCards;
 
   return (
     <div className="grid gap-4">
@@ -67,10 +90,10 @@ function Dashboard() {
             <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.13em] text-primary">
               Admin Dashboard
             </p>
-            <CardTitle className="text-3xl font-black tracking-normal max-sm:text-2xl">
+            <CardTitle className="text-2xl font-black tracking-normal max-sm:text-2xl">
               Business Operations Overview
             </CardTitle>
-            <CardDescription className="mt-3 max-w-3xl leading-7">
+            <CardDescription className="mt-1 max-w-3xl leading-5">
               Monitor inventory, reservations, sales, customers, payments, and
               maintenance work from one centralized admin workspace.
             </CardDescription>
@@ -85,92 +108,95 @@ function Dashboard() {
       {isRefreshing ? (
         <DashboardCardSkeletonGrid count={dashboardCards.length} />
       ) : (
-      <div className="grid grid-cols-4 gap-4 max-xl:grid-cols-2 max-sm:grid-cols-1">
-        {liveCards.map(({ color, icon: Icon, label, value }) => (
-          <Card className={cn("border-l-4", color.split(" ")[0])} key={label}>
-            <CardContent className="flex items-center gap-4 p-4">
-              <span
-                className={cn(
-                  "grid size-12 shrink-0 place-items-center rounded-lg",
-                  color,
-                )}
-              >
-                <Icon aria-hidden="true" className="size-5" />
-              </span>
-              <div>
-                <p className="text-sm font-bold text-muted-foreground">{label}</p>
-                <DashboardCardValue value={value} />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+        <div className="grid grid-cols-4 gap-4 max-xl:grid-cols-2 max-sm:grid-cols-1">
+          {liveCards.map(({ color, icon: Icon, label, value }) => (
+            <Card className={cn("border-l-4", color.split(" ")[0])} key={label}>
+              <CardContent className="flex items-center gap-4 p-4">
+                <span
+                  className={cn(
+                    "grid size-10 shrink-0 place-items-center rounded-lg",
+                    color,
+                  )}
+                >
+                  <Icon aria-hidden="true" className="size-5" />
+                </span>
+                <div>
+                  <p className="text-sm font-bold text-muted-foreground">
+                    {label}
+                  </p>
+                  <DashboardCardValue value={value} />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       )}
 
       {isRefreshing ? <DashboardChartsSkeleton /> : <DashboardCharts />}
 
       <div className="grid grid-cols-2 gap-4 max-lg:grid-cols-1">
-        <ActivityCard
-          items={[]}
-          title="Today's Priority"
-        />
-        <ActivityCard
-          items={[]}
-          title="Recent Activity"
-        />
+        <ActivityCard items={[]} title="Today's Priority" />
+        <ActivityCard items={[]} title="Recent Activity" />
       </div>
     </div>
-  )
+  );
 }
 
 function DashboardCardValue({ value }: { value: string }) {
   if (value.startsWith("PHP ")) {
     return (
-      <strong className="mt-2 flex items-end gap-1.5 text-3xl leading-none">
-        <span className="pb-0.5 text-sm font-black uppercase leading-none text-muted-foreground">
-          PHP
+      <strong className="mt-2 flex flex-wrap items-end gap-1 text-lg md:text-xl xl:text-2xl leading-none">
+        <span className="pb-0.5 text-xs font-black uppercase leading-none text-muted-foreground">
+          ₱
         </span>
-        <span>{value.replace(/^PHP\s+/, "")}</span>
+        <span className="break-all">{value.replace(/^PHP\s+/, "")}</span>
       </strong>
-    )
+    );
   }
 
-  return <strong className="mt-2 block text-3xl leading-none">{value}</strong>
+  return (
+    <strong className="mt-2 block text-xl md:text-2xl xl:text-3xl leading-none">
+      {value}
+    </strong>
+  );
 }
 
 function DashboardCharts() {
   return (
-    <div className="grid grid-cols-3 gap-4 max-xl:grid-cols-1">
+    <div className="grid grid-cols-3 gap-2 max-xl:grid-cols-1">
       <BarChartCard />
       <PieChartCard />
       <RadarChartCard />
     </div>
-  )
+  );
 }
 
 function BarChartCard() {
-  const maxValue = Math.max(...monthlySalesData.map((item) => item.value))
+  const maxValue = Math.max(...monthlySalesData.map((item) => item.value));
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-3">
           <BarChart3 aria-hidden="true" className="size-5 text-primary" />
           Monthly Sales
         </CardTitle>
         <CardDescription>Sales movement from January to June.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex h-64 items-end gap-3 rounded-lg bg-muted/60 p-4">
+        <div className="flex h-85 items-end gap-2 rounded-lg bg-muted/60 p-4">
           {monthlySalesData.map((item) => (
-            <div className="group relative flex h-full flex-1 flex-col justify-end gap-2" key={item.label}>
+            <div
+              className="group relative flex h-full flex-1 flex-col justify-end gap-2"
+              key={item.label}
+            >
               <div
                 aria-label={`${item.label} sales PHP ${item.value}K`}
                 className="min-h-3 rounded-t-lg bg-primary shadow-lg shadow-primary/20 transition group-hover:bg-primary/80"
                 style={{ height: `${(item.value / maxValue) * 100}%` }}
               />
               <div className="pointer-events-none absolute bottom-[calc(100%+0.5rem)] left-1/2 z-10 hidden -translate-x-1/2 whitespace-nowrap rounded-lg border bg-popover px-3 py-2 text-xs font-black text-popover-foreground shadow-xl group-hover:block">
-                {item.label}: PHP {item.value}K
+                {item.label}: ₱ {item.value}K
               </div>
               <span className="text-center text-xs font-black text-muted-foreground">
                 {item.label}
@@ -180,11 +206,11 @@ function BarChartCard() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function PieChartCard() {
-  const total = vehicleStatusData.reduce((sum, item) => sum + item.value, 0)
+  const total = vehicleStatusData.reduce((sum, item) => sum + item.value, 0);
   const gradient = vehicleStatusData
     .map((item, index) => {
       const start =
@@ -192,12 +218,12 @@ function PieChartCard() {
           .slice(0, index)
           .reduce((sum, current) => sum + current.value, 0) /
           total) *
-        100
-      const end = start + (item.value / total) * 100
+        100;
+      const end = start + (item.value / total) * 100;
 
-      return `${item.color} ${start}% ${end}%`
+      return `${item.color} ${start}% ${end}%`;
     })
-    .join(", ")
+    .join(", ");
 
   return (
     <Card>
@@ -206,7 +232,9 @@ function PieChartCard() {
           <Car aria-hidden="true" className="size-5 text-primary" />
           Vehicle Status
         </CardTitle>
-        <CardDescription>Inventory distribution by current status.</CardDescription>
+        <CardDescription>
+          Inventory distribution by current status.
+        </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-5 sm:grid-cols-[180px_minmax(0,1fr)] sm:items-center xl:grid-cols-1 2xl:grid-cols-[180px_minmax(0,1fr)]">
         <div
@@ -222,7 +250,7 @@ function PieChartCard() {
 
         <div className="grid gap-3">
           {vehicleStatusData.map((item) => {
-            const percent = Math.round((item.value / total) * 100)
+            const percent = Math.round((item.value / total) * 100);
 
             return (
               <div
@@ -241,25 +269,26 @@ function PieChartCard() {
                   {item.value} vehicles • {percent}%
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function RadarChartCard() {
-  const center = 110
-  const radius = 76
+  const center = 110;
+  const radius = 76;
   const chartPoints = operationsRadarData
     .map((item, index) => {
-      const angle = (Math.PI * 2 * index) / operationsRadarData.length - Math.PI / 2
-      const distance = (item.value / 100) * radius
+      const angle =
+        (Math.PI * 2 * index) / operationsRadarData.length - Math.PI / 2;
+      const distance = (item.value / 100) * radius;
 
-      return `${center + Math.cos(angle) * distance},${center + Math.sin(angle) * distance}`
+      return `${center + Math.cos(angle) * distance},${center + Math.sin(angle) * distance}`;
     })
-    .join(" ")
+    .join(" ");
 
   return (
     <Card>
@@ -268,7 +297,9 @@ function RadarChartCard() {
           <ShieldCheck aria-hidden="true" className="size-5 text-primary" />
           Operations Health
         </CardTitle>
-        <CardDescription>Radar view of core admin performance areas.</CardDescription>
+        <CardDescription>
+          Radar view of core admin performance areas.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid place-items-center rounded-lg bg-muted/60 p-4">
@@ -285,22 +316,25 @@ function RadarChartCard() {
                 points={operationsRadarData
                   .map((_, index) => {
                     const angle =
-                      (Math.PI * 2 * index) / operationsRadarData.length - Math.PI / 2
+                      (Math.PI * 2 * index) / operationsRadarData.length -
+                      Math.PI / 2;
 
                     return `${center + Math.cos(angle) * radius * scale},${
                       center + Math.sin(angle) * radius * scale
-                    }`
+                    }`;
                   })
                   .join(" ")}
               />
             ))}
 
             {operationsRadarData.map((item, index) => {
-              const angle = (Math.PI * 2 * index) / operationsRadarData.length - Math.PI / 2
-              const labelRadius = radius + 24
-              const pointRadius = (item.value / 100) * radius
-              const pointX = center + Math.cos(angle) * pointRadius
-              const pointY = center + Math.sin(angle) * pointRadius
+              const angle =
+                (Math.PI * 2 * index) / operationsRadarData.length -
+                Math.PI / 2;
+              const labelRadius = radius + 24;
+              const pointRadius = (item.value / 100) * radius;
+              const pointX = center + Math.cos(angle) * pointRadius;
+              const pointY = center + Math.sin(angle) * pointRadius;
 
               return (
                 <g className="group" key={item.label}>
@@ -345,7 +379,7 @@ function RadarChartCard() {
                     </text>
                   </g>
                 </g>
-              )
+              );
             })}
 
             <polygon
@@ -357,15 +391,15 @@ function RadarChartCard() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function ActivityCard({
   items,
   title,
 }: {
-  items: [string, string][]
-  title: string
+  items: [string, string][];
+  title: string;
 }) {
   return (
     <Card>
@@ -373,22 +407,24 @@ function ActivityCard({
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-3">
-        {items.length > 0 ? items.map(([label, value]) => (
-          <div
-            className="flex items-center justify-between gap-4 rounded-lg bg-muted p-3 text-sm text-muted-foreground"
-            key={label}
-          >
-            <span>{label}</span>
-            <Badge variant="orange">{value}</Badge>
-          </div>
-        )) : (
+        {items.length > 0 ? (
+          items.map(([label, value]) => (
+            <div
+              className="flex items-center justify-between gap-4 rounded-lg bg-muted p-3 text-sm text-muted-foreground"
+              key={label}
+            >
+              <span>{label}</span>
+              <Badge variant="orange">{value}</Badge>
+            </div>
+          ))
+        ) : (
           <div className="rounded-lg bg-muted p-3 text-sm font-semibold text-muted-foreground">
             No live activity available yet.
           </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;

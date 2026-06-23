@@ -1,10 +1,17 @@
-import { useState } from "react"
-import type { FormEvent } from "react"
-import { ArrowRight, Eye, EyeOff, LoaderCircle, LockKeyhole, Mail } from "lucide-react"
-import { toast } from "react-toastify"
-import Swal from "sweetalert2"
+import { useState } from "react";
+import type { FormEvent } from "react";
+import {
+  ArrowRight,
+  Eye,
+  EyeOff,
+  LoaderCircle,
+  LockKeyhole,
+  Mail,
+} from "lucide-react";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   type AuthUser,
   getLoginErrorMessage,
@@ -12,48 +19,48 @@ import {
   isInactiveAccountError,
   loginUser,
   saveAuthSession,
-} from "@/lib/auth"
+} from "@/lib/auth";
 
 type LoginProps = {
-  onLogin: (destinationRoute: string, user: AuthUser) => void
-  onNavigate: (route: string) => void
-}
+  onLogin: (destinationRoute: string, user: AuthUser) => void;
+  onNavigate: (route: string) => void;
+};
 
-const systemTitle = "CDO Car Trading IMS"
+const systemTitle = "CDO Car Trading IMS";
 
 const systemSubtitle =
-  "Efficiently manage vehicle inventory, sales transactions, reservations, customer records, and maintenance operations through a centralized web and mobile platform."
+  "Efficiently manage vehicle inventory, sales transactions, reservations, customer records, and maintenance operations through a centralized web and mobile platform.";
 
 function Login({ onLogin, onNavigate }: LoginProps) {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [rememberMe, setRememberMe] = useState(true)
-  const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setError("")
+    event.preventDefault();
+    setError("");
 
-    const normalizedEmail = email.trim().toLowerCase()
+    const normalizedEmail = email.trim().toLowerCase();
 
     if (!normalizedEmail || !password) {
-      setError("Please enter your email address and password.")
-      return
+      setError("Please enter your email address and password.");
+      return;
     }
 
     if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
-      setError("Please enter a valid email address.")
-      return
+      setError("Please enter a valid email address.");
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const auth = await loginUser(normalizedEmail, password)
-      saveAuthSession(auth, rememberMe)
-      toast.success(`Welcome back, ${auth.user.name}.`)
-      onLogin(getRouteForRole(auth.user.role?.name), auth.user)
+      const auth = await loginUser(normalizedEmail, password);
+      saveAuthSession(auth, rememberMe);
+      toast.success(`Welcome back, ${auth.user.name}.`);
+      onLogin(getRouteForRole(auth.user.role?.name), auth.user);
     } catch (loginError) {
       if (isInactiveAccountError(loginError)) {
         await Swal.fire({
@@ -62,18 +69,18 @@ function Login({ onLogin, onNavigate }: LoginProps) {
           icon: "warning",
           text: "Your account is inactive. Please contact the admin.",
           title: "Account inactive",
-        })
+        });
       }
 
-      setError(getLoginErrorMessage(loginError))
+      setError(getLoginErrorMessage(loginError));
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <main
-      className="grid min-h-svh grid-cols-1 bg-background pt-[68px] text-primary-foreground sm:grid-cols-[minmax(0,1.08fr)_minmax(420px,0.92fr)]"
+      className=" min-h-svh grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] bg-background pt-[10px] "
       style={{
         backgroundImage:
           "linear-gradient(120deg, rgba(8, 17, 35, 0.96), rgba(15, 23, 42, 0.78)), url('https://images.unsplash.com/photo-1562141961-b5d1fd9e24e3?auto=format&fit=crop&w=1800&q=85')",
@@ -82,10 +89,10 @@ function Login({ onLogin, onNavigate }: LoginProps) {
       }}
     >
       <section
-        className="hidden h-[calc(100svh-68px)] items-stretch sm:flex"
+        className="hidden lg:flex min-h-[calc(100svh-68px)]"
         aria-labelledby="system-title"
       >
-        <div className="flex w-full flex-col justify-between gap-6 bg-[radial-gradient(circle_at_15%_20%,rgba(234,88,12,0.22),transparent_31rem),linear-gradient(90deg,rgba(2,6,23,0.45),rgba(2,6,23,0.12))] p-8 lg:p-20">
+        <div className="flex w-full flex-col justify-between gap-2 bg-[radial-gradient(circle_at_15%_20%,rgba(234,88,12,0.22),transparent_31rem),linear-gradient(90deg,rgba(2,6,23,0.45),rgba(2,6,23,0.12))] p-8 lg:p-20">
           <div className="max-w-3xl">
             <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.13em] text-primary">
               Auto CDO Car Trading
@@ -135,11 +142,11 @@ function Login({ onLogin, onNavigate }: LoginProps) {
       </section>
 
       <section
-        className="grid h-[calc(100svh-68px)] place-items-center bg-background/95 p-4 text-foreground lg:p-12"
+        className="min-h-[calc(100svh-68px)] overflow-y-auto grid place-items-center p-4 md:p-6 lg:p-12"
         aria-label="Login form"
       >
         <form
-          className="w-full max-w-[500px] rounded-lg border border-border bg-card/95 p-5 text-card-foreground shadow-2xl shadow-foreground/10 sm:p-8"
+          className="w-full max-w-md sm:max-w-lg rounded-lg border bg-card/95 p-5 sm:p-8"
           onSubmit={handleSubmit}
           noValidate
         >
@@ -178,7 +185,10 @@ function Login({ onLogin, onNavigate }: LoginProps) {
           >
             <span>Email Address</span>
             <div className="flex min-h-13 items-center gap-3 rounded-lg border border-input bg-background px-3 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
-              <Mail aria-hidden="true" className="size-4 text-muted-foreground" />
+              <Mail
+                aria-hidden="true"
+                className="size-4 text-muted-foreground"
+              />
               <input
                 className="w-full border-0 bg-transparent font-medium text-foreground outline-none placeholder:text-muted-foreground"
                 autoComplete="email"
@@ -198,7 +208,10 @@ function Login({ onLogin, onNavigate }: LoginProps) {
           >
             <span>Password</span>
             <div className="flex min-h-13 items-center gap-3 rounded-lg border border-input bg-background px-3 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
-              <LockKeyhole aria-hidden="true" className="size-4 text-muted-foreground" />
+              <LockKeyhole
+                aria-hidden="true"
+                className="size-4 text-muted-foreground"
+              />
               <input
                 className="w-full border-0 bg-transparent font-medium text-foreground outline-none placeholder:text-muted-foreground"
                 autoComplete="current-password"
@@ -266,7 +279,7 @@ function Login({ onLogin, onNavigate }: LoginProps) {
         </form>
       </section>
     </main>
-  )
+  );
 }
 
-export default Login
+export default Login;
