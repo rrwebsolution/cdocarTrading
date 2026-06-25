@@ -111,7 +111,8 @@ function App() {
     setAuthUser(user)
     setIsAuthenticated(true)
     setIsOutletLoading(true)
-    navigate(destinationRoute)
+    window.history.replaceState(null, "", `/${destinationRoute}`)
+    window.location.reload()
   }
 
   const handleLogout = async () => {
@@ -125,7 +126,8 @@ function App() {
 
     setAuthUser(null)
     setIsAuthenticated(false)
-    navigate("login")
+    window.history.replaceState(null, "", "/login")
+    window.location.reload()
   }
 
   const profileName = authUser?.name ?? (
