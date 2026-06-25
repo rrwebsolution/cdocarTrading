@@ -7,6 +7,7 @@ import {
   LoaderCircle,
   LockKeyhole,
   Mail,
+  ShieldCheck,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
@@ -26,10 +27,40 @@ type LoginProps = {
   onNavigate: (route: string) => void;
 };
 
+type LoginFieldErrors = {
+  email?: string;
+  password?: string;
+};
+
 const systemTitle = "CDO Car Trading IMS";
 
 const systemSubtitle =
   "Efficiently manage vehicle inventory, sales transactions, reservations, customer records, and maintenance operations through a centralized web and mobile platform.";
+
+const emailRoleHints = [
+  { keywords: ["admin", "owner"], role: "Administrator" },
+  { keywords: ["secretary", "frontoffice", "front-office"], role: "Secretary" },
+  { keywords: ["mechanic", "technician"], role: "Mechanic" },
+  { keywords: ["carwasher", "washer"], role: "Carwasher" },
+  { keywords: ["customer", "client"], role: "Customer" },
+];
+
+function getEmailRolePreview(email: string) {
+  const normalizedEmail = email.trim().toLowerCase();
+
+  if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
+    return "";
+  }
+
+  const [localPart, domain = ""] = normalizedEmail.split("@");
+  const emailSignature = `${localPart} ${domain.replace(/\./g, " ")}`;
+
+  return (
+    emailRoleHints.find(({ keywords }) =>
+      keywords.some((keyword) => emailSignature.includes(keyword)),
+    )?.role ?? "Customer"
+  );
+}
 
 function Login({ onLogin, onNavigate }: LoginProps) {
   const [email, setEmail] = useState("");
@@ -37,21 +68,30 @@ function Login({ onLogin, onNavigate }: LoginProps) {
   const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({});
   const [isLoading, setIsLoading] = useState(false);
+  const emailRolePreview = getEmailRolePreview(email);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
+    setFieldErrors({});
 
     const normalizedEmail = email.trim().toLowerCase();
+    const nextFieldErrors: LoginFieldErrors = {};
 
-    if (!normalizedEmail || !password) {
-      setError("Please enter your email address and password.");
-      return;
+    if (!normalizedEmail) {
+      nextFieldErrors.email = "Email address is required.";
+    } else if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
+      nextFieldErrors.email = "Please enter a valid email address.";
     }
 
-    if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
-      setError("Please enter a valid email address.");
+    if (!password) {
+      nextFieldErrors.password = "Password is required.";
+    }
+
+    if (nextFieldErrors.email || nextFieldErrors.password) {
+      setFieldErrors(nextFieldErrors);
       return;
     }
 
@@ -158,6 +198,21 @@ function Login({ onLogin, onNavigate }: LoginProps) {
             />
           </div>
 
+          {emailRolePreview ? (
+            <div className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-primary/25 bg-primary/10 px-3 py-2 text-sm">
+              <span className="inline-flex min-w-0 items-center gap-2 font-bold text-muted-foreground">
+                <ShieldCheck
+                  aria-hidden="true"
+                  className="size-4 shrink-0 text-primary"
+                />
+                <span>Access Role</span>
+              </span>
+              <strong className="truncate text-primary">
+                {emailRolePreview}
+              </strong>
+            </div>
+          ) : null}
+
           <div>
             <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.13em] text-primary">
               Secure access
@@ -184,22 +239,46 @@ function Login({ onLogin, onNavigate }: LoginProps) {
             htmlFor="email"
           >
             <span>Email Address</span>
-            <div className="flex min-h-13 items-center gap-3 rounded-lg border border-input bg-background px-3 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
+            <div className={`flex min-h-13 items-center gap-3 rounded-lg border bg-background px-3 transition focus-within:ring-4 ${
+              fieldErrors.email
+                ? "border-destructive focus-within:border-destructive focus-within:ring-destructive/15"
+                : "border-input focus-within:border-primary focus-within:ring-primary/15"
+            }`}>
               <Mail
                 aria-hidden="true"
                 className="size-4 text-muted-foreground"
               />
               <input
+                aria-describedby={
+                  fieldErrors.email ? "email-error" : undefined
+                }
+                aria-invalid={fieldErrors.email ? "true" : undefined}
                 className="w-full border-0 bg-transparent font-medium text-foreground outline-none placeholder:text-muted-foreground"
                 autoComplete="email"
                 id="email"
                 inputMode="email"
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  setError("");
+                  setFieldErrors((current) => ({
+                    ...current,
+                    email: undefined,
+                  }));
+                }}
                 placeholder="admin@autocdo.com"
                 type="email"
                 value={email}
               />
             </div>
+            {fieldErrors.email ? (
+              <span
+                className="text-xs font-bold text-destructive"
+                id="email-error"
+                role="alert"
+              >
+                {fieldErrors.email}
+              </span>
+            ) : null}
           </label>
 
           <label
@@ -207,16 +286,31 @@ function Login({ onLogin, onNavigate }: LoginProps) {
             htmlFor="password"
           >
             <span>Password</span>
-            <div className="flex min-h-13 items-center gap-3 rounded-lg border border-input bg-background px-3 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
+            <div className={`flex min-h-13 items-center gap-3 rounded-lg border bg-background px-3 transition focus-within:ring-4 ${
+              fieldErrors.password
+                ? "border-destructive focus-within:border-destructive focus-within:ring-destructive/15"
+                : "border-input focus-within:border-primary focus-within:ring-primary/15"
+            }`}>
               <LockKeyhole
                 aria-hidden="true"
                 className="size-4 text-muted-foreground"
               />
               <input
+                aria-describedby={
+                  fieldErrors.password ? "password-error" : undefined
+                }
+                aria-invalid={fieldErrors.password ? "true" : undefined}
                 className="w-full border-0 bg-transparent font-medium text-foreground outline-none placeholder:text-muted-foreground"
                 autoComplete="current-password"
                 id="password"
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  setError("");
+                  setFieldErrors((current) => ({
+                    ...current,
+                    password: undefined,
+                  }));
+                }}
                 placeholder="Enter your password"
                 type={showPassword ? "text" : "password"}
                 value={password}
@@ -230,6 +324,15 @@ function Login({ onLogin, onNavigate }: LoginProps) {
                 {showPassword ? <EyeOff /> : <Eye />}
               </button>
             </div>
+            {fieldErrors.password ? (
+              <span
+                className="text-xs font-bold text-destructive"
+                id="password-error"
+                role="alert"
+              >
+                {fieldErrors.password}
+              </span>
+            ) : null}
           </label>
 
           <div className="my-4 flex items-center justify-between gap-4 text-sm text-muted-foreground">
@@ -240,7 +343,7 @@ function Login({ onLogin, onNavigate }: LoginProps) {
                 onChange={(event) => setRememberMe(event.target.checked)}
                 type="checkbox"
               />
-              <span>Remember Me</span>
+              <span>Keep me logged in</span>
             </label>
             <a
               className="font-extrabold text-primary hover:underline"
