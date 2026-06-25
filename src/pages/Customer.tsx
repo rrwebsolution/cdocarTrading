@@ -7,6 +7,12 @@ import CustomerReservations from "./customer/CustomerReservations"
 import CustomerServiceRequests from "./customer/CustomerServiceRequests"
 import CustomerVehicles from "./customer/CustomerVehicles"
 import { customerSidebarGroups } from "./customer/customerData"
+import type { AuthUser } from "@/lib/auth"
+import {
+  customerRoutePermissions,
+  filterSidebarGroups,
+  resolveAccessibleRoute,
+} from "@/lib/access"
 
 type CustomerProps = {
   activeRoute: string
@@ -14,6 +20,7 @@ type CustomerProps = {
   onNavigate: (route: string) => void
   profileName?: string
   profileSubtitle?: string
+  user?: AuthUser | null
 }
 
 const customerPages = {
@@ -32,13 +39,24 @@ function Customer({
   onNavigate,
   profileName = "Customer",
   profileSubtitle = "Customer Portal",
+  user,
 }: CustomerProps) {
-  const normalizedRoute =
-    activeRoute === "customer" ? "customer/dashboard" : activeRoute
+  const normalizedRoute = resolveAccessibleRoute(
+    activeRoute,
+    "customer/dashboard",
+    Object.keys(customerPages),
+    user,
+    customerRoutePermissions,
+  )
   const page =
     customerPages[normalizedRoute as keyof typeof customerPages] ?? (
       <CustomerDashboard />
     )
+  const sidebarGroups = filterSidebarGroups(
+    customerSidebarGroups,
+    user,
+    customerRoutePermissions,
+  )
 
   return (
     <AdminLayout
@@ -47,7 +65,7 @@ function Customer({
       onNavigate={onNavigate}
       profileName={profileName}
       profileSubtitle={profileSubtitle}
-      sidebarGroups={customerSidebarGroups}
+      sidebarGroups={sidebarGroups}
     >
       {page}
     </AdminLayout>

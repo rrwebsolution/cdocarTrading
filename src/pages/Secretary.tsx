@@ -10,6 +10,12 @@ import SecretarySalesPayments from "./secretary/SecretarySalesPayments"
 import SecretaryVehicleRelease from "./secretary/SecretaryVehicleRelease"
 import SecretaryVehicles from "./secretary/SecretaryVehicles"
 import { secretarySidebarGroups } from "./secretary/secretaryData"
+import type { AuthUser } from "@/lib/auth"
+import {
+  filterSidebarGroups,
+  resolveAccessibleRoute,
+  secretaryRoutePermissions,
+} from "@/lib/access"
 
 type SecretaryProps = {
   activeRoute: string
@@ -17,6 +23,7 @@ type SecretaryProps = {
   onNavigate: (route: string) => void
   profileName?: string
   profileSubtitle?: string
+  user?: AuthUser | null
 }
 
 const secretaryPages = {
@@ -38,13 +45,24 @@ function Secretary({
   onNavigate,
   profileName = "Secretary",
   profileSubtitle = "Front Office Workspace",
+  user,
 }: SecretaryProps) {
-  const normalizedRoute =
-    activeRoute === "secretary" ? "secretary/dashboard" : activeRoute
+  const normalizedRoute = resolveAccessibleRoute(
+    activeRoute,
+    "secretary/dashboard",
+    Object.keys(secretaryPages),
+    user,
+    secretaryRoutePermissions,
+  )
   const page =
     secretaryPages[normalizedRoute as keyof typeof secretaryPages] ?? (
       <SecretaryDashboard />
     )
+  const sidebarGroups = filterSidebarGroups(
+    secretarySidebarGroups,
+    user,
+    secretaryRoutePermissions,
+  )
 
   return (
     <AdminLayout
@@ -53,7 +71,7 @@ function Secretary({
       onNavigate={onNavigate}
       profileName={profileName}
       profileSubtitle={profileSubtitle}
-      sidebarGroups={secretarySidebarGroups}
+      sidebarGroups={sidebarGroups}
     >
       {page}
     </AdminLayout>

@@ -134,6 +134,7 @@ function App() {
         onNavigate={navigate}
         profileName={profileName}
         profileSubtitle={profileSubtitle}
+        user={authUser}
       />
     ) : route.startsWith("mechanic") ? (
       <Mechanic
@@ -142,6 +143,7 @@ function App() {
         onNavigate={navigate}
         profileName={profileName}
         profileSubtitle={profileSubtitle}
+        user={authUser}
       />
     ) : route.startsWith("customer") ? (
       <Customer
@@ -150,6 +152,7 @@ function App() {
         onNavigate={navigate}
         profileName={profileName}
         profileSubtitle={profileSubtitle}
+        user={authUser}
       />
     ) : (
       <Admin
@@ -158,6 +161,7 @@ function App() {
         onNavigate={navigate}
         profileName={profileName}
         profileSubtitle={profileSubtitle}
+        user={authUser}
       />
     )
   ) : (

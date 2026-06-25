@@ -45,7 +45,11 @@ const permissionOptions = [
   "Job Orders",
   "Job Orders & Maintenance",
   "Customer Records",
+  "Documents",
+  "Financing",
   "Reports",
+  "Activity Logs",
+  "Vehicle Release",
   "Assigned Job Orders",
   "Assigned Cleaning Job Orders",
   "Repair Progress",
@@ -576,6 +580,7 @@ function RoleCreateDialog({
   const [permissions, setPermissions] = useState<string[]>([])
   const [status, setStatus] = useState<"active" | "inactive">("active")
   const [isSaving, setIsSaving] = useState(false)
+  const areAllPermissionsChecked = permissions.length === permissionOptions.length
 
   const togglePermission = (permission: string) => {
     setPermissions((current) =>
@@ -659,7 +664,31 @@ function RoleCreateDialog({
         </label>
 
         <div className="grid gap-3">
-          <p className="text-sm font-black text-muted-foreground">Permissions</p>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm font-black text-muted-foreground">
+              Permissions
+            </p>
+            <div className="flex gap-2">
+              <Button
+                disabled={areAllPermissionsChecked}
+                onClick={() => setPermissions(permissionOptions)}
+                size="sm"
+                type="button"
+                variant="outline"
+              >
+                Check all
+              </Button>
+              <Button
+                disabled={permissions.length === 0}
+                onClick={() => setPermissions([])}
+                size="sm"
+                type="button"
+                variant="outline"
+              >
+                Clear all
+              </Button>
+            </div>
+          </div>
           <div className="grid gap-2 sm:grid-cols-2">
             {permissionOptions.map((permission) => (
               <label
@@ -705,6 +734,7 @@ function RoleEditDialog({
   const [description, setDescription] = useState(role.description ?? "")
   const [permissions, setPermissions] = useState<string[]>(role.permissions ?? [])
   const [isSaving, setIsSaving] = useState(false)
+  const areAllPermissionsChecked = permissions.length === permissionOptions.length
 
   const togglePermission = (permission: string) => {
     setPermissions((current) =>
@@ -766,7 +796,31 @@ function RoleEditDialog({
         </label>
 
         <div className="grid gap-3">
-          <p className="text-sm font-black text-muted-foreground">Permissions</p>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm font-black text-muted-foreground">
+              Permissions
+            </p>
+            <div className="flex gap-2">
+              <Button
+                disabled={areAllPermissionsChecked}
+                onClick={() => setPermissions(permissionOptions)}
+                size="sm"
+                type="button"
+                variant="outline"
+              >
+                Check all
+              </Button>
+              <Button
+                disabled={permissions.length === 0}
+                onClick={() => setPermissions([])}
+                size="sm"
+                type="button"
+                variant="outline"
+              >
+                Clear all
+              </Button>
+            </div>
+          </div>
           <div className="grid gap-2 sm:grid-cols-2">
             {permissionOptions.map((permission) => (
               <label

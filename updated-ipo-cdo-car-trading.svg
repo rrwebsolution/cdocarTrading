@@ -1,266 +1,264 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="2820" viewBox="0 0 2400 2820">
-  <rect width="2400" height="2820" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1756" viewBox="0 0 1024 1756">
+  <rect width="1024" height="1756" fill="#ffffff"/>
   <style>
-    .title { font: 700 34px Arial, Helvetica, sans-serif; fill: #111111; }
-    .head { font: 700 32px Arial, Helvetica, sans-serif; fill: #111111; }
-    .input { font: 24px Arial, Helvetica, sans-serif; fill: #111111; }
-    .cell { font: 23px Arial, Helvetica, sans-serif; fill: #111111; }
-    .note { font: 22px Arial, Helvetica, sans-serif; fill: #111111; }
-    .box { fill: #ffffff; stroke: #111111; stroke-width: 4; }
-    .header-box { fill: #f3f4f6; stroke: #111111; stroke-width: 4; }
+    .header { font: 700 20px Arial, Helvetica, sans-serif; fill: #0f0f0f; }
+    .title { font: 700 12px Arial, Helvetica, sans-serif; fill: #0f0f0f; }
+    .body { font: 11.5px Arial, Helvetica, sans-serif; fill: #0f0f0f; }
+    .small { font: 10.5px Arial, Helvetica, sans-serif; fill: #0f0f0f; }
   </style>
-  <text x="1200" y="52" text-anchor="middle" class="title">CDO Car Trading Management System - Updated IPO</text>
-  <rect x="34" y="82" width="520" height="70" class="header-box"/>
-  <text x="294" y="125" text-anchor="middle" class="head">
-    <tspan x="294" dy="0">I</tspan>
+  <rect x="8" y="8" width="309" height="50" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <text x="162.5" y="40" text-anchor="middle" class="header">
+    <tspan x="162.5" dy="0">INPUT</tspan>
   </text>
-  <rect x="566" y="82" width="930" height="70" class="header-box"/>
-  <text x="1031" y="125" text-anchor="middle" class="head">
-    <tspan x="1031" dy="0">P</tspan>
+  <rect x="357" y="8" width="309" height="50" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <text x="511.5" y="40" text-anchor="middle" class="header">
+    <tspan x="511.5" dy="0">PROCESS</tspan>
   </text>
-  <rect x="1508" y="82" width="840" height="70" class="header-box"/>
-  <text x="1928" y="125" text-anchor="middle" class="head">
-    <tspan x="1928" dy="0">O</tspan>
+  <rect x="706" y="8" width="309" height="50" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <text x="860.5" y="40" text-anchor="middle" class="header">
+    <tspan x="860.5" dy="0">OUTPUT</tspan>
   </text>
-  <rect x="34" y="164" width="520" height="138" class="box"/>
-  <rect x="566" y="164" width="930" height="138" class="box"/>
-  <rect x="1508" y="164" width="840" height="138" class="box"/>
-  <text x="294" y="241" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">U</tspan>
+  <rect x="8" y="76" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="357" y="76" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="706" y="76" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <text x="162.5" y="98" text-anchor="middle" class="title">
+    <tspan x="162.5" dy="0">User Account Details</tspan>
   </text>
-  <text x="1031" y="227.5" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Register/login users, manage user accounts, update status,</tspan>
-    <tspan x="1031" dy="27">and assign role access</tspan>
+  <text x="42" y="128" text-anchor="start" class="body">
+    <tspan x="42" dy="0">•  Email Address</tspan>
+    <tspan x="42" dy="18">•  Password</tspan>
+    <tspan x="42" dy="18">•  Assign Role Access</tspan>
+    <tspan x="42" dy="18">•  Update Status</tspan>
   </text>
-  <text x="1928" y="227.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">User account records, login access, active/inactive</tspan>
-    <tspan x="1928" dy="27">user list</tspan>
+  <text x="511.5" y="142" text-anchor="middle" class="body">
+    <tspan x="511.5" dy="0">M</tspan>
   </text>
-  <rect x="34" y="314" width="520" height="138" class="box"/>
-  <rect x="566" y="314" width="930" height="138" class="box"/>
-  <rect x="1508" y="314" width="840" height="138" class="box"/>
-  <text x="294" y="377" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">Role and Permission</tspan>
-    <tspan x="294" dy="28">Details</tspan>
+  <text x="860.5" y="130" text-anchor="middle" class="body">
+    <tspan x="860.5" dy="0">User Account, Login Access,</tspan>
+    <tspan x="860.5" dy="18">Active/Inactive User List</tspan>
   </text>
-  <text x="1031" y="377.5" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Create roles, update permissions, and assign module access</tspan>
-    <tspan x="1031" dy="27">per user type</tspan>
+  <rect x="8" y="226" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="357" y="226" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="706" y="226" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <text x="162.5" y="248" text-anchor="middle" class="title">
+    <tspan x="162.5" dy="0">Secretary Details</tspan>
   </text>
-  <text x="1928" y="391" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">R</tspan>
+  <text x="162.5" y="284" text-anchor="middle" class="body">
+    <tspan x="162.5" dy="0">Vehicle Updates</tspan>
+    <tspan x="162.5" dy="16">Register Customer like Email,</tspan>
+    <tspan x="162.5" dy="16">Customer Name, Contact, Status</tspan>
   </text>
-  <rect x="34" y="464" width="520" height="138" class="box"/>
-  <rect x="566" y="464" width="930" height="138" class="box"/>
-  <rect x="1508" y="464" width="840" height="138" class="box"/>
-  <text x="294" y="541" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">S</tspan>
+  <text x="511.5" y="248" text-anchor="middle" class="title">
+    <tspan x="511.5" dy="0">Manage Secretary</tspan>
   </text>
-  <text x="1031" y="500.5" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Register customers, update vehicles, process reservations,</tspan>
-    <tspan x="1031" dy="27">encode sales/payments, record</tspan>
-    <tspan x="1031" dy="27">financing/documents/releases, and create or assign job</tspan>
-    <tspan x="1031" dy="27">orders</tspan>
+  <text x="427" y="284" text-anchor="start" class="body">
+    <tspan x="427" dy="0">•  Add Customer</tspan>
+    <tspan x="427" dy="18">•  Process Reservation</tspan>
+    <tspan x="427" dy="18">•  Create Job Order</tspan>
   </text>
-  <text x="1928" y="514" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Secretary records, updated customer/vehicle records,</tspan>
-    <tspan x="1928" dy="27">reservations, payments, financing, documents, and</tspan>
-    <tspan x="1928" dy="27">releases</tspan>
+  <text x="860.5" y="280" text-anchor="middle" class="body">
+    <tspan x="860.5" dy="0">Secretary records, update</tspan>
+    <tspan x="860.5" dy="18">customer/vehicle records, reservation,</tspan>
+    <tspan x="860.5" dy="18">payments, documents and release</tspan>
   </text>
-  <rect x="34" y="614" width="520" height="138" class="box"/>
-  <rect x="566" y="614" width="930" height="138" class="box"/>
-  <rect x="1508" y="614" width="840" height="138" class="box"/>
-  <text x="294" y="691" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">M</tspan>
+  <rect x="8" y="376" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="357" y="376" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="706" y="376" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <text x="162.5" y="398" text-anchor="middle" class="title">
+    <tspan x="162.5" dy="0">Mechanic/Car-Washer</tspan>
   </text>
-  <text x="1031" y="664" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">View assigned job orders, update repair progress, record</tspan>
-    <tspan x="1031" dy="27">inspection findings, update vehicle condition, and</tspan>
-    <tspan x="1031" dy="27">document pre-sale repair actions</tspan>
+  <text x="162.5" y="434" text-anchor="middle" class="body">
+    <tspan x="162.5" dy="0">Job Order, Request, Vehicle, assigned,</tspan>
+    <tspan x="162.5" dy="16">Repair/Washing Status, Status</tspan>
+    <tspan x="162.5" dy="16">Active/Inactive</tspan>
   </text>
-  <text x="1928" y="664" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Mechanic job order updates, repair records,</tspan>
-    <tspan x="1928" dy="27">inspection findings, vehicle condition/status</tspan>
-    <tspan x="1928" dy="27">updates</tspan>
+  <text x="511.5" y="398" text-anchor="middle" class="title">
+    <tspan x="511.5" dy="0">Manage Mechanic/Car-
+Washer</tspan>
   </text>
-  <rect x="34" y="764" width="520" height="138" class="box"/>
-  <rect x="566" y="764" width="930" height="138" class="box"/>
-  <rect x="1508" y="764" width="840" height="138" class="box"/>
-  <text x="294" y="841" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">C</tspan>
+  <text x="427" y="434" text-anchor="start" class="body">
+    <tspan x="427" dy="0">•  Update Job Order</tspan>
+    <tspan x="427" dy="18">•  Update Vehicle Status</tspan>
   </text>
-  <text x="1031" y="827.5" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">View assigned carwash job orders, update washing/detailing</tspan>
-    <tspan x="1031" dy="27">status, and mark cleaning services as completed</tspan>
+  <text x="860.5" y="430" text-anchor="middle" class="body">
+    <tspan x="860.5" dy="0">Washing/Repair Status, Order Updates</tspan>
+    <tspan x="860.5" dy="18">completed cleaning records and</tspan>
+    <tspan x="860.5" dy="18">inspection findings, vehicle condition</tspan>
+    <tspan x="860.5" dy="18">updates</tspan>
   </text>
-  <text x="1928" y="827.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Carwash job order updates, washing/detailing status</tspan>
-    <tspan x="1928" dy="27">records, completed cleaning records</tspan>
+  <rect x="8" y="526" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="357" y="526" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="706" y="526" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <text x="162.5" y="548" text-anchor="middle" class="title">
+    <tspan x="162.5" dy="0">Customer Details</tspan>
   </text>
-  <rect x="34" y="914" width="520" height="138" class="box"/>
-  <rect x="566" y="914" width="930" height="138" class="box"/>
-  <rect x="1508" y="914" width="840" height="138" class="box"/>
-  <text x="294" y="991" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">C</tspan>
+  <text x="162.5" y="584" text-anchor="middle" class="body">
+    <tspan x="162.5" dy="0">Register Customer</tspan>
+    <tspan x="162.5" dy="16">Update Customer</tspan>
   </text>
-  <text x="1031" y="977.5" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Register customers, update customer profile, maintain</tspan>
-    <tspan x="1031" dy="27">contact/address/status</tspan>
+  <text x="511.5" y="548" text-anchor="middle" class="title">
+    <tspan x="511.5" dy="0">Customer</tspan>
   </text>
-  <text x="1928" y="977.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Customer records, customer profile, active customer</tspan>
-    <tspan x="1928" dy="27">list</tspan>
+  <text x="427" y="584" text-anchor="start" class="body">
+    <tspan x="427" dy="0">•  Browse Vehicle</tspan>
+    <tspan x="427" dy="18">•  View History</tspan>
+    <tspan x="427" dy="18">•  Reserve Vehicle</tspan>
   </text>
-  <rect x="34" y="1064" width="520" height="138" class="box"/>
-  <rect x="566" y="1064" width="930" height="138" class="box"/>
-  <rect x="1508" y="1064" width="840" height="138" class="box"/>
-  <text x="294" y="1141" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">V</tspan>
+  <text x="860.5" y="580" text-anchor="middle" class="body">
+    <tspan x="860.5" dy="0">Customer Records , Customer Profile,</tspan>
+    <tspan x="860.5" dy="18">Active Customer List</tspan>
   </text>
-  <text x="1031" y="1114" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Add/update vehicle inventory including brand, model, year,</tspan>
-    <tspan x="1031" dy="27">color, engine/chassis/plate number, mileage, pricing,</tspan>
-    <tspan x="1031" dy="27">photos, location, and status</tspan>
+  <rect x="8" y="676" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="357" y="676" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="706" y="676" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <text x="162.5" y="698" text-anchor="middle" class="title">
+    <tspan x="162.5" dy="0">Vehicle Details</tspan>
   </text>
-  <text x="1928" y="1127.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Vehicle inventory records, vehicle list,</tspan>
-    <tspan x="1928" dy="27">available/reserved/sold/for repair status</tspan>
+  <text x="162.5" y="734" text-anchor="middle" class="body">
+    <tspan x="162.5" dy="0">Add and Update Inventory, brand,</tspan>
+    <tspan x="162.5" dy="16">model, year, color,</tspan>
+    <tspan x="162.5" dy="16">engine/chassis/plate number, mileage,</tspan>
+    <tspan x="162.5" dy="16">pricing, photos, location, and status</tspan>
   </text>
-  <rect x="34" y="1214" width="520" height="138" class="box"/>
-  <rect x="566" y="1214" width="930" height="138" class="box"/>
-  <rect x="1508" y="1214" width="840" height="138" class="box"/>
-  <text x="294" y="1291" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">R</tspan>
+  <text x="511.5" y="698" text-anchor="middle" class="title">
+    <tspan x="511.5" dy="0">Manage Vehicle</tspan>
   </text>
-  <text x="1031" y="1277.5" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Create, review, approve, update, monitor, or cancel</tspan>
-    <tspan x="1031" dy="27">vehicle reservations</tspan>
+  <text x="427" y="734" text-anchor="start" class="body">
+    <tspan x="427" dy="0">•  Add Vehicle</tspan>
+    <tspan x="427" dy="18">•  Update Vehicle</tspan>
   </text>
-  <text x="1928" y="1277.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Reservation history, approval status, expiring</tspan>
-    <tspan x="1928" dy="27">reservation records</tspan>
+  <text x="860.5" y="730" text-anchor="middle" class="body">
+    <tspan x="860.5" dy="0">Inventory Records, Vehicle List,</tspan>
+    <tspan x="860.5" dy="18">available/reserved/sold/sold for repair</tspan>
+    <tspan x="860.5" dy="18">status</tspan>
   </text>
-  <rect x="34" y="1364" width="520" height="138" class="box"/>
-  <rect x="566" y="1364" width="930" height="138" class="box"/>
-  <rect x="1508" y="1364" width="840" height="138" class="box"/>
-  <text x="294" y="1441" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">S</tspan>
+  <rect x="8" y="826" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="357" y="826" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="706" y="826" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <text x="162.5" y="848" text-anchor="middle" class="title">
+    <tspan x="162.5" dy="0">Reservation Details</tspan>
   </text>
-  <text x="1031" y="1414" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Record vehicle sale, link customer/vehicle/reservation,</tspan>
-    <tspan x="1031" dy="27">compute total amount, paid amount, balance, payment</tspan>
-    <tspan x="1031" dy="27">method, and sale status</tspan>
+  <text x="162.5" y="884" text-anchor="middle" class="body">
+    <tspan x="162.5" dy="0">Create, View, Approve, Update,</tspan>
+    <tspan x="162.5" dy="16">monitor or cancel vehicle reservation</tspan>
   </text>
-  <text x="1928" y="1427.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Sales transaction records, purchase history,</tspan>
-    <tspan x="1928" dy="27">outstanding balance report</tspan>
+  <text x="511.5" y="892" text-anchor="middle" class="body">
+    <tspan x="511.5" dy="0">M</tspan>
   </text>
-  <rect x="34" y="1514" width="520" height="138" class="box"/>
-  <rect x="566" y="1514" width="930" height="138" class="box"/>
-  <rect x="1508" y="1514" width="840" height="138" class="box"/>
-  <text x="294" y="1591" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">P</tspan>
+  <text x="860.5" y="880" text-anchor="middle" class="body">
+    <tspan x="860.5" dy="0">Reservation history, approval status,</tspan>
+    <tspan x="860.5" dy="18">expiring reservation records</tspan>
   </text>
-  <text x="1031" y="1564" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Record customer payments, receipt number, amount, method,</tspan>
-    <tspan x="1031" dy="27">proof of payment, paid date, status, and update sale</tspan>
-    <tspan x="1031" dy="27">totals</tspan>
+  <rect x="8" y="976" width="309" height="146" fill="#ffffff" stroke="#3d7aa9" stroke-width="1.4"/>
+  <rect x="357" y="976" width="309" height="146" fill="#ffffff" stroke="#3d7aa9" stroke-width="1.4"/>
+  <rect x="706" y="976" width="309" height="146" fill="#ffffff" stroke="#3d7aa9" stroke-width="1.4"/>
+  <text x="162.5" y="998" text-anchor="middle" class="title">
+    <tspan x="162.5" dy="0">Job Order Details</tspan>
   </text>
-  <text x="1928" y="1577.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Payment records, receipts, proof review status,</tspan>
-    <tspan x="1928" dy="27">updated customer balance</tspan>
+  <text x="26" y="1024" text-anchor="start" class="small">
+    <tspan x="26" dy="0">•  Job Order No.</tspan>
+    <tspan x="26" dy="16">•  Customer/Vehicle</tspan>
+    <tspan x="26" dy="16">•  Service Type</tspan>
+    <tspan x="26" dy="16">•  Issue</tspan>
+    <tspan x="26" dy="16">•  Priority</tspan>
   </text>
-  <rect x="34" y="1664" width="520" height="138" class="box"/>
-  <rect x="566" y="1664" width="930" height="138" class="box"/>
-  <rect x="1508" y="1664" width="840" height="138" class="box"/>
-  <text x="294" y="1741" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">F</tspan>
+  <text x="168.5" y="1024" text-anchor="start" class="small">
+    <tspan x="168.5" dy="0">•  Schedule</tspan>
+    <tspan x="168.5" dy="16">•  Assigned Staff</tspan>
+    <tspan x="168.5" dy="16">•  Labor/Cost</tspan>
+    <tspan x="168.5" dy="16">•  Progress/Status</tspan>
   </text>
-  <text x="1031" y="1714" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Record financing company, application number, approved</tspan>
-    <tspan x="1031" dy="27">amount, down payment, approval date, documents, remarks,</tspan>
-    <tspan x="1031" dy="27">and status</tspan>
+  <text x="511.5" y="1018" text-anchor="middle" class="body">
+    <tspan x="511.5" dy="0">Create / Review / Assign</tspan>
+    <tspan x="511.5" dy="18">Update Progress</tspan>
+    <tspan x="511.5" dy="18">Record Findings and Cost</tspan>
+    <tspan x="511.5" dy="18">Complete or Cancel</tspan>
   </text>
-  <text x="1928" y="1727.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Financing records, financial basis tracking,</tspan>
-    <tspan x="1928" dy="27">financing approval/status report</tspan>
+  <text x="860.5" y="1030" text-anchor="middle" class="body">
+    <tspan x="860.5" dy="0">Job Order Information</tspan>
+    <tspan x="860.5" dy="18">Status Report</tspan>
   </text>
-  <rect x="34" y="1814" width="520" height="138" class="box"/>
-  <rect x="566" y="1814" width="930" height="138" class="box"/>
-  <rect x="1508" y="1814" width="840" height="138" class="box"/>
-  <text x="294" y="1891" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">S</tspan>
+  <rect x="8" y="1140" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="357" y="1140" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="706" y="1140" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <text x="162.5" y="1162" text-anchor="middle" class="title">
+    <tspan x="162.5" dy="0">Job Order Details</tspan>
   </text>
-  <text x="1031" y="1877.5" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Customer submits repair or maintenance request with</tspan>
-    <tspan x="1031" dy="27">vehicle, service type, issue, photo, progress, and status</tspan>
+  <text x="162.5" y="1198" text-anchor="middle" class="body">
+    <tspan x="162.5" dy="0">Create, View, Approve, Update,</tspan>
+    <tspan x="162.5" dy="16">monitor or cancel vehicle reservation</tspan>
   </text>
-  <text x="1928" y="1877.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Service request history, repair progress status,</tspan>
-    <tspan x="1928" dy="27">customer service record</tspan>
+  <text x="511.5" y="1206" text-anchor="middle" class="body">
+    <tspan x="511.5" dy="0">C</tspan>
   </text>
-  <rect x="34" y="1964" width="520" height="138" class="box"/>
-  <rect x="566" y="1964" width="930" height="138" class="box"/>
-  <rect x="1508" y="1964" width="840" height="138" class="box"/>
-  <text x="294" y="2041" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">J</tspan>
+  <text x="860.5" y="1194" text-anchor="middle" class="body">
+    <tspan x="860.5" dy="0">Job Order Information</tspan>
+    <tspan x="860.5" dy="18">Status Report</tspan>
   </text>
-  <text x="1031" y="2000.5" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Secretary creates job order from a service request or</tspan>
-    <tspan x="1031" dy="27">vehicle maintenance need, assigns mechanic/carwasher,</tspan>
-    <tspan x="1031" dy="27">schedules work, then assigned staff update repair or</tspan>
-    <tspan x="1031" dy="27">washing progress</tspan>
+  <rect x="8" y="1290" width="309" height="146" fill="#ffffff" stroke="#3d7aa9" stroke-width="1.4"/>
+  <rect x="357" y="1290" width="309" height="146" fill="#ffffff" stroke="#3d7aa9" stroke-width="1.4"/>
+  <rect x="706" y="1290" width="309" height="146" fill="#ffffff" stroke="#3d7aa9" stroke-width="1.4"/>
+  <text x="162.5" y="1312" text-anchor="middle" class="title">
+    <tspan x="162.5" dy="0">Vehicle Parts / Pre-Sale Repair Details</tspan>
   </text>
-  <text x="1928" y="2027.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Job order records, assigned work list,</tspan>
-    <tspan x="1928" dy="27">repair/washing progress, service completion records</tspan>
+  <text x="26" y="1338" text-anchor="start" class="small">
+    <tspan x="26" dy="0">•  Affected Part</tspan>
+    <tspan x="26" dy="16">•  Issue</tspan>
+    <tspan x="26" dy="16">•  Repair Action</tspan>
+    <tspan x="26" dy="16">•  Cost</tspan>
   </text>
-  <rect x="34" y="2114" width="520" height="138" class="box"/>
-  <rect x="566" y="2114" width="930" height="138" class="box"/>
-  <rect x="1508" y="2114" width="840" height="138" class="box"/>
-  <text x="294" y="2177" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">Vehicle Parts / Pre-Sale</tspan>
-    <tspan x="294" dy="28">Repair Details</tspan>
+  <text x="168.5" y="1338" text-anchor="start" class="small">
+    <tspan x="168.5" dy="0">•  Photos</tspan>
+    <tspan x="168.5" dy="16">•  Assigned Staff</tspan>
+    <tspan x="168.5" dy="16">•  Readiness Status</tspan>
   </text>
-  <text x="1031" y="2164" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Record affected parts only during inspection or repair,</tspan>
-    <tspan x="1031" dy="27">including issue, action taken, repair cost, before/after</tspan>
-    <tspan x="1031" dy="27">photos, assigned staff, and readiness status</tspan>
+  <text x="511.5" y="1332" text-anchor="middle" class="body">
+    <tspan x="511.5" dy="0">Manage Parts During</tspan>
+    <tspan x="511.5" dy="18">Inspection / Pre-Sale Repair</tspan>
+    <tspan x="511.5" dy="18">Update Affected Parts</tspan>
+    <tspan x="511.5" dy="18">Record Repair Actions / Costs</tspan>
+    <tspan x="511.5" dy="18">Verify Condition</tspan>
+    <tspan x="511.5" dy="18">Mark Ready for Sale</tspan>
   </text>
-  <text x="1928" y="2177.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Affected-parts record, pre-sale inspection record,</tspan>
-    <tspan x="1928" dy="27">repair record, ready-for-sale status</tspan>
+  <text x="860.5" y="1344" text-anchor="middle" class="body">
+    <tspan x="860.5" dy="0">Affected-Parts record, presale</tspan>
+    <tspan x="860.5" dy="18">inspections record, repair, ready tosale status</tspan>
   </text>
-  <rect x="34" y="2264" width="520" height="138" class="box"/>
-  <rect x="566" y="2264" width="930" height="138" class="box"/>
-  <rect x="1508" y="2264" width="840" height="138" class="box"/>
-  <text x="294" y="2341" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">V</tspan>
+  <rect x="8" y="1454" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="357" y="1454" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="706" y="1454" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <text x="162.5" y="1476" text-anchor="middle" class="title">
+    <tspan x="162.5" dy="0">Payments Details</tspan>
   </text>
-  <text x="1031" y="2327.5" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Verify release checklist, document status, released date,</tspan>
-    <tspan x="1031" dy="27">released by, remarks, and final status</tspan>
+  <text x="162.5" y="1512" text-anchor="middle" class="body">
+    <tspan x="162.5" dy="0">receipt of payment</tspan>
+    <tspan x="162.5" dy="16">receipt number, paid date, status,</tspan>
+    <tspan x="162.5" dy="16">update sales totals</tspan>
   </text>
-  <text x="1928" y="2327.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Vehicle release records, turnover checklist,</tspan>
-    <tspan x="1928" dy="27">released vehicle report</tspan>
+  <text x="511.5" y="1520" text-anchor="middle" class="body">
+    <tspan x="511.5" dy="0">M</tspan>
   </text>
-  <rect x="34" y="2414" width="520" height="138" class="box"/>
-  <rect x="566" y="2414" width="930" height="138" class="box"/>
-  <rect x="1508" y="2414" width="840" height="138" class="box"/>
-  <text x="294" y="2491" text-anchor="middle" class="input">
-    <tspan x="294" dy="0">D</tspan>
+  <text x="860.5" y="1508" text-anchor="middle" class="body">
+    <tspan x="860.5" dy="0">Payments records, receipt, proof</tspan>
+    <tspan x="860.5" dy="18">history, outstanding balance report</tspan>
   </text>
-  <text x="1031" y="2477.5" text-anchor="middle" class="cell">
-    <tspan x="1031" dy="0">Upload/verify documents, generate reports, and record</tspan>
-    <tspan x="1031" dy="27">important system actions</tspan>
+  <rect x="8" y="1604" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="357" y="1604" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <rect x="706" y="1604" width="309" height="132" fill="#ffffff" stroke="#0f0f0f" stroke-width="1.4"/>
+  <text x="162.5" y="1626" text-anchor="middle" class="title">
+    <tspan x="162.5" dy="0">Financing</tspan>
   </text>
-  <text x="1928" y="2477.5" text-anchor="middle" class="cell">
-    <tspan x="1928" dy="0">Document records, summary reports, system audit</tspan>
-    <tspan x="1928" dy="27">trail/activity logs</tspan>
+  <text x="162.5" y="1662" text-anchor="middle" class="body">
+    <tspan x="162.5" dy="0">Application Number, approved amount,</tspan>
+    <tspan x="162.5" dy="16">down payment, approval date,</tspan>
+    <tspan x="162.5" dy="16">remarks and status</tspan>
   </text>
-  <text x="1200" y="2768" text-anchor="middle" class="note">
-    <tspan x="1200" dy="0">Note: Vehicle Parts is not a separate inventory module in the current code; parts are recorded only as affected parts during pre-sale repair</tspan>
-    <tspan x="1200" dy="24">or job-order work.</tspan>
+  <text x="511.5" y="1670" text-anchor="middle" class="body">
+    <tspan x="511.5" dy="0">M</tspan>
+  </text>
+  <text x="860.5" y="1658" text-anchor="middle" class="body">
+    <tspan x="860.5" dy="0">Financing records, financial basis</tspan>
+    <tspan x="860.5" dy="18">tracking, financing approval/status</tspan>
+    <tspan x="860.5" dy="18">report.</tspan>
   </text>
 </svg>

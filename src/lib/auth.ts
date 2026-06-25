@@ -4,6 +4,7 @@ import { api } from "@/lib/api"
 
 type BackendRole = {
   name?: string
+  permissions?: string[] | null
 }
 
 export type AuthUser = {
@@ -18,6 +19,8 @@ type LoginResponse = {
   token: string
   token_type: string
 }
+
+const authPersistenceKey = "auth_keep_logged_in"
 
 const roleRoutes: Record<string, string> = {
   admin: "admin/dashboard",
@@ -47,8 +50,13 @@ export function saveAuthSession(
 
   otherStorage.removeItem("auth_token")
   otherStorage.removeItem("auth_user")
+  window.localStorage.setItem(authPersistenceKey, rememberMe ? "true" : "false")
   storage.setItem("auth_token", auth.token)
   storage.setItem("auth_user", JSON.stringify(auth.user))
+}
+
+export function getAuthPersistencePreference() {
+  return window.localStorage.getItem(authPersistenceKey) !== "false"
 }
 
 export function getStoredAuthUser(): AuthUser | null {

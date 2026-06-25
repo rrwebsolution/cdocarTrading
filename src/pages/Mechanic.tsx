@@ -4,6 +4,12 @@ import MechanicJobOrders from "./mechanic/MechanicJobOrders"
 import MechanicPreSaleRepairs from "./mechanic/MechanicPreSaleRepairs"
 import MechanicVehicleStatus from "./mechanic/MechanicVehicleStatus"
 import { mechanicSidebarGroups } from "./mechanic/mechanicData"
+import type { AuthUser } from "@/lib/auth"
+import {
+  filterSidebarGroups,
+  mechanicRoutePermissions,
+  resolveAccessibleRoute,
+} from "@/lib/access"
 
 type MechanicProps = {
   activeRoute: string
@@ -11,6 +17,7 @@ type MechanicProps = {
   onNavigate: (route: string) => void
   profileName?: string
   profileSubtitle?: string
+  user?: AuthUser | null
 }
 
 const mechanicPages = {
@@ -26,13 +33,24 @@ function Mechanic({
   onNavigate,
   profileName = "Mechanic & Carwasher",
   profileSubtitle = "Maintenance Workspace",
+  user,
 }: MechanicProps) {
-  const normalizedRoute =
-    activeRoute === "mechanic" ? "mechanic/dashboard" : activeRoute
+  const normalizedRoute = resolveAccessibleRoute(
+    activeRoute,
+    "mechanic/dashboard",
+    Object.keys(mechanicPages),
+    user,
+    mechanicRoutePermissions,
+  )
   const page =
     mechanicPages[normalizedRoute as keyof typeof mechanicPages] ?? (
       <MechanicDashboard />
     )
+  const sidebarGroups = filterSidebarGroups(
+    mechanicSidebarGroups,
+    user,
+    mechanicRoutePermissions,
+  )
 
   return (
     <AdminLayout
@@ -41,7 +59,7 @@ function Mechanic({
       onNavigate={onNavigate}
       profileName={profileName}
       profileSubtitle={profileSubtitle}
-      sidebarGroups={mechanicSidebarGroups}
+      sidebarGroups={sidebarGroups}
     >
       {page}
     </AdminLayout>

@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import { Button } from "@/components/ui/button";
 import {
   type AuthUser,
+  getAuthPersistencePreference,
   getLoginErrorMessage,
   getRouteForRole,
   isInactiveAccountError,
@@ -65,7 +66,7 @@ function getEmailRolePreview(email: string) {
 function Login({ onLogin, onNavigate }: LoginProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(true);
+  const [rememberMe, setRememberMe] = useState(getAuthPersistencePreference);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({});

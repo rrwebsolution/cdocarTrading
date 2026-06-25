@@ -10,6 +10,13 @@ import SalesPayments from "./admin/SalesPayments"
 import Staff from "./admin/Staff"
 import UserManagement from "./admin/UserManagement"
 import Vehicles from "./admin/Vehicles"
+import type { AuthUser } from "@/lib/auth"
+import {
+  adminRoutePermissions,
+  filterSidebarGroups,
+  resolveAccessibleRoute,
+} from "@/lib/access"
+import { sidebarGroups as adminSidebarGroups } from "./admin/adminData"
 
 type AdminProps = {
   activeRoute: string
@@ -17,6 +24,7 @@ type AdminProps = {
   onNavigate: (route: string) => void
   profileName?: string
   profileSubtitle?: string
+  user?: AuthUser | null
 }
 
 const adminPages = {
@@ -39,9 +47,21 @@ function Admin({
   onNavigate,
   profileName,
   profileSubtitle,
+  user,
 }: AdminProps) {
-  const normalizedRoute = activeRoute === "admin" ? "admin/dashboard" : activeRoute
+  const normalizedRoute = resolveAccessibleRoute(
+    activeRoute,
+    "admin/dashboard",
+    Object.keys(adminPages),
+    user,
+    adminRoutePermissions,
+  )
   const page = adminPages[normalizedRoute as keyof typeof adminPages] ?? <Dashboard />
+  const sidebarGroups = filterSidebarGroups(
+    adminSidebarGroups,
+    user,
+    adminRoutePermissions,
+  )
 
   return (
     <AdminLayout
@@ -50,6 +70,7 @@ function Admin({
       onNavigate={onNavigate}
       profileName={profileName}
       profileSubtitle={profileSubtitle}
+      sidebarGroups={sidebarGroups}
     >
       {page}
     </AdminLayout>
