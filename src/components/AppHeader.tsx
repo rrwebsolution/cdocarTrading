@@ -53,6 +53,7 @@ const routeLabels: Record<string, string> = {
   profile: "History",
   reports: "Reports",
   reservations: "Reservations",
+  requirements: "Requirements",
   "role-management": "Role Management",
   secretary: "Secretary",
   "sales-payments": "Sales & Payments",

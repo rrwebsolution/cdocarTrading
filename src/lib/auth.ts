@@ -129,6 +129,21 @@ export function getLoginErrorMessage(error: unknown) {
   return "Unable to login. Please try again."
 }
 
+export function getLoginFieldErrors(error: unknown) {
+  if (!axios.isAxiosError(error)) {
+    return {}
+  }
+
+  const responseData = error.response?.data as
+    | { errors?: Record<string, string[]> }
+    | undefined
+
+  return {
+    email: responseData?.errors?.email?.[0],
+    password: responseData?.errors?.password?.[0],
+  }
+}
+
 export function isInactiveAccountError(error: unknown) {
   if (!axios.isAxiosError(error)) {
     return false

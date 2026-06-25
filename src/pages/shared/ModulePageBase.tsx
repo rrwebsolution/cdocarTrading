@@ -35,6 +35,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { api, apiBaseUrl } from "@/lib/api"
+import { getRoles } from "@/lib/roles"
 import { cn } from "@/lib/utils"
 import type { AdminModule } from "@/pages/admin/types"
 
@@ -224,7 +225,13 @@ function ModulePageBase({
       Object.fromEntries(
         columns.map((column) => [
           column,
-          column.toLowerCase() === "status" ? "Active" : "",
+          module.id === "vehicles" && column === "Status"
+            ? "Available"
+            : column === "Required From"
+            ? "Customer"
+            : column.toLowerCase() === "status"
+              ? "Active"
+              : "",
         ]),
       ),
     )
@@ -296,7 +303,10 @@ function ModulePageBase({
             ...record,
             Photo: vehicleImages[Math.max(recordIndex, 0) % vehicleImages.length],
           }
-        : record
+        : {
+            ...record,
+            "Required From": record["Required From"] || "Customer",
+          }
 
     setFormValues(nextValues)
     setEditingRecordIndex(recordIndex)
@@ -596,10 +606,13 @@ function ModulePageBase({
 
       {isCreateDialogOpen ? (
         <CreateRecordDialog
-          columns={module.id === "vehicles" ? columns.filter((column) => column !== "Status") : columns}
+          columns={getFormColumns(module.id, columns)}
           errors={formErrors}
           formValues={formValues}
           isVehicleForm={module.id === "vehicles"}
+          twoColumnFields={
+            module.id === "requirements" ? ["Requirement", "Category"] : undefined
+          }
           locationOptions={vehicleLocations}
           moduleTitle={module.title}
           onChange={(column, value) => {
@@ -616,6 +629,9 @@ function ModulePageBase({
           }}
           onLocationAdd={(location) =>
             setVehicleLocations((current) => [...new Set([...current, location])])
+          }
+          onLocationDelete={(location) =>
+            setVehicleLocations((current) => current.filter((item) => item !== location))
           }
           onSubmit={submitCreateForm}
           primaryAction={module.primaryAction}
@@ -641,10 +657,13 @@ function ModulePageBase({
 
       {editingRecordIndex !== null ? (
         <CreateRecordDialog
-          columns={columns}
+          columns={getFormColumns(module.id, columns)}
           errors={formErrors}
           formValues={formValues}
           isVehicleForm={module.id === "vehicles"}
+          twoColumnFields={
+            module.id === "requirements" ? ["Requirement", "Category"] : undefined
+          }
           locationOptions={vehicleLocations}
           moduleTitle={module.title}
           onChange={(column, value) => {
@@ -658,6 +677,9 @@ function ModulePageBase({
           }}
           onLocationAdd={(location) =>
             setVehicleLocations((current) => [...new Set([...current, location])])
+          }
+          onLocationDelete={(location) =>
+            setVehicleLocations((current) => current.filter((item) => item !== location))
           }
           onSubmit={submitEditForm}
           primaryAction="Edit Record"
@@ -679,8 +701,10 @@ function CreateRecordDialog({
   onClose,
   onFileChange,
   onLocationAdd,
+  onLocationDelete,
   onSubmit,
   primaryAction,
+  twoColumnFields = [],
   uploadProgress,
 }: {
   columns: string[]
@@ -693,8 +717,10 @@ function CreateRecordDialog({
   onClose: () => void
   onFileChange?: (column: string, file: File | null) => void
   onLocationAdd?: (location: string) => void
+  onLocationDelete?: (location: string) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
   primaryAction: string
+  twoColumnFields?: string[]
   uploadProgress?: number | null
 }) {
   const [isLocationOpen, setIsLocationOpen] = useState(false)
@@ -702,16 +728,30 @@ function CreateRecordDialog({
   const [newLocation, setNewLocation] = useState("")
   const [photoPreview, setPhotoPreview] = useState("")
   const [photoSelectProgress, setPhotoSelectProgress] = useState<number | null>(null)
+  const [isRequiredFromOpen, setIsRequiredFromOpen] = useState(false)
+  const [requiredFromSearch, setRequiredFromSearch] = useState("")
+  const [requiredFromOptions, setRequiredFromOptions] = useState<string[]>([])
+  const [isLoadingRequiredFrom, setIsLoadingRequiredFrom] = useState(false)
+  const [requiredFromMenuPosition, setRequiredFromMenuPosition] = useState({
+    left: 0,
+    top: 0,
+    width: 320,
+  })
   const [locationMenuPosition, setLocationMenuPosition] = useState({
     left: 0,
     top: 0,
     width: 320,
   })
+  const requiredFromButtonRef = useRef<HTMLButtonElement | null>(null)
   const locationButtonRef = useRef<HTMLButtonElement | null>(null)
   const photoProgressTimerRef = useRef<number | null>(null)
   const photoPreviewRef = useRef("")
   const isUploading = typeof uploadProgress === "number"
   const visiblePhotoProgress = isUploading ? uploadProgress : photoSelectProgress
+  const hasRequiredFromField = columns.includes("Required From")
+  const filteredRequiredFromOptions = requiredFromOptions.filter((option) =>
+    option.toLowerCase().includes(requiredFromSearch.trim().toLowerCase()),
+  )
 
   useEffect(() => {
     return () => {
@@ -724,6 +764,25 @@ function CreateRecordDialog({
       }
     }
   }, [])
+
+  useEffect(() => {
+    if (!hasRequiredFromField || requiredFromOptions.length > 0) {
+      return
+    }
+
+    setIsLoadingRequiredFrom(true)
+    getRoles()
+      .then((roles) =>
+        setRequiredFromOptions([
+          ...new Set(["Customer", ...roles.map((role) => role.name)]),
+        ]),
+      )
+      .catch(() => {
+        setRequiredFromOptions(["Customer"])
+        toast.error("Unable to load role options.")
+      })
+      .finally(() => setIsLoadingRequiredFrom(false))
+  }, [hasRequiredFromField, requiredFromOptions.length])
 
   const startPhotoSelectionProgress = () => {
     if (photoProgressTimerRef.current) {
@@ -790,14 +849,25 @@ function CreateRecordDialog({
         </div>
 
         <form className="grid max-h-[calc(90svh-81px)] grid-rows-[1fr_auto]" onSubmit={onSubmit}>
-          <div className="grid gap-4 overflow-y-auto p-4 sm:grid-cols-2">
+          <div
+            className={cn(
+              "grid gap-4 overflow-y-auto p-4",
+              "sm:grid-cols-2",
+            )}
+          >
             {columns.map((column) => (
               <label
-                className={cn("grid gap-2", isVehicleForm && isPhotoColumn(column) && "sm:col-span-2")}
+                className={cn(
+                  "grid gap-2",
+                  isVehicleForm && isPhotoColumn(column) && "sm:col-span-2",
+                  twoColumnFields.length > 0 &&
+                    !twoColumnFields.includes(column) &&
+                    "sm:col-span-2",
+                )}
                 key={column}
               >
                 <span className="text-sm font-black text-muted-foreground">
-                  {isVehicleForm && isPhotoColumn(column) ? "Upload Photo" : column}
+                  {getFormFieldLabel(column, isVehicleForm)}
                   {isVehicleForm && isRequiredVehicleColumn(column) ? (
                     <span className="text-destructive"> *</span>
                   ) : null}
@@ -806,14 +876,11 @@ function CreateRecordDialog({
                   <select
                     className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
                     onChange={(event) => onChange(column, event.target.value)}
-                    value={formValues[column] ?? "Active"}
+                    value={formValues[column] ?? (isVehicleForm ? "Available" : "Active")}
                   >
-                    <option>Active</option>
-                    <option>Pending</option>
-                    <option>Available</option>
-                    <option>Reserved</option>
-                    <option>Draft</option>
-                    <option>Inactive</option>
+                    {getStatusOptions(isVehicleForm).map((option) => (
+                      <option key={option}>{option}</option>
+                    ))}
                   </select>
                 ) : isPhotoColumn(column) ? (
                   <div className="grid gap-2">
@@ -882,6 +949,105 @@ function CreateRecordDialog({
                       </span>
                     )}
                   </div>
+                ) : column === "Required From" ? (
+                  <div className="relative">
+                    <Button
+                      aria-expanded={isRequiredFromOpen}
+                      aria-haspopup="listbox"
+                      className="h-10 w-full justify-between"
+                      onClick={() => {
+                        const rect = requiredFromButtonRef.current?.getBoundingClientRect()
+
+                        if (rect) {
+                          setRequiredFromMenuPosition({
+                            left: rect.left,
+                            top: rect.bottom + 8,
+                            width: rect.width,
+                          })
+                        }
+
+                        setIsRequiredFromOpen((open) => !open)
+                      }}
+                      ref={requiredFromButtonRef}
+                      type="button"
+                      variant="outline"
+                    >
+                      <span className="truncate">
+                        {formValues[column] || "Select role"}
+                      </span>
+                      <ChevronsUpDown aria-hidden="true" className="size-4 opacity-70" />
+                    </Button>
+
+                    {isRequiredFromOpen ? (
+                      <div className="fixed inset-0 z-[70]" role="presentation">
+                        <button
+                          aria-label="Close required from selection"
+                          className="absolute inset-0 cursor-default bg-transparent"
+                          onClick={() => {
+                            setRequiredFromSearch("")
+                            setIsRequiredFromOpen(false)
+                          }}
+                          type="button"
+                        />
+                        <div
+                          className="absolute z-[71] overflow-hidden rounded-lg border bg-popover p-2 text-popover-foreground shadow-2xl"
+                          style={{
+                            left: requiredFromMenuPosition.left,
+                            top: requiredFromMenuPosition.top,
+                            width: requiredFromMenuPosition.width,
+                          }}
+                        >
+                          <p className="px-2 py-1 text-xs font-black uppercase tracking-wider text-muted-foreground">
+                            Select Required From
+                          </p>
+                          <div className="mt-1 flex min-h-9 items-center gap-2 rounded-md border border-input bg-background px-2">
+                            <Search aria-hidden="true" className="size-4 text-muted-foreground" />
+                            <input
+                              className="w-full border-0 bg-transparent text-sm font-semibold outline-none placeholder:text-muted-foreground"
+                              onChange={(event) => setRequiredFromSearch(event.target.value)}
+                              placeholder="Search role"
+                              type="search"
+                              value={requiredFromSearch}
+                            />
+                          </div>
+                          <div className="mt-2 grid max-h-56 gap-1 overflow-y-auto" role="listbox">
+                            {isLoadingRequiredFrom ? (
+                              <div className="px-2 py-3 text-sm font-bold text-muted-foreground">
+                                Loading roles...
+                              </div>
+                            ) : filteredRequiredFromOptions.length > 0 ? (
+                              filteredRequiredFromOptions.map((option) => (
+                                <button
+                                  aria-selected={formValues[column] === option}
+                                  className={cn(
+                                    "flex w-full items-center gap-2 rounded-md px-2 py-2 text-left text-sm font-bold transition hover:bg-muted focus-visible:bg-muted focus-visible:outline-none",
+                                    formValues[column] === option && "bg-muted",
+                                  )}
+                                  key={option}
+                                  onClick={() => {
+                                    onChange(column, option)
+                                    setRequiredFromSearch("")
+                                    setIsRequiredFromOpen(false)
+                                  }}
+                                  role="option"
+                                  type="button"
+                                >
+                                  <span className="flex-1 truncate">{option}</span>
+                                  {formValues[column] === option ? (
+                                    <Check aria-hidden="true" className="size-4 text-primary" />
+                                  ) : null}
+                                </button>
+                              ))
+                            ) : (
+                              <div className="px-2 py-3 text-sm font-bold text-muted-foreground">
+                                No roles found.
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
                 ) : isVehicleForm && column === "Location" ? (
                   <div>
                     <Button
@@ -894,7 +1060,7 @@ function CreateRecordDialog({
                         if (rect) {
                           setLocationMenuPosition({
                             left: rect.left,
-                            top: Math.max(16, rect.top - 360),
+                            top: rect.bottom + 8,
                             width: rect.width,
                           })
                         }
@@ -932,25 +1098,49 @@ function CreateRecordDialog({
                           </p>
                           <div className="grid max-h-72 gap-1 overflow-y-auto" role="listbox">
                             {locationOptions.map((location) => (
-                              <button
-                                aria-selected={formValues[column] === location}
+                              <div
                                 className={cn(
-                                  "flex w-full items-center gap-2 rounded-md px-2 py-2 text-left text-sm font-bold transition hover:bg-muted focus-visible:bg-muted focus-visible:outline-none",
+                                  "flex items-center gap-1 rounded-md transition hover:bg-muted",
                                   formValues[column] === location && "bg-muted",
                                 )}
                                 key={location}
-                                onClick={() => {
-                                  onChange(column, location)
-                                  setIsLocationOpen(false)
-                                }}
                                 role="option"
-                                type="button"
                               >
-                                <span className="flex-1 truncate">{location}</span>
-                                {formValues[column] === location ? (
-                                  <Check aria-hidden="true" className="size-4 text-primary" />
+                                <button
+                                  aria-selected={formValues[column] === location}
+                                  className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-2 text-left text-sm font-bold transition focus-visible:bg-muted focus-visible:outline-none"
+                                  onClick={() => {
+                                    onChange(column, location)
+                                    setIsLocationOpen(false)
+                                  }}
+                                  type="button"
+                                >
+                                  <span className="flex-1 truncate">{location}</span>
+                                  {formValues[column] === location ? (
+                                    <Check aria-hidden="true" className="size-4 text-primary" />
+                                  ) : null}
+                                </button>
+                                {onLocationDelete ? (
+                                  <Button
+                                    aria-label={`Delete ${location}`}
+                                    className="mr-1 size-7 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                                    onClick={(event) => {
+                                      event.stopPropagation()
+                                      onLocationDelete(location)
+
+                                      if (formValues[column] === location) {
+                                        onChange(column, "")
+                                      }
+                                    }}
+                                    size="icon-sm"
+                                    title="Delete location"
+                                    type="button"
+                                    variant="ghost"
+                                  >
+                                    <Trash2 aria-hidden="true" className="size-3.5" />
+                                  </Button>
                                 ) : null}
-                              </button>
+                              </div>
                             ))}
                           </div>
                           <div className="mt-2 border-t pt-2">
@@ -996,6 +1186,13 @@ function CreateRecordDialog({
                       </div>
                     ) : null}
                   </div>
+                ) : isLongTextColumn(column) ? (
+                  <textarea
+                    className="min-h-28 resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm font-semibold leading-6 outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/15"
+                    onChange={(event) => onChange(column, event.target.value)}
+                    placeholder={getFieldPlaceholder(column)}
+                    value={formValues[column] ?? ""}
+                  />
                 ) : isDecimalNumberColumn(column) ? (
                   <input
                     className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/15"
@@ -1095,14 +1292,16 @@ function VehicleCards({
             ([key]) =>
               !["vehicle", "status", "photo"].includes(key.toLowerCase()),
           )
+          const uploadedImage = resolveImageUrl(record.Photo)
           const image =
-            resolveImageUrl(record.Photo) ??
+            uploadedImage ??
             vehicleImages[(startIndex + index) % vehicleImages.length]
 
           return (
             <VehicleCard
               details={details}
               image={image}
+              isUploadedImage={Boolean(uploadedImage)}
               key={`${title}-${index}`}
               onDelete={onDelete}
               onEdit={onEdit}
@@ -1145,6 +1344,7 @@ function VehicleCards({
 function VehicleCard({
   details,
   image,
+  isUploadedImage,
   onDelete,
   onEdit,
   record,
@@ -1152,6 +1352,7 @@ function VehicleCard({
 }: {
   details: [string, string][]
   image: string
+  isUploadedImage: boolean
   onDelete: (record: Record<string, string>) => void | Promise<void>
   onEdit: (record: Record<string, string>) => void
   record: Record<string, string>
@@ -1159,22 +1360,54 @@ function VehicleCard({
 }) {
   const [isActionsOpen, setIsActionsOpen] = useState(false)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+  const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false)
+  const [displayImage, setDisplayImage] = useState(image)
+  const [hasImageError, setHasImageError] = useState(false)
   const colorIndex = details.findIndex(([label]) => label.toLowerCase() === "color")
   const visibleDetails =
     colorIndex >= 0 ? details.slice(0, colorIndex + 1) : details.slice(0, 4)
   const hiddenDetails =
     colorIndex >= 0 ? details.slice(colorIndex + 1) : details.slice(4)
 
+  useEffect(() => {
+    setDisplayImage(image)
+    setHasImageError(false)
+  }, [image])
+
   return (
     <Card className="overflow-visible">
       <div className="relative aspect-[4/3] overflow-visible bg-muted">
-        <img
-          alt={title}
-          className="size-full rounded-t-lg object-cover transition duration-300 hover:scale-105"
-          src={image}
-        />
+        {hasImageError && isUploadedImage ? (
+          <div className="grid size-full place-items-center rounded-t-lg bg-muted p-4 text-center text-sm font-bold text-muted-foreground">
+            Uploaded vehicle photo is unavailable.
+          </div>
+        ) : (
+          <button
+            aria-label={`Preview ${title} photo`}
+            className="block size-full overflow-hidden rounded-t-lg text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/25"
+            onClick={() => setIsImagePreviewOpen(true)}
+            type="button"
+          >
+            <img
+              alt={title}
+              className="size-full object-cover transition duration-300 hover:scale-105"
+              onError={() => {
+                if (isUploadedImage) {
+                  setHasImageError(true)
+                  return
+                }
+
+                setDisplayImage(vehicleImages[0])
+              }}
+              src={displayImage}
+            />
+          </button>
+        )}
         {record.Status ? (
-          <div className="absolute left-3 top-3">
+          <div className="absolute inset-x-3 bottom-3 z-10 flex items-center justify-between gap-3 rounded-lg border border-background/60 bg-background/95 px-3 py-2 shadow-lg backdrop-blur">
+            <span className="text-xs font-black uppercase text-muted-foreground">
+              Status
+            </span>
             <StatusBadge value={record.Status} />
           </div>
         ) : null}
@@ -1219,6 +1452,47 @@ function VehicleCard({
           ) : null}
         </div>
       </div>
+      {isImagePreviewOpen ? (
+        <div
+          aria-label={`${title} photo preview`}
+          aria-modal="true"
+          className="fixed inset-0 z-[80] grid place-items-center bg-background/85 p-4 backdrop-blur-sm"
+          role="dialog"
+        >
+          <button
+            aria-label="Close photo preview"
+            className="absolute inset-0 cursor-default"
+            onClick={() => setIsImagePreviewOpen(false)}
+            type="button"
+          />
+          <div className="relative z-[81] w-full max-w-5xl overflow-hidden rounded-lg border border-border bg-card shadow-2xl">
+            <div className="flex items-center justify-between gap-3 border-b px-4 py-3">
+              <div className="min-w-0">
+                <p className="text-xs font-black uppercase tracking-wider text-primary">
+                  Vehicle Photo
+                </p>
+                <h3 className="truncate text-base font-black">{title}</h3>
+              </div>
+              <Button
+                aria-label="Close photo preview"
+                onClick={() => setIsImagePreviewOpen(false)}
+                size="icon-sm"
+                type="button"
+                variant="outline"
+              >
+                <X aria-hidden="true" className="size-4" />
+              </Button>
+            </div>
+            <div className="grid max-h-[78svh] place-items-center bg-muted">
+              <img
+                alt={title}
+                className="max-h-[78svh] w-full object-contain"
+                src={displayImage}
+              />
+            </div>
+          </div>
+        </div>
+      ) : null}
       <CardContent className="grid gap-4 p-4">
         <div>
           <h3 className="line-clamp-1 text-base font-black">{title}</h3>
@@ -1509,6 +1783,11 @@ function getRecordActions(actionSet: string, record: Record<string, string>): Re
         { icon: ClipboardCheck, label: "Checklist", variant: "outline" },
         { icon: Send, label: "Release Unit", variant: "default" },
       ]
+    case "requirements":
+      return [
+        update,
+        { icon: Trash2, kind: "delete", label: "Delete", variant: "destructive" },
+      ]
     case "documents":
       return [
         view,
@@ -1611,6 +1890,7 @@ function RecordTable({
   records: Record<string, string>[]
   searchTerm: string
 }) {
+  const isRequirementsModule = moduleId === "requirements"
   const rowsWithActions = records.map((record) => ({
     actions: getRecordActions(actionSet ?? moduleId, record),
     record,
@@ -1642,12 +1922,22 @@ function RecordTable({
             return (
               <tr className="border-b last:border-b-0" key={`${moduleId}-${index}`}>
                 {columns.map((column) => (
-                  <td className="whitespace-nowrap px-4 py-3 text-sm" key={column}>
+                  <td
+                    className={cn(
+                      "px-4 py-3 text-sm",
+                      column.toLowerCase() === "documents"
+                        ? "max-w-xs whitespace-normal break-words leading-6"
+                        : "whitespace-nowrap",
+                    )}
+                    key={column}
+                  >
                     {isPhotoColumn(column) ? (
                       <ProfilePhoto
                         name={record.Employee ?? record.Name ?? "Staff member"}
                         src={record[column]}
                       />
+                    ) : isRequirementsModule && column.toLowerCase() === "documents" ? (
+                      <DocumentBadges value={record[column]} />
                     ) : column.toLowerCase() === "description" ? (
                       <ExpandableText value={record[column]} />
                     ) : column.toLowerCase() === "permissions" ? (
@@ -1693,13 +1983,20 @@ function RecordTable({
 
                               onWorkflowAction(action.label, record)
                             }}
-                            size="sm"
+                            size={isRequirementsModule ? "icon-sm" : "sm"}
                             title={action.label}
                             type="button"
                             variant={action.variant}
                           >
                             <Icon aria-hidden="true" className="size-4" />
-                            <span className="max-xl:sr-only">{action.label}</span>
+                            <span
+                              className={cn(
+                                "max-xl:sr-only",
+                                isRequirementsModule && "sr-only",
+                              )}
+                            >
+                              {action.label}
+                            </span>
                           </Button>
                         )
                       })}
@@ -1766,6 +2063,31 @@ function RecordDetailsDialog({
           ))}
         </div>
       </div>
+    </div>
+  )
+}
+
+function DocumentBadges({ value }: { value: string }) {
+  const documents = value
+    .split(",")
+    .map((document) => document.trim())
+    .filter(Boolean)
+
+  if (documents.length === 0) {
+    return <span className="font-semibold text-muted-foreground">N/A</span>
+  }
+
+  return (
+    <div className="flex max-w-sm flex-wrap gap-2">
+      {documents.map((document) => (
+        <span
+          className="inline-flex max-w-full items-center rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs font-black text-primary"
+          key={document}
+          title={document}
+        >
+          <span className="max-w-48 truncate">{document}</span>
+        </span>
+      ))}
     </div>
   )
 }
@@ -3484,7 +3806,7 @@ async function createVehicleRecord(
 function vehicleRecordFromApi(vehicle: Record<string, string | number | null | undefined>) {
   return {
     Vehicle: String(vehicle.name ?? "N/A"),
-    Photo: String(vehicle.photo_url ?? ""),
+    Photo: String(vehicle.photo_url ?? vehicle.photo_path ?? vehicle.photo ?? vehicle.image_url ?? ""),
     Brand: String(vehicle.brand ?? "N/A"),
     Model: String(vehicle.model ?? "N/A"),
     Year: String(vehicle.year ?? "N/A"),
@@ -3537,6 +3859,7 @@ function getDefaultModuleColumns(moduleId: string, actionSet?: string) {
     financing: ["Reference", "Customer", "Vehicle", "Financing Company", "Approved Amount", "Status"],
     "mechanic-job-orders": ["Job Order", "Vehicle", "Service Type", "Progress", "Findings", "Status"],
     reports: ["Report", "Coverage", "Generated By", "Status"],
+    requirements: ["Requirement", "Category", "Required From", "Documents", "Status"],
     reservations: ["Reservation", "Customer", "Vehicle", "Amount", "Status"],
     "role-access": ["Role", "Permissions", "Status"],
     "sales-payments": ["Reference", "Customer", "Vehicle", "Payment", "Balance", "Status"],
@@ -3550,6 +3873,46 @@ function getDefaultModuleColumns(moduleId: string, actionSet?: string) {
   return columnsByActionSet[key] ?? ["Reference", "Name", "Status"]
 }
 
+function getFormColumns(moduleId: string, columns: string[]) {
+  if (moduleId === "requirements") {
+    return columns.filter((column) => column !== "Status")
+  }
+
+  if (moduleId === "vehicles") {
+    const orderedColumns = columns.filter((column) => column !== "Status")
+    const vehicleIndex = orderedColumns.indexOf("Vehicle")
+
+    if (vehicleIndex >= 0) {
+      orderedColumns.splice(vehicleIndex + 1, 0, "Status")
+      return orderedColumns
+    }
+
+    return [...orderedColumns, "Status"]
+  }
+
+  return columns
+}
+
+function getFormFieldLabel(column: string, isVehicleForm: boolean) {
+  if (isVehicleForm && isPhotoColumn(column)) {
+    return "Upload Photo"
+  }
+
+  if (isVehicleForm && column === "Status") {
+    return "Vehicle Status"
+  }
+
+  return column
+}
+
+function getStatusOptions(isVehicleForm: boolean) {
+  if (isVehicleForm) {
+    return ["Available", "Reserved", "Sold", "For Repair", "Inactive"]
+  }
+
+  return ["Active", "Pending", "Available", "Reserved", "Draft", "Inactive"]
+}
+
 function resolveImageUrl(src?: string) {
   const value = src?.trim()
 
@@ -3561,7 +3924,9 @@ function resolveImageUrl(src?: string) {
     return value
   }
 
-  return `${apiBaseUrl.replace(/\/$/, "")}/${value.replace(/^\//, "")}`
+  const normalizedValue = value.replace(/^\/+/, "").replace(/^public\//, "storage/")
+
+  return `${apiBaseUrl.replace(/\/$/, "")}/${normalizedValue}`
 }
 
 function getFieldPlaceholder(column: string) {
@@ -3573,7 +3938,11 @@ function getFieldPlaceholder(column: string) {
     Location: "Select or enter location",
     Mileage: "Enter mileage",
     Model: "Enter model",
+    Category: "Enter requirement category",
+    Documents: "Enter required documents",
     "Plate Number": "Enter plate number",
+    Requirement: "Enter requirement name",
+    "Required From": "Enter who must submit this",
     "Selling Price": "Enter selling price",
     Vehicle: "Enter vehicle name",
     Year: "Enter year",
@@ -3596,6 +3965,10 @@ function isRequiredVehicleColumn(column: string) {
 
 function isDecimalNumberColumn(column: string) {
   return ["Selling Price", "Purchase Price"].includes(column)
+}
+
+function isLongTextColumn(column: string) {
+  return ["Documents"].includes(column)
 }
 
 function validateVehicleForm(values: Record<string, string>, photo: File | null) {
@@ -3659,11 +4032,18 @@ function slugText(value: string) {
 }
 
 function ProfilePhoto({ name, src }: { name: string; src: string }) {
+  const [displaySrc, setDisplaySrc] = useState(src)
+
+  useEffect(() => {
+    setDisplaySrc(src)
+  }, [src])
+
   return (
     <img
       alt={`${name} profile`}
       className="size-11 rounded-full border border-border object-cover shadow-sm"
-      src={src}
+      onError={() => setDisplaySrc(vehicleImages[0])}
+      src={displaySrc}
     />
   )
 }

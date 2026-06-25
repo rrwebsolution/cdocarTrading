@@ -85,11 +85,15 @@ function AdminLayout({
   return (
     <main
       className={cn(
-        "grid min-h-svh bg-background pt-[68px] text-foreground transition-[grid-template-columns] duration-300 ease-in-out max-[1023px]:grid-cols-1",
+        "grid min-h-svh bg-background bg-cover bg-fixed bg-center bg-no-repeat pt-[68px] text-foreground transition-[grid-template-columns] duration-300 ease-in-out max-[1023px]:grid-cols-1",
         isSidebarCollapsed
           ? "min-[1024px]:grid-cols-[80px_minmax(0,1fr)] xl:grid-cols-[88px_minmax(0,1fr)]"
           : "min-[1024px]:grid-cols-[232px_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)]",
       )}
+      style={{
+        backgroundImage:
+          "linear-gradient(color-mix(in oklch, var(--background) 90%, transparent), color-mix(in oklch, var(--background) 88%, transparent)), url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1800&q=85')",
+      }}
     >
       <Button
         aria-expanded={isMobileSidebarOpen}
@@ -258,13 +262,15 @@ function AdminLayout({
 
       <section className="flex min-w-0 flex-col gap-6 px-6 py-7 max-xl:px-5 max-xl:py-5 max-sm:p-3 max-[1023px]:pt-16">
         <div className="min-w-0 flex-1">{children}</div>
-        <footer className="border-t border-border py-4 text-sm font-semibold text-muted-foreground">
+        <footer className="rounded-lg border border-border bg-card/90 px-4 py-3 text-sm font-semibold text-card-foreground shadow-sm backdrop-blur-md">
           <div className="flex items-center justify-between gap-3 max-sm:flex-col max-sm:items-start">
             <span className="inline-flex items-center gap-2 text-foreground">
               <Car aria-hidden="true" className="size-4 text-primary" />
               CDO Car Trading IMS
             </span>
-            <span>Inventory, sales, reservations, and maintenance system.</span>
+            <span className="text-muted-foreground">
+              Inventory, sales, reservations, and maintenance system.
+            </span>
           </div>
         </footer>
       </section>

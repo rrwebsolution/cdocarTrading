@@ -3,7 +3,7 @@ import {
   BarChart3,
   CalendarCheck,
   Car,
-  Activity,
+  ClipboardList,
   LayoutDashboard,
   ReceiptText,
   ShieldCheck,
@@ -266,6 +266,48 @@ export const adminModules: AdminModule[] = [
     records: [],
   },
   {
+    id: "requirements",
+    actionSet: "requirements",
+    route: "admin/requirements",
+    title: "Requirements",
+    navLabel: "Requirements",
+    description:
+      "Manage customer submission requirements for cash basis, financing basis, document proof, and verification records.",
+    icon: ClipboardList,
+    primaryAction: "Add Requirement",
+    stats: [
+      { label: "Requirement Types", value: "3" },
+      { label: "Required Documents", value: "0" },
+      { label: "For Verification", value: "0" },
+    ],
+    recordsTitle: "Requirements List",
+    recordsDescription:
+      "Required IDs, payment proofs, and financing documents for online customer submission.",
+    records: [
+      {
+        Requirement: "Cash Basis Verification",
+        Category: "Cash Basis",
+        "Required From": "Customer",
+        Documents: "1 valid verification ID",
+        Status: "Active",
+      },
+      {
+        Requirement: "Financing Documents",
+        Category: "Financing Basis",
+        "Required From": "Customer",
+        Documents: "Application documents, valid ID, proof of income, supporting financing records",
+        Status: "Active",
+      },
+      {
+        Requirement: "Online Proof Submission",
+        Category: "Document Upload",
+        "Required From": "Customer",
+        Documents: "Proof of payment, IDs, financing documents, and other required files",
+        Status: "Active",
+      },
+    ],
+  },
+  {
     id: "reports",
     actionSet: "reports",
     route: "admin/reports",
@@ -280,26 +322,6 @@ export const adminModules: AdminModule[] = [
       { label: "Generated Today", value: "0" },
       { label: "Scheduled", value: "0" },
     ],
-    records: [],
-  },
-  {
-    id: "activity-logs",
-    actionSet: "activity-logs",
-    route: "admin/activity-logs",
-    title: "Activity Logs",
-    navLabel: "Activity Logs",
-    description:
-      "Monitor important system actions such as record updates, approvals, payments, releases, and document verification.",
-    icon: Activity,
-    primaryAction: "Export Logs",
-    stats: [
-      { label: "Actions Today", value: "0" },
-      { label: "Critical Updates", value: "0" },
-      { label: "Exported Reports", value: "0" },
-    ],
-    recordsTitle: "System Audit Trail",
-    recordsDescription:
-      "Review who performed key actions and when they were recorded for accountability.",
     records: [],
   },
 ]

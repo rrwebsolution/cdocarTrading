@@ -19,11 +19,14 @@ type VehicleRecord = {
   chassis_number?: string
   color?: string
   engine_number?: string
+  image_url?: string
   location?: string
   mileage?: number
   model?: string
   name?: string
   plate_number?: string
+  photo?: string
+  photo_path?: string
   photo_url?: string
   selling_price?: string
   status?: string
@@ -261,7 +264,7 @@ const liveModules: Record<
     toRecords: (data) =>
       (data as VehicleRecord[]).map((vehicle) => ({
         Vehicle: vehicle.name ?? "N/A",
-        Photo: vehicle.photo_url ?? "",
+        Photo: vehicle.photo_url ?? vehicle.photo_path ?? vehicle.photo ?? vehicle.image_url ?? "",
         Brand: vehicle.brand ?? "N/A",
         Model: vehicle.model ?? "N/A",
         Year: String(vehicle.year ?? "N/A"),
@@ -339,7 +342,7 @@ function ApiModulePage({ fallbackModule, moduleLabel }: ApiModulePageProps) {
       ...fallbackModule,
       records,
       recordsDescription: config
-        ? "Live records loaded from the backend API."
+        ? "Latest records synced from the system database."
         : fallbackModule.recordsDescription,
     }),
     [config, fallbackModule, records],

@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import {
   type AuthUser,
   getAuthPersistencePreference,
+  getLoginFieldErrors,
   getLoginErrorMessage,
   getRouteForRole,
   isInactiveAccountError,
@@ -113,7 +114,13 @@ function Login({ onLogin, onNavigate }: LoginProps) {
         });
       }
 
-      setError(getLoginErrorMessage(loginError));
+      const loginFieldErrors = getLoginFieldErrors(loginError);
+
+      if (loginFieldErrors.email || loginFieldErrors.password) {
+        setFieldErrors(loginFieldErrors);
+      } else {
+        setError(getLoginErrorMessage(loginError));
+      }
     } finally {
       setIsLoading(false);
     }

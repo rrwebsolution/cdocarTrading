@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import Swal from "sweetalert2"
 
 import AppHeader, { type ThemeMode } from "@/components/AppHeader"
 import {
@@ -17,6 +18,7 @@ import Register from "@/pages/Register"
 import Secretary from "@/pages/Secretary"
 
 const getCurrentRoute = () => window.location.pathname.replace(/^\/?/, "") || "login"
+const publicRoutes = new Set(["login", "register"])
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() =>
@@ -28,6 +30,7 @@ function App() {
   const [authUser, setAuthUser] = useState<AuthUser | null>(getStoredAuthUser)
   const [isOutletLoading, setIsOutletLoading] = useState(true)
   const [route, setRoute] = useState(getCurrentRoute)
+  const lastGuardedRouteRef = useRef("")
   const [theme, setTheme] = useState<ThemeMode>(() => {
     const savedTheme = window.localStorage.getItem("theme")
 
@@ -76,6 +79,28 @@ function App() {
 
     return () => window.clearTimeout(timer)
   }, [isOutletLoading])
+
+  useEffect(() => {
+    if (isAuthenticated || publicRoutes.has(route)) {
+      return
+    }
+
+    if (lastGuardedRouteRef.current === route) {
+      return
+    }
+
+    lastGuardedRouteRef.current = route
+    window.history.replaceState(null, "", "/login")
+    setRoute("login")
+
+    void Swal.fire({
+      confirmButtonColor: "#ea580c",
+      confirmButtonText: "Login now",
+      icon: "warning",
+      text: "Please login first before accessing the system.",
+      title: "Login first",
+    })
+  }, [isAuthenticated, route])
 
   const navigate = (nextRoute: string) => {
     window.history.pushState(null, "", `/${nextRoute}`)

@@ -4,11 +4,11 @@ import type { SidebarGroup } from "@/pages/admin/types"
 type RoutePermissionMap = Record<string, string[]>
 
 export const adminRoutePermissions: RoutePermissionMap = {
-  "admin/activity-logs": ["Activity Logs"],
   "admin/customers": ["Customer Records"],
   "admin/job-orders-maintenance": ["Job Orders & Maintenance", "Job Orders"],
   "admin/reports": ["Reports"],
   "admin/reservations": ["Reservations"],
+  "admin/requirements": ["Requirements"],
   "admin/role-management": ["Role Management"],
   "admin/sales-payments": ["Sales & Payments"],
   "admin/staff": ["Staff Management"],
