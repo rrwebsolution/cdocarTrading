@@ -80,7 +80,7 @@ function Login({ onLogin, onNavigate }: LoginProps) {
 
   return (
     <main
-      className=" min-h-svh grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] bg-background pt-[10px] "
+      className="h-screen overflow-hidden grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] bg-background"
       style={{
         backgroundImage:
           "linear-gradient(120deg, rgba(8, 17, 35, 0.96), rgba(15, 23, 42, 0.78)), url('https://images.unsplash.com/photo-1562141961-b5d1fd9e24e3?auto=format&fit=crop&w=1800&q=85')",
@@ -92,14 +92,14 @@ function Login({ onLogin, onNavigate }: LoginProps) {
         className="hidden lg:flex min-h-[calc(100svh-68px)]"
         aria-labelledby="system-title"
       >
-        <div className="flex w-full flex-col justify-between gap-2 bg-[radial-gradient(circle_at_15%_20%,rgba(234,88,12,0.22),transparent_31rem),linear-gradient(90deg,rgba(2,6,23,0.45),rgba(2,6,23,0.12))] p-8 lg:p-20">
+        <div className="flex w-full flex-col justify-between gap-2 bg-[radial-gradient(circle_at_15%_20%,rgba(234,88,12,0.22),transparent_31rem),linear-gradient(90deg,rgba(2,6,23,0.45),rgba(2,6,23,0.12))] p-8 lg:p-12">
           <div className="max-w-3xl">
-            <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.13em] text-primary">
+            <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.5em] text-primary">
               Auto CDO Car Trading
             </p>
             <h1
               id="system-title"
-              className="text-5xl font-black leading-none tracking-normal lg:text-7xl"
+              className="text-5xl font-black leading-none tracking-normal text-primary-foreground lg:text-5xl"
             >
               {systemTitle}
             </h1>
@@ -112,7 +112,7 @@ function Login({ onLogin, onNavigate }: LoginProps) {
             <div className="grid justify-items-center">
               <img
                 alt=""
-                className="max-h-[40vh] lg:max-h-[50vh] object-contain"
+                className="max-h-[30vh] lg:max-h-[30vh] object-contain"
                 src="/cdocarlogo.png"
               />
             </div>
@@ -142,31 +142,33 @@ function Login({ onLogin, onNavigate }: LoginProps) {
       </section>
 
       <section
-        className="min-h-[calc(100svh-68px)] overflow-y-auto grid place-items-center p-4 md:p-6 lg:p-12"
+        className="h-screen grid place-items-center px-4 pt-20 pb-6 lg:px-10"
         aria-label="Login form"
       >
         <form
-          className="w-full max-w-md sm:max-w-lg rounded-lg border bg-card/95 p-5 sm:p-8"
+          className="w-full max-w-md rounded-2xl border border-white/10 bg-card/95 p-6 shadow-2xl backdrop-blur-md"
           onSubmit={handleSubmit}
           noValidate
         >
-          <div className="mx-auto mb-7 grid w-32 h-32 sm:w-40 sm:h-40 place-items-center overflow-hidden">
+          {/* <div className="mx-auto mb-7 grid w-24 h-24 sm:w-28 sm:h-28 place-items-center overflow-hidden">
             <img
               alt="Auto CDO Car Trading logo"
               className="w-full h-full object-contain"
               src="/cdocarlogo.png"
             />
-          </div>
+          </div> */}
 
-          <div>
-            <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.13em] text-primary">
-              Secure access
+          <div className="mb-6 text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">
+              Secure Access
             </p>
-            <h2 className="text-3xl font-black leading-tight text-foreground">
-              Login to your account
+
+            <h2 className="mt-2 text-3xl font-bold text-foreground">
+              Welcome Back
             </h2>
-            <p className="mt-3 leading-7 text-muted-foreground">
-              Enter your account credentials to continue.
+
+            <p className="mt-2 text-sm text-muted-foreground">
+              Sign in to continue to your account.
             </p>
           </div>
 
@@ -184,7 +186,7 @@ function Login({ onLogin, onNavigate }: LoginProps) {
             htmlFor="email"
           >
             <span>Email Address</span>
-            <div className="flex min-h-13 items-center gap-3 rounded-lg border border-input bg-background px-3 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
+            <div className="flex h-11 items-center gap-3 rounded-lg border border-input bg-background px-3 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
               <Mail
                 aria-hidden="true"
                 className="size-4 text-muted-foreground"
@@ -207,7 +209,7 @@ function Login({ onLogin, onNavigate }: LoginProps) {
             htmlFor="password"
           >
             <span>Password</span>
-            <div className="flex min-h-13 items-center gap-3 rounded-lg border border-input bg-background px-3 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
+            <div className="flex h-11 items-center gap-3 rounded-lg border border-input bg-background px-3 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
               <LockKeyhole
                 aria-hidden="true"
                 className="size-4 text-muted-foreground"
@@ -251,7 +253,7 @@ function Login({ onLogin, onNavigate }: LoginProps) {
           </div>
 
           <Button
-            className="h-12 w-full text-base"
+            className="h-11 w-full text-base"
             disabled={isLoading}
             type="submit"
           >
