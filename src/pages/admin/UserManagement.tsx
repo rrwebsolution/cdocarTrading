@@ -1,16 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import type { FormEvent } from "react"
 import {
   Check,
   ChevronsUpDown,
-  Pencil,
   RefreshCw,
-  Save,
   Search,
   ShieldCheck,
   SlidersHorizontal,
-  Trash2,
-  X,
 } from "lucide-react"
 import Swal from "sweetalert2"
 import { toast } from "react-toastify"
@@ -23,11 +18,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { type BackendRole, getRoles } from "@/lib/roles"
 import {
   type BackendUser,
-  createUser,
-  deleteUser,
   getUsers,
   updateUser,
 } from "@/lib/users"
@@ -35,10 +27,8 @@ import { cn } from "@/lib/utils"
 
 function UserManagement() {
   const [users, setUsers] = useState<BackendUser[]>([])
-  const [roles, setRoles] = useState<BackendRole[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const [editUser, setEditUser] = useState<BackendUser | null>(null)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [page, setPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
@@ -47,13 +37,8 @@ function UserManagement() {
   const pageSize = 5
 
   const loadData = useCallback(async (forceRefresh = false) => {
-    const [nextUsers, nextRoles] = await Promise.all([
-      getUsers(forceRefresh),
-      getRoles(forceRefresh),
-    ])
-
+    const nextUsers = await getUsers(forceRefresh)
     setUsers(nextUsers)
-    setRoles(nextRoles)
   }, [])
 
   useEffect(() => {
@@ -133,30 +118,6 @@ function UserManagement() {
       toast.success(`${user.name} is now ${nextStatus}.`)
     } catch {
       toast.error("Unable to update user status.")
-    }
-  }
-
-  const removeUser = async (user: BackendUser) => {
-    const result = await Swal.fire({
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#dc2626",
-      confirmButtonText: "Yes, delete user",
-      icon: "warning",
-      showCancelButton: true,
-      text: `Are you sure you want to delete ${user.name}? This action cannot be undone.`,
-      title: "Delete user?",
-    })
-
-    if (!result.isConfirmed) {
-      return
-    }
-
-    try {
-      await deleteUser(user.id)
-      setUsers((current) => current.filter((item) => item.id !== user.id))
-      toast.success(`${user.name} has been deleted.`)
-    } catch {
-      toast.error("Unable to delete user.")
     }
   }
 
@@ -308,7 +269,7 @@ function UserManagement() {
               <table className="w-full min-w-[900px] border-collapse">
                 <thead>
                   <tr className="border-b bg-muted">
-                    {["Name", "Email", "Role", "Status", "Created", "Action"].map(
+                    {["Name", "Email", "Role", "Created", "Action"].map(
                       (column) => (
                         <th
                           className="px-4 py-3 text-left text-xs font-black uppercase tracking-wider text-muted-foreground"
@@ -332,38 +293,14 @@ function UserManagement() {
                       <td className="whitespace-nowrap px-4 py-3 text-sm">
                         {user.role}
                       </td>
+                      <td className="whitespace-nowrap px-4 py-3 text-sm">
+                        {formatPhilippineDateTime(user.created_at)}
+                      </td>
                       <td className="whitespace-nowrap px-4 py-3">
                         <StatusConfirmSwitch
                           status={user.status === "inactive" ? "inactive" : "active"}
                           onChange={() => void changeUserStatus(user)}
                         />
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-sm">
-                        {formatPhilippineDateTime(user.created_at)}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <Button
-                            aria-label={`Edit ${user.name}`}
-                            onClick={() => setEditUser(user)}
-                            size="icon-sm"
-                            title="Edit"
-                            type="button"
-                            variant="outline"
-                          >
-                            <Pencil aria-hidden="true" className="size-4" />
-                          </Button>
-                          <Button
-                            aria-label={`Delete ${user.name}`}
-                            onClick={() => void removeUser(user)}
-                            size="icon-sm"
-                            title="Delete"
-                            type="button"
-                            variant="destructive"
-                          >
-                            <Trash2 aria-hidden="true" className="size-4" />
-                          </Button>
-                        </div>
                       </td>
                     </tr>
                   )) : (
@@ -416,183 +353,7 @@ function UserManagement() {
         </CardContent>
       </Card>
 
-      {editUser ? (
-        <UserFormDialog
-          roles={roles}
-          title="Edit User"
-          user={editUser}
-          onClose={() => setEditUser(null)}
-          onSave={(updatedUser) => {
-            setUsers((current) =>
-              current.map((user) =>
-                user.id === updatedUser.id ? updatedUser : user,
-              ),
-            )
-            setEditUser(null)
-          }}
-        />
-      ) : null}
     </div>
-  )
-}
-
-function UserFormDialog({
-  onClose,
-  onSave,
-  roles,
-  title,
-  user,
-}: {
-  onClose: () => void
-  onSave: (user: BackendUser) => void
-  roles: BackendRole[]
-  title: string
-  user?: BackendUser
-}) {
-  const [email, setEmail] = useState(user?.email ?? "")
-  const [name, setName] = useState(user?.name ?? "")
-  const [password, setPassword] = useState("")
-  const [roleId, setRoleId] = useState(() => String(user?.role_id ?? roles[0]?.id ?? ""))
-  const [status, setStatus] = useState<"active" | "inactive">(
-    user?.status === "inactive" ? "inactive" : "active",
-  )
-  const [isSaving, setIsSaving] = useState(false)
-  const isEditing = Boolean(user)
-
-  const submitForm = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    const normalizedEmail = email.trim()
-    const normalizedName = name.trim()
-    const selectedRoleId = Number(roleId)
-
-    if (!normalizedName || !normalizedEmail || !selectedRoleId) {
-      toast.error("Please complete the user details.")
-      return
-    }
-
-    if (!isEditing && password.length < 8) {
-      toast.error("Password must be at least 8 characters.")
-      return
-    }
-
-    setIsSaving(true)
-
-    try {
-      const savedUser = isEditing && user
-        ? await updateUser(user.id, {
-            email: normalizedEmail,
-            name: normalizedName,
-            password: password.trim() || undefined,
-            role_id: selectedRoleId,
-            status,
-          })
-        : await createUser({
-            email: normalizedEmail,
-            name: normalizedName,
-            password,
-            role_id: selectedRoleId,
-            status,
-          })
-
-      toast.success(`${savedUser.name} has been saved.`)
-      onSave(savedUser)
-    } catch {
-      toast.error("Unable to save user. Please check the details.")
-    } finally {
-      setIsSaving(false)
-    }
-  }
-
-  return (
-    <UserDialogFrame onClose={onClose} title={title}>
-      <form className="grid gap-5" onSubmit={submitForm}>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="grid gap-2">
-            <span className="text-sm font-black text-muted-foreground">
-              Full Name
-            </span>
-            <input
-              className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
-              onChange={(event) => setName(event.target.value)}
-              value={name}
-            />
-          </label>
-
-          <label className="grid gap-2">
-            <span className="text-sm font-black text-muted-foreground">
-              Email
-            </span>
-            <input
-              className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
-              onChange={(event) => setEmail(event.target.value)}
-              type="email"
-              value={email}
-            />
-          </label>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="grid gap-2">
-            <span className="text-sm font-black text-muted-foreground">
-              Role
-            </span>
-            <select
-              className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
-              onChange={(event) => setRoleId(event.target.value)}
-              value={roleId}
-            >
-              <option value="" disabled>
-                Select role
-              </option>
-              {roles.map((role) => (
-                <option key={role.id} value={role.id}>
-                  {role.name}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="grid gap-2">
-            <span className="text-sm font-black text-muted-foreground">
-              Status
-            </span>
-            <select
-              className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
-              onChange={(event) =>
-                setStatus(event.target.value === "inactive" ? "inactive" : "active")
-              }
-              value={status}
-            >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
-          </label>
-        </div>
-
-        <label className="grid gap-2">
-          <span className="text-sm font-black text-muted-foreground">
-            {isEditing ? "New Password (optional)" : "Password"}
-          </span>
-          <input
-            className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
-            onChange={(event) => setPassword(event.target.value)}
-            type="password"
-            value={password}
-          />
-        </label>
-
-        <div className="flex justify-end gap-2 border-t pt-4">
-          <Button onClick={onClose} type="button" variant="outline">
-            Cancel
-          </Button>
-          <Button disabled={isSaving} type="submit">
-            <Save aria-hidden="true" className="size-4" />
-            {isSaving ? "Saving..." : "Save User"}
-          </Button>
-        </div>
-      </form>
-    </UserDialogFrame>
   )
 }
 
@@ -633,50 +394,6 @@ function StatusConfirmSwitch({
       </span>
       {checked ? "Active" : "Inactive"}
     </button>
-  )
-}
-
-function UserDialogFrame({
-  children,
-  onClose,
-  title,
-}: {
-  children: React.ReactNode
-  onClose: () => void
-  title: string
-}) {
-  return (
-    <div
-      aria-labelledby="user-dialog-title"
-      aria-modal="true"
-      className="fixed inset-0 z-50 grid place-items-center bg-background/75 p-4 backdrop-blur-sm"
-      role="dialog"
-    >
-      <div className="max-h-[90svh] w-full max-w-3xl overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b p-4">
-          <div>
-            <p className="text-xs font-black uppercase tracking-wider text-primary">
-              User Management
-            </p>
-            <h2 className="mt-1 text-xl font-black" id="user-dialog-title">
-              {title}
-            </h2>
-          </div>
-          <Button
-            aria-label="Close modal"
-            onClick={onClose}
-            size="icon-sm"
-            type="button"
-            variant="outline"
-          >
-            <X aria-hidden="true" className="size-4" />
-          </Button>
-        </div>
-        <div className="max-h-[calc(90svh-81px)] overflow-y-auto p-4">
-          {children}
-        </div>
-      </div>
-    </div>
   )
 }
 

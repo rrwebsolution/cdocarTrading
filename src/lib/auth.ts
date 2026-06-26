@@ -20,6 +20,11 @@ type LoginResponse = {
   token_type: string
 }
 
+type RegisterResponse = {
+  message?: string
+  user: AuthUser
+}
+
 const authPersistenceKey = "auth_keep_logged_in"
 
 const roleRoutes: Record<string, string> = {
@@ -83,11 +88,14 @@ export function clearAuthSession() {
 }
 
 export async function loginUser(
-  email: string,
+  identifier: string,
   password: string,
+  loginType: "email" | "username" = "email",
 ): Promise<LoginResponse> {
   const { data } = await api.post<LoginResponse>("/api/login", {
-    email,
+    email: loginType === "email" ? identifier : undefined,
+    login: identifier,
+    login_type: loginType,
     password,
     device_name: "cdo-car-trading-web",
   })
@@ -96,14 +104,34 @@ export async function loginUser(
 }
 
 export async function registerCustomer(payload: {
+  address: string
   email: string
+  mobile_number: string
   name: string
   password: string
   password_confirmation: string
-}): Promise<LoginResponse> {
-  const { data } = await api.post<LoginResponse>("/api/register", {
-    ...payload,
+  username: string
+  valid_id_file: File
+  valid_id_type: string
+}): Promise<RegisterResponse> {
+  const formData = new FormData()
+
+  Object.entries({
+    address: payload.address,
     device_name: "cdo-car-trading-web",
+    email: payload.email,
+    mobile_number: payload.mobile_number,
+    name: payload.name,
+    password: payload.password,
+    password_confirmation: payload.password_confirmation,
+    username: payload.username,
+    valid_id_type: payload.valid_id_type,
+  }).forEach(([key, value]) => formData.append(key, value))
+
+  formData.append("valid_id_file", payload.valid_id_file)
+
+  const { data } = await api.post<LoginResponse>("/api/register", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
   })
 
   return data

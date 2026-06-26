@@ -11,15 +11,20 @@ import {
   Eye,
   FileText,
   MoreHorizontal,
+  Pause,
   Pencil,
+  Play,
   Plus,
+  Printer,
   RefreshCw,
+  RotateCcw,
   Search,
   Send,
   Save,
   SlidersHorizontal,
   Trash2,
   Inbox,
+  LoaderCircle,
   X,
 } from "lucide-react"
 import { toast } from "react-toastify"
@@ -44,6 +49,7 @@ type RecordAction = {
   kind?: "view" | "edit" | "delete" | "workflow"
   label: string
   variant: "default" | "outline" | "secondary" | "ghost" | "destructive" | "link"
+  workflowAction?: string
 }
 
 type WorkflowActionState = {
@@ -90,6 +96,12 @@ type WorkflowVisualProfile = {
   widthClass: string
 }
 
+type SelectOption = {
+  id: string
+  label: string
+  meta?: Record<string, string>
+}
+
 const statIconStyles = [
   "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-200",
   "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-200",
@@ -121,6 +133,24 @@ const vehicleImages = [
   "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80",
 ]
 
+const jobOrderServiceOptions: SelectOption[] = [
+  { id: "Detailing", label: "Detailing" },
+  { id: "Change Oil", label: "Change Oil" },
+  { id: "Brake Inspection", label: "Brake Inspection" },
+  { id: "PMS", label: "PMS" },
+  { id: "Aircon Cleaning", label: "Aircon Cleaning" },
+]
+
+const jobOrderCancellationReasons = [
+  "Customer Cancelled Request",
+  "Vehicle Already Sold",
+  "Duplicate Job Order",
+  "Parts Unavailable",
+  "Service No Longer Needed",
+  "Incorrect Job Order",
+  "Others",
+]
+
 type ModulePageBaseProps = {
   isLoading?: boolean
   module: AdminModule
@@ -140,26 +170,43 @@ function ModulePageBase({
   const [statusFilter, setStatusFilter] = useState(() => module.defaultStatusFilter ?? "All")
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [isSavingJobOrder, setIsSavingJobOrder] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [showAllVehiclesMobile, setShowAllVehiclesMobile] = useState(false)
   const [records, setRecords] = useState(() => module.records)
   const [selectedRecord, setSelectedRecord] = useState<Record<string, string> | null>(null)
+  const [verifyingCustomer, setVerifyingCustomer] = useState<Record<string, string> | null>(null)
+  const [startingJobOrder, setStartingJobOrder] = useState<Record<string, string> | null>(null)
+  const [printingJobOrder, setPrintingJobOrder] = useState<Record<string, string> | null>(null)
+  const [jobOrderWorkflow, setJobOrderWorkflow] = useState<{
+    action: "Waiting for Parts" | "Resume Job" | "Complete" | "Cancel Job" | "Restore"
+    record: Record<string, string>
+  } | null>(null)
   const [workflowAction, setWorkflowAction] = useState<WorkflowActionState>(null)
   const [editingRecordIndex, setEditingRecordIndex] = useState<number | null>(null)
-  const baseColumns = Object.keys(records[0] ?? module.records[0] ?? {})
+  const moduleKey = module.actionSet ?? module.id
+  const baseColumns = Object.keys(records[0] ?? module.records[0] ?? {}).filter(isVisibleColumn)
   const fallbackColumns = module.columns ?? getDefaultModuleColumns(module.id, module.actionSet)
   const columns =
-    module.id === "vehicles" && !baseColumns.includes("Photo")
-      ? ["Photo", ...(baseColumns.length ? baseColumns : fallbackColumns.filter((column) => column !== "Photo"))]
+    moduleKey === "admin-job-orders"
+      ? fallbackColumns
+      : moduleKey === "customers"
+      ? getDefaultModuleColumns(module.id, module.actionSet)
+      : module.id === "vehicles" && !baseColumns.includes("Main Photo")
+      ? ["Main Photo", ...(baseColumns.length ? baseColumns : fallbackColumns.filter((column) => column !== "Main Photo"))]
       : baseColumns.length
         ? baseColumns
         : fallbackColumns
   const [formValues, setFormValues] = useState<Record<string, string>>({})
-  const [formFiles, setFormFiles] = useState<Record<string, File | null>>({})
+  const [formFiles, setFormFiles] = useState<Record<string, File | File[] | null>>({})
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
   const [vehicleLocations, setVehicleLocations] = useState<string[]>([])
+  const [jobOrderVehicles, setJobOrderVehicles] = useState<SelectOption[]>([])
+  const [jobOrderCustomers, setJobOrderCustomers] = useState<SelectOption[]>([])
+  const [jobOrderStaff, setJobOrderStaff] = useState<SelectOption[]>([])
   const [uploadProgress, setUploadProgress] = useState<number | null>(null)
   const Icon = module.icon
+  const isJobOrderModule = moduleKey === "admin-job-orders"
   const isVehicleCards =
     module.id === "vehicles" ||
     module.id === "inventory" ||
@@ -178,6 +225,32 @@ function ModulePageBase({
     setPage(1)
     setShowAllVehiclesMobile(false)
   }, [module.records])
+
+  useEffect(() => {
+    if (!isJobOrderModule) {
+      return
+    }
+
+    let isMounted = true
+
+    loadJobOrderSelectOptions()
+      .then((options) => {
+        if (!isMounted) {
+          return
+        }
+
+        setJobOrderVehicles(options.vehicles)
+        setJobOrderCustomers(options.customers)
+        setJobOrderStaff(options.staff)
+      })
+      .catch(() => {
+        toast.error("Unable to load job order selections from backend.")
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [isJobOrderModule])
 
   const statusOptions = [
     "All",
@@ -221,17 +294,19 @@ function ModulePageBase({
     }
   }
   const openCreateDialog = () => {
+    if (isJobOrderModule) {
+      setFormValues(getJobOrderInitialValues(records))
+      setFormFiles({})
+      setFormErrors({})
+      setIsCreateDialogOpen(true)
+      return
+    }
+
     setFormValues(
       Object.fromEntries(
         columns.map((column) => [
           column,
-          module.id === "vehicles" && column === "Status"
-            ? "Available"
-            : column === "Required From"
-            ? "Customer"
-            : column.toLowerCase() === "status"
-              ? "Active"
-              : "",
+          getDefaultFormValue(column, module.id === "vehicles"),
         ]),
       ),
     )
@@ -242,8 +317,32 @@ function ModulePageBase({
   const submitCreateForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
+    if (isJobOrderModule) {
+      if (isSavingJobOrder) {
+        return
+      }
+
+      setIsSavingJobOrder(true)
+
+      try {
+        const nextRecord = await createJobOrderRecord(formValues)
+
+        setRecords((current) => [nextRecord, ...current])
+        setPage(1)
+        setShowAllVehiclesMobile(false)
+        setIsCreateDialogOpen(false)
+        toast.success(`${nextRecord["JO No."]} has been saved.`)
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Unable to save job order to backend.")
+      } finally {
+        setIsSavingJobOrder(false)
+      }
+
+      return
+    }
+
     if (module.id === "vehicles") {
-      const nextErrors = validateVehicleForm(formValues, formFiles.Photo ?? null)
+      const nextErrors = validateVehicleForm(formValues, fileValue(formFiles["Main Photo"]))
 
       if (Object.keys(nextErrors).length > 0) {
         setFormErrors(nextErrors)
@@ -255,7 +354,7 @@ function ModulePageBase({
         setUploadProgress(0)
         const vehicle = await createVehicleRecord(
           formValues,
-          formFiles.Photo ?? null,
+          formFiles,
           setUploadProgress,
         )
         setRecords((current) => [vehicle, ...current])
@@ -298,10 +397,10 @@ function ModulePageBase({
   const openEditDialog = (record: Record<string, string>) => {
     const recordIndex = records.indexOf(record)
     const nextValues =
-      module.id === "vehicles" && !resolveImageUrl(record.Photo)
+      module.id === "vehicles" && !resolveImageUrl(record["Main Photo"])
         ? {
             ...record,
-            Photo: vehicleImages[Math.max(recordIndex, 0) % vehicleImages.length],
+            "Main Photo": vehicleImages[Math.max(recordIndex, 0) % vehicleImages.length],
           }
         : {
             ...record,
@@ -321,7 +420,9 @@ function ModulePageBase({
     setRecords((current) =>
       current.map((record, index) =>
         index === editingRecordIndex
-          ? Object.fromEntries(columns.map((column) => [column, formValues[column] || record[column] || "N/A"]))
+          ? isJobOrderModule
+            ? { ...record, ...pickFormValues(formValues, getJobOrderEditableColumns()) }
+            : Object.fromEntries(columns.map((column) => [column, formValues[column] || record[column] || "N/A"]))
           : record,
       ),
     )
@@ -329,22 +430,123 @@ function ModulePageBase({
     toast.success("Record has been updated.")
   }
   const deleteRecord = async (recordToDelete: Record<string, string>) => {
+    if (isJobOrderModule && recordToDelete.Status !== "Pending") {
+      toast.error("Only pending job orders can be deleted.")
+      return
+    }
+
+    const recordName = recordToDelete.Customer ?? recordToDelete.Vehicle ?? "this record"
     const confirmed = await Swal.fire({
       cancelButtonText: "Cancel",
       confirmButtonColor: "#dc2626",
-      confirmButtonText: "Yes, delete",
+      confirmButtonText: isJobOrderModule ? "Delete" : "Yes, delete",
       icon: "warning",
       showCancelButton: true,
-      text: `Are you sure you want to delete ${recordToDelete.Vehicle ?? "this record"}?`,
-      title: "Delete record?",
+      html: isJobOrderModule
+        ? `<div style="text-align:left"><p><strong>${getJobOrderNumber(recordToDelete)}</strong></p><p>${recordToDelete.Vehicle ?? "N/A"}</p><p style="margin-top:1rem">This action cannot be undone.</p></div>`
+        : undefined,
+      text: isJobOrderModule ? undefined : `Are you sure you want to delete ${recordName}?`,
+      title: isJobOrderModule ? "Delete Job Order?" : "Delete record?",
     })
 
     if (!confirmed.isConfirmed) {
       return
     }
 
-    setRecords((current) => current.filter((record) => record !== recordToDelete))
-    toast.success(`${recordToDelete.Vehicle ?? "Record"} has been deleted.`)
+    try {
+      if ((module.actionSet ?? module.id) === "customers" && recordToDelete._id) {
+        await api.delete(`/api/customers/${recordToDelete._id}`)
+      }
+
+      setRecords((current) => current.filter((record) => record !== recordToDelete))
+      toast.success(`${recordName} has been deleted.`)
+    } catch {
+      toast.error("Unable to delete record.")
+    }
+  }
+  const handleWorkflowAction = async (action: string, record: Record<string, string>, note?: string) => {
+    if (isJobOrderModule && action === "Start Job") {
+      setStartingJobOrder(record)
+      return
+    }
+
+    if (isJobOrderModule && action === "Print Job Order") {
+      setPrintingJobOrder(record)
+      return
+    }
+
+    if (
+      isJobOrderModule &&
+      (action === "Waiting for Parts" ||
+        action === "Resume Job" ||
+        action === "Complete" ||
+        action === "Cancel Job" ||
+        action === "Restore")
+    ) {
+      setJobOrderWorkflow({ action, record })
+      return
+    }
+
+    if ((module.actionSet ?? module.id) === "customers" && action === "Verify") {
+      setVerifyingCustomer(record)
+      return
+    }
+
+    if ((module.actionSet ?? module.id) === "customers" && action === "Approve") {
+      const customerId = record._id
+
+      if (!customerId) {
+        toast.error("Unable to approve customer record.")
+        return
+      }
+
+      try {
+        await api.patch(`/api/customers/${customerId}`, { status: "approved" })
+        setRecords((current) =>
+          current.map((item) =>
+            item._id === customerId
+              ? { ...item, _userAccount: "Active", Status: "Approved" }
+              : item,
+          ),
+        )
+        toast.success(`${record.Customer ?? "Customer"} has been approved.`)
+      } catch {
+        toast.error("Unable to approve customer.")
+      }
+
+      return
+    }
+
+    if ((module.actionSet ?? module.id) === "customers" && action === "Reject") {
+      const customerId = record._id
+
+      if (!customerId) {
+        toast.error("Unable to reject customer record.")
+        return
+      }
+
+      try {
+        await api.patch(`/api/customers/${customerId}`, { status: "rejected" })
+        setRecords((current) =>
+          current.map((item) =>
+            item._id === customerId
+              ? { ...item, _rejectionNote: note ?? "", _userAccount: "Inactive", Status: "Rejected" }
+              : item,
+          ),
+        )
+        toast.success(`${record.Customer ?? "Customer"} has been rejected.`)
+      } catch {
+        toast.error("Unable to reject customer.")
+      }
+
+      return
+    }
+
+    setWorkflowAction({
+      action,
+      actionSet: module.actionSet ?? module.id,
+      record,
+    })
   }
 
   return (
@@ -559,13 +761,7 @@ function ModulePageBase({
               onDelete={deleteRecord}
               onEdit={openEditDialog}
               onView={setSelectedRecord}
-              onWorkflowAction={(action, record) =>
-                setWorkflowAction({
-                  action,
-                  actionSet: module.actionSet ?? module.id,
-                  record,
-                })
-              }
+              onWorkflowAction={handleWorkflowAction}
             />
           )}
 
@@ -605,44 +801,142 @@ function ModulePageBase({
       </Card>
 
       {isCreateDialogOpen ? (
-        <CreateRecordDialog
-          columns={getFormColumns(module.id, columns)}
-          errors={formErrors}
-          formValues={formValues}
-          isVehicleForm={module.id === "vehicles"}
-          twoColumnFields={
-            module.id === "requirements" ? ["Requirement", "Category"] : undefined
-          }
-          locationOptions={vehicleLocations}
-          moduleTitle={module.title}
-          onChange={(column, value) => {
-            setFormValues((current) => ({ ...current, [column]: value }))
-            setFormErrors((current) => ({ ...current, [column]: "" }))
-          }}
-          onClose={() => {
-            setFormErrors({})
-            setIsCreateDialogOpen(false)
-          }}
-          onFileChange={(column, file) => {
-            setFormFiles((current) => ({ ...current, [column]: file }))
-            setFormErrors((current) => ({ ...current, [column]: "" }))
-          }}
-          onLocationAdd={(location) =>
-            setVehicleLocations((current) => [...new Set([...current, location])])
-          }
-          onLocationDelete={(location) =>
-            setVehicleLocations((current) => current.filter((item) => item !== location))
-          }
-          onSubmit={submitCreateForm}
-          primaryAction={module.primaryAction}
-          uploadProgress={uploadProgress}
-        />
+        isJobOrderModule ? (
+          <JobOrderFormDialog
+            formValues={formValues}
+            customerOptions={jobOrderCustomers}
+            isSubmitting={isSavingJobOrder}
+            mode="create"
+            onChange={(column, value) => setFormValues((current) => ({ ...current, [column]: value }))}
+            onClose={() => setIsCreateDialogOpen(false)}
+            onSubmit={submitCreateForm}
+            staffOptions={jobOrderStaff}
+            vehicleOptions={jobOrderVehicles}
+          />
+        ) : (
+          <CreateRecordDialog
+            columns={getFormColumns(module.id, columns)}
+            errors={formErrors}
+            formValues={formValues}
+            isVehicleForm={module.id === "vehicles"}
+            twoColumnFields={
+              module.id === "requirements" ? ["Requirement", "Category"] : undefined
+            }
+            locationOptions={vehicleLocations}
+            moduleTitle={module.title}
+            onChange={(column, value) => {
+              setFormValues((current) => ({ ...current, [column]: value }))
+              setFormErrors((current) => ({ ...current, [column]: "" }))
+            }}
+            onClose={() => {
+              setFormErrors({})
+              setIsCreateDialogOpen(false)
+            }}
+            onFileChange={(column, file) => {
+              setFormFiles((current) => ({ ...current, [column]: file }))
+              setFormErrors((current) => ({ ...current, [column]: "" }))
+            }}
+            onLocationAdd={(location) =>
+              setVehicleLocations((current) => [...new Set([...current, location])])
+            }
+            onLocationDelete={(location) =>
+              setVehicleLocations((current) => current.filter((item) => item !== location))
+            }
+            onSubmit={submitCreateForm}
+            primaryAction={module.primaryAction}
+            uploadProgress={uploadProgress}
+          />
+        )
       ) : null}
 
       {selectedRecord ? (
-        <RecordDetailsDialog
-          record={selectedRecord}
-          onClose={() => setSelectedRecord(null)}
+        isJobOrderRecord(selectedRecord) ? (
+          <JobOrderDetailsDialog
+            record={selectedRecord}
+            onClose={() => setSelectedRecord(null)}
+            onPrint={() => {
+              setPrintingJobOrder(selectedRecord)
+              setSelectedRecord(null)
+            }}
+          />
+        ) : (
+          <RecordDetailsDialog
+            record={selectedRecord}
+            onClose={() => setSelectedRecord(null)}
+          />
+        )
+      ) : null}
+
+      {startingJobOrder ? (
+        <StartJobOrderDialog
+          record={startingJobOrder}
+          staffOptions={jobOrderStaff}
+          onClose={() => setStartingJobOrder(null)}
+          onStart={(assignedStaff, remarks) => {
+            const dateStarted = new Date().toLocaleDateString("en-PH", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })
+
+            setRecords((current) =>
+              current.map((record) =>
+                record === startingJobOrder
+                  ? {
+                      ...record,
+                      "Assigned Staff": assignedStaff,
+                      "Date Started": dateStarted,
+                      "Started By": "Current User",
+                      Remarks: remarks || record.Remarks || "Started job order.",
+                      Status: "In Progress",
+                    }
+                  : record,
+              ),
+            )
+            toast.success(`${getJobOrderNumber(startingJobOrder)} moved to In Progress.`)
+            setStartingJobOrder(null)
+          }}
+        />
+      ) : null}
+
+      {printingJobOrder ? (
+        <JobOrderPrintDialog
+          record={printingJobOrder}
+          onClose={() => setPrintingJobOrder(null)}
+        />
+      ) : null}
+
+      {jobOrderWorkflow ? (
+        <JobOrderWorkflowDialog
+          action={jobOrderWorkflow.action}
+          record={jobOrderWorkflow.record}
+          onClose={() => setJobOrderWorkflow(null)}
+          onSave={(updates) => {
+            setRecords((current) =>
+              current.map((record) =>
+                record === jobOrderWorkflow.record
+                  ? { ...record, ...updates }
+                  : record,
+              ),
+            )
+            toast.success(`${getJobOrderNumber(jobOrderWorkflow.record)} updated.`)
+            setJobOrderWorkflow(null)
+          }}
+        />
+      ) : null}
+
+      {verifyingCustomer ? (
+        <CustomerVerifyDialog
+          record={verifyingCustomer}
+          onApprove={async () => {
+            await handleWorkflowAction("Approve", verifyingCustomer)
+            setVerifyingCustomer(null)
+          }}
+          onClose={() => setVerifyingCustomer(null)}
+          onReject={async (note) => {
+            await handleWorkflowAction("Reject", verifyingCustomer, note)
+            setVerifyingCustomer(null)
+          }}
         />
       ) : null}
 
@@ -656,35 +950,48 @@ function ModulePageBase({
       ) : null}
 
       {editingRecordIndex !== null ? (
-        <CreateRecordDialog
-          columns={getFormColumns(module.id, columns)}
-          errors={formErrors}
-          formValues={formValues}
-          isVehicleForm={module.id === "vehicles"}
-          twoColumnFields={
-            module.id === "requirements" ? ["Requirement", "Category"] : undefined
-          }
-          locationOptions={vehicleLocations}
-          moduleTitle={module.title}
-          onChange={(column, value) => {
-            setFormValues((current) => ({ ...current, [column]: value }))
-            setFormErrors((current) => ({ ...current, [column]: "" }))
-          }}
-          onClose={() => setEditingRecordIndex(null)}
-          onFileChange={(column, file) => {
-            setFormFiles((current) => ({ ...current, [column]: file }))
-            setFormErrors((current) => ({ ...current, [column]: "" }))
-          }}
-          onLocationAdd={(location) =>
-            setVehicleLocations((current) => [...new Set([...current, location])])
-          }
-          onLocationDelete={(location) =>
-            setVehicleLocations((current) => current.filter((item) => item !== location))
-          }
-          onSubmit={submitEditForm}
-          primaryAction="Edit Record"
-          uploadProgress={uploadProgress}
-        />
+        isJobOrderModule ? (
+          <JobOrderFormDialog
+            formValues={formValues}
+            customerOptions={jobOrderCustomers}
+            mode="edit"
+            onChange={(column, value) => setFormValues((current) => ({ ...current, [column]: value }))}
+            onClose={() => setEditingRecordIndex(null)}
+            onSubmit={submitEditForm}
+            staffOptions={jobOrderStaff}
+            vehicleOptions={jobOrderVehicles}
+          />
+        ) : (
+          <CreateRecordDialog
+            columns={getFormColumns(module.id, columns)}
+            errors={formErrors}
+            formValues={formValues}
+            isVehicleForm={module.id === "vehicles"}
+            twoColumnFields={
+              module.id === "requirements" ? ["Requirement", "Category"] : undefined
+            }
+            locationOptions={vehicleLocations}
+            moduleTitle={module.title}
+            onChange={(column, value) => {
+              setFormValues((current) => ({ ...current, [column]: value }))
+              setFormErrors((current) => ({ ...current, [column]: "" }))
+            }}
+            onClose={() => setEditingRecordIndex(null)}
+            onFileChange={(column, file) => {
+              setFormFiles((current) => ({ ...current, [column]: file }))
+              setFormErrors((current) => ({ ...current, [column]: "" }))
+            }}
+            onLocationAdd={(location) =>
+              setVehicleLocations((current) => [...new Set([...current, location])])
+            }
+            onLocationDelete={(location) =>
+              setVehicleLocations((current) => current.filter((item) => item !== location))
+            }
+            onSubmit={submitEditForm}
+            primaryAction="Edit Record"
+            uploadProgress={uploadProgress}
+          />
+        )
       ) : null}
     </div>
   )
@@ -715,7 +1022,7 @@ function CreateRecordDialog({
   moduleTitle: string
   onChange: (column: string, value: string) => void
   onClose: () => void
-  onFileChange?: (column: string, file: File | null) => void
+  onFileChange?: (column: string, file: File | File[] | null) => void
   onLocationAdd?: (location: string) => void
   onLocationDelete?: (location: string) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
@@ -827,7 +1134,7 @@ function CreateRecordDialog({
       className="fixed inset-0 z-50 grid place-items-center bg-background/75 p-4 backdrop-blur-sm"
       role="dialog"
     >
-      <div className="max-h-[90svh] w-full max-w-3xl overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-2xl">
+      <div className={cn("max-h-[90svh] w-full overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-2xl", isVehicleForm ? "max-w-5xl" : "max-w-3xl")}>
         <div className="flex items-start justify-between gap-4 border-b p-4">
           <div>
             <p className="text-xs font-black uppercase tracking-wider text-primary">
@@ -876,7 +1183,7 @@ function CreateRecordDialog({
                   <select
                     className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
                     onChange={(event) => onChange(column, event.target.value)}
-                    value={formValues[column] ?? (isVehicleForm ? "Available" : "Active")}
+                    value={formValues[column] || getDefaultFormValue(column, isVehicleForm)}
                   >
                     {getStatusOptions(isVehicleForm).map((option) => (
                       <option key={option}>{option}</option>
@@ -901,10 +1208,12 @@ function CreateRecordDialog({
                       accept="image/*"
                       className="min-h-10 rounded-lg border border-input bg-background px-3 py-2 text-sm font-semibold file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-xs file:font-black file:text-primary-foreground focus:border-primary focus:ring-4 focus:ring-primary/15"
                       onChange={(event) => {
-                        const file = event.target.files?.[0] ?? null
+                        const files = Array.from(event.target.files ?? [])
+                        const fileValue = isMultiPhotoColumn(column) ? files : files[0] ?? null
+                        const file = files[0] ?? null
 
-                        if (file && file.size > 10 * 1024 * 1024) {
-                          window.alert("Vehicle photo must be 10MB or smaller.")
+                        if (files.some((selectedFile) => selectedFile.size > 10 * 1024 * 1024)) {
+                          window.alert("Each vehicle photo must be 10MB or smaller.")
                           event.target.value = ""
                           onFileChange?.(column, null)
                           setPhotoPreview("")
@@ -927,8 +1236,9 @@ function CreateRecordDialog({
                         } else {
                           setPhotoSelectProgress(null)
                         }
-                        onFileChange?.(column, file)
+                        onFileChange?.(column, fileValue)
                       }}
+                      multiple={isMultiPhotoColumn(column)}
                       type="file"
                     />
                     {typeof visiblePhotoProgress === "number" ? (
@@ -1094,7 +1404,7 @@ function CreateRecordDialog({
                           }}
                         >
                           <p className="px-2 py-1 text-xs font-black uppercase tracking-wider text-muted-foreground">
-                            Select Location
+                            Select Vehicle Storage Location
                           </p>
                           <div className="grid max-h-72 gap-1 overflow-y-auto" role="listbox">
                             {locationOptions.map((location) => (
@@ -1186,6 +1496,17 @@ function CreateRecordDialog({
                       </div>
                     ) : null}
                   </div>
+                ) : isVehicleForm && isVehicleSelectColumn(column) ? (
+                  <select
+                    className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                    onChange={(event) => onChange(column, event.target.value)}
+                    value={formValues[column] ?? ""}
+                  >
+                    <option value="">Select {column.toLowerCase()}</option>
+                    {getVehicleSelectOptions(column).map((option) => (
+                      <option key={option}>{option}</option>
+                    ))}
+                  </select>
                 ) : isLongTextColumn(column) ? (
                   <textarea
                     className="min-h-28 resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm font-semibold leading-6 outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/15"
@@ -1207,7 +1528,7 @@ function CreateRecordDialog({
                     className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/15"
                     onChange={(event) => onChange(column, event.target.value)}
                     placeholder={getFieldPlaceholder(column)}
-                    type="text"
+                    type={column === "Registration Expiry" ? "date" : "text"}
                     value={formValues[column] ?? ""}
                   />
                 )}
@@ -1226,7 +1547,7 @@ function CreateRecordDialog({
             </Button>
             <Button disabled={isUploading} type="submit">
               <Save aria-hidden="true" className="size-4" />
-              {isUploading ? "Uploading..." : "Save"}
+              {isUploading ? "Uploading..." : primaryAction.toLowerCase().startsWith("edit") ? "Update" : "Save"}
             </Button>
           </div>
         </form>
@@ -1290,9 +1611,9 @@ function VehicleCards({
           const title = record.Vehicle ?? "Vehicle Unit"
           const details = Object.entries(record).filter(
             ([key]) =>
-              !["vehicle", "status", "photo"].includes(key.toLowerCase()),
+              !["vehicle", "status", "photo", "main photo", "interior photos", "exterior photos"].includes(key.toLowerCase()),
           )
-          const uploadedImage = resolveImageUrl(record.Photo)
+          const uploadedImage = resolveImageUrl(record["Main Photo"] ?? record.Photo)
           const image =
             uploadedImage ??
             vehicleImages[(startIndex + index) % vehicleImages.length]
@@ -1709,6 +2030,7 @@ function StatusNavigation({
 function getRecordActions(actionSet: string, record: Record<string, string>): RecordAction[] {
   const status = record.Status?.toLowerCase() ?? ""
   const view: RecordAction = { icon: Eye, kind: "view", label: "Details", variant: "outline" }
+  const jobOrderView: RecordAction = { icon: Eye, kind: "view", label: "View", variant: "outline" }
   const update: RecordAction = { icon: Pencil, kind: "edit", label: "Update", variant: "outline" }
   const download: RecordAction = { icon: Download, label: "Download", variant: "outline" }
 
@@ -1744,17 +2066,50 @@ function getRecordActions(actionSet: string, record: Record<string, string>): Re
           : { icon: CheckCircle2, label: "Mark Ready", variant: "default" },
       ]
     case "admin-job-orders":
-      return [
-        status === "pending"
-          ? { icon: CheckCircle2, label: "Approve", variant: "default" }
-          : { icon: ClipboardCheck, label: "Monitor", variant: "outline" },
-        { icon: Send, label: "Assign", variant: "outline" },
-      ]
+      if (status === "pending") {
+        return [
+          jobOrderView,
+          { icon: Play, label: "Start Job", variant: "default" },
+          { icon: Pencil, kind: "edit", label: "Edit", variant: "outline" },
+          { icon: Trash2, kind: "delete", label: "Delete", variant: "destructive" },
+        ]
+      }
+
+      if (status === "in progress") {
+        return [
+          jobOrderView,
+          { icon: Pause, label: "Waiting for Parts", variant: "outline" },
+          { icon: CheckCircle2, label: "Complete", variant: "default" },
+        ]
+      }
+
+      if (status === "waiting for parts") {
+        return [
+          jobOrderView,
+          { icon: Play, label: "Resume Job", variant: "default" },
+          { icon: X, label: "Cancel", variant: "destructive", workflowAction: "Cancel Job" },
+        ]
+      }
+
+      if (status === "completed") {
+        return [
+          jobOrderView,
+          { icon: Printer, label: "Print", variant: "outline", workflowAction: "Print Job Order" },
+        ]
+      }
+
+      if (status === "cancelled") {
+        return [
+          jobOrderView,
+          { icon: RotateCcw, label: "Restore", variant: "outline" },
+        ]
+      }
+
+      return [jobOrderView]
     case "customers":
-      return [
-        { icon: FileText, label: "History", variant: "outline" },
-        { icon: Send, label: "Follow Up", variant: "default" },
-      ]
+      return status === "pending"
+        ? [{ icon: ClipboardCheck, label: "Verify", variant: "default" }]
+        : [{ icon: FileText, label: "View Transaction", variant: "outline" }]
     case "sales-payments":
       return [
         { icon: ReceiptActionIcon, label: "Receipt", variant: "outline" },
@@ -1891,6 +2246,7 @@ function RecordTable({
   searchTerm: string
 }) {
   const isRequirementsModule = moduleId === "requirements"
+  const isJobOrderModule = (actionSet ?? moduleId) === "admin-job-orders"
   const rowsWithActions = records.map((record) => ({
     actions: getRecordActions(actionSet ?? moduleId, record),
     record,
@@ -1960,6 +2316,7 @@ function RecordTable({
                     <div className="flex items-center gap-2">
                       {recordActions.map((action) => {
                         const Icon = action.icon
+                        const shouldHideActionText = !isJobOrderModule || isRequirementsModule
 
                         return (
                           <Button
@@ -1981,7 +2338,7 @@ function RecordTable({
                                 return
                               }
 
-                              onWorkflowAction(action.label, record)
+                              onWorkflowAction(action.workflowAction ?? action.label, record)
                             }}
                             size={isRequirementsModule ? "icon-sm" : "sm"}
                             title={action.label}
@@ -1991,7 +2348,7 @@ function RecordTable({
                             <Icon aria-hidden="true" className="size-4" />
                             <span
                               className={cn(
-                                "max-xl:sr-only",
+                                shouldHideActionText && "max-xl:sr-only",
                                 isRequirementsModule && "sr-only",
                               )}
                             >
@@ -2053,7 +2410,7 @@ function RecordDetailsDialog({
           </Button>
         </div>
         <div className="grid max-h-[calc(90svh-81px)] gap-3 overflow-y-auto p-4 sm:grid-cols-2">
-          {Object.entries(record).map(([label, value]) => (
+          {Object.entries(record).filter(([label]) => isVisibleColumn(label)).map(([label, value]) => (
             <div className="rounded-lg border border-border p-3" key={label}>
               <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">
                 {label}
@@ -2061,6 +2418,1254 @@ function RecordDetailsDialog({
               <p className="mt-2 break-words text-sm font-semibold">{value}</p>
             </div>
           ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function JobOrderDetailsDialog({
+  onClose,
+  onPrint,
+  record,
+}: {
+  onClose: () => void
+  onPrint: () => void
+  record: Record<string, string>
+}) {
+  const rows = [
+    ["Job Order No.", getJobOrderNumber(record)],
+    ["Date Created", record["Date Created"] ?? "N/A"],
+    ["Vehicle", record.Vehicle ?? "N/A"],
+    ["Plate Number", record["Plate Number"] ?? "N/A"],
+    ["Customer", record.Customer ?? "N/A"],
+    ["Assigned Staff", record["Assigned Staff"] ?? "Unassigned"],
+    ["Service Type", record["Service Type"] ?? "N/A"],
+    ["Priority", record.Priority ?? "N/A"],
+    ["Target Completion", record["Target Completion Date"] ?? "N/A"],
+    ["Estimated Labor", record["Estimated Labor Cost"] ?? "N/A"],
+    ["Estimated Parts", record["Estimated Parts Cost"] ?? "N/A"],
+    ["Status", record.Status ?? "N/A"],
+    ["Date Started", record["Date Started"] ?? "N/A"],
+    ["Date Completed", record["Date Completed"] ?? "N/A"],
+    ...(record.Status === "Cancelled"
+      ? [
+          ["Cancellation Reason", record["Cancellation Reason"] ?? "N/A"],
+          ["Cancelled By", record["Cancelled By"] ?? "N/A"],
+          ["Cancellation Date", record["Cancellation Date"] ?? "N/A"],
+        ]
+      : []),
+    ...(record["Restore Reason"]
+      ? [
+          ["Previous Status", record["Previous Status"] ?? "Cancelled"],
+          ["Restore Reason", record["Restore Reason"] ?? "N/A"],
+          ["Restored By", record["Restored By"] ?? "N/A"],
+          ["Restore Date", record["Restore Date"] ?? "N/A"],
+        ]
+      : []),
+  ]
+
+  return (
+    <div
+      aria-labelledby="job-order-details-title"
+      aria-modal="true"
+      className="fixed inset-0 z-50 grid place-items-center bg-background/75 p-4 backdrop-blur-sm"
+      role="dialog"
+    >
+      <div className="grid max-h-[90svh] w-full max-w-3xl grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b p-4">
+          <div>
+            <p className="text-xs font-black uppercase tracking-wider text-primary">
+              Job Order Details
+            </p>
+            <h2 className="mt-1 text-xl font-black" id="job-order-details-title">
+              View Job Order
+            </h2>
+          </div>
+          <Button aria-label="Close modal" onClick={onClose} size="icon-sm" type="button" variant="outline">
+            <X aria-hidden="true" className="size-4" />
+          </Button>
+        </div>
+
+        <div className="overflow-y-auto p-4">
+          <div className="rounded-lg border border-border bg-background p-4">
+            <h3 className="text-sm font-black uppercase tracking-wider text-muted-foreground">
+              Job Order Information
+            </h3>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {rows.map(([label, value]) => (
+                <div className="rounded-lg border border-border p-3" key={label}>
+                  <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">{label}</p>
+                  <p className="mt-2 break-words text-sm font-semibold">{value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 grid gap-3">
+              <div className="rounded-lg border border-border p-3">
+                <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Concern</p>
+                <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6">
+                {record["Concern/Description"] ?? record.Concern ?? "N/A"}
+                </p>
+              </div>
+              <div className="rounded-lg border border-border p-3">
+                <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Remarks</p>
+                <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6">
+                {record.Remarks ?? "N/A"}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-2 border-t p-4">
+          <Button onClick={onClose} type="button" variant="outline">
+            Close
+          </Button>
+          <Button onClick={onPrint} type="button" variant="outline">
+            <Printer aria-hidden="true" className="size-4" />
+            Print
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function StartJobOrderDialog({
+  onClose,
+  onStart,
+  record,
+  staffOptions,
+}: {
+  onClose: () => void
+  onStart: (assignedStaff: string, remarks: string) => void
+  record: Record<string, string>
+  staffOptions: SelectOption[]
+}) {
+  const initialAssignedStaff = record["Assigned Staff"] || ""
+  const staffSelectOptions = staffOptions.some((option) => option.label === initialAssignedStaff)
+    ? staffOptions
+    : initialAssignedStaff
+      ? [{ id: initialAssignedStaff, label: initialAssignedStaff }, ...staffOptions]
+      : staffOptions
+  const [assignedStaff, setAssignedStaff] = useState(initialAssignedStaff)
+  const [remarks, setRemarks] = useState("")
+
+  return (
+    <div
+      aria-labelledby="start-job-order-title"
+      aria-modal="true"
+      className="fixed inset-0 z-50 grid place-items-center bg-background/75 p-4 backdrop-blur-sm"
+      role="dialog"
+    >
+      <div className="grid max-h-[90svh] w-full max-w-xl grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b p-4">
+          <div>
+            <p className="text-xs font-black uppercase tracking-wider text-primary">
+              Job Order Workflow
+            </p>
+            <h2 className="mt-1 text-xl font-black" id="start-job-order-title">
+              Start Job
+            </h2>
+            <p className="mt-2 text-sm font-semibold text-muted-foreground">
+              Start this job and move the status to In Progress.
+            </p>
+          </div>
+          <Button aria-label="Close modal" onClick={onClose} size="icon-sm" type="button" variant="outline">
+            <X aria-hidden="true" className="size-4" />
+          </Button>
+        </div>
+
+        <div className="grid gap-4 overflow-y-auto p-4">
+          <div className="grid gap-3 rounded-lg border border-border bg-background p-4 sm:grid-cols-3">
+            <div>
+              <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Job Order</p>
+              <p className="mt-2 text-sm font-black">{getJobOrderNumber(record)}</p>
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Vehicle</p>
+              <p className="mt-2 text-sm font-black">{record.Vehicle ?? "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Service</p>
+              <p className="mt-2 text-sm font-black">{record["Service Type"] ?? "N/A"}</p>
+            </div>
+          </div>
+
+          <label className="grid gap-2">
+            <span className="text-sm font-black text-muted-foreground">Assigned Staff</span>
+            <select
+              className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+              onChange={(event) => setAssignedStaff(event.target.value)}
+              value={assignedStaff}
+            >
+              {staffSelectOptions.length === 0 ? (
+                <option value="">No staff available</option>
+              ) : null}
+              {staffSelectOptions.map((staff) => (
+                <option key={staff.id} value={staff.label}>{staff.label}</option>
+              ))}
+            </select>
+          </label>
+
+          <label className="grid gap-2">
+            <span className="text-sm font-black text-muted-foreground">Remarks</span>
+            <textarea
+              className="min-h-24 resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+              onChange={(event) => setRemarks(event.target.value)}
+              value={remarks}
+            />
+          </label>
+
+          <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-200">
+            On save: Status becomes In Progress, Date Started is recorded, and Started By is recorded.
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-2 border-t p-4">
+          <Button onClick={onClose} type="button" variant="outline">
+            Cancel
+          </Button>
+          <Button onClick={() => onStart(assignedStaff, remarks)} type="button">
+            <Play aria-hidden="true" className="size-4" />
+            Start
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function JobOrderPrintDialog({
+  onClose,
+  record,
+}: {
+  onClose: () => void
+  record: Record<string, string>
+}) {
+  const printRows = getJobOrderPrintRows(record)
+
+  return (
+    <div
+      aria-labelledby="job-order-print-title"
+      aria-modal="true"
+      className="fixed inset-0 z-50 grid place-items-center bg-background/75 p-4 backdrop-blur-sm"
+      role="dialog"
+    >
+      <div className="grid max-h-[90svh] w-full max-w-3xl grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b p-4">
+          <div>
+            <p className="text-xs font-black uppercase tracking-wider text-primary">
+              Job Order Printing
+            </p>
+            <h2 className="mt-1 text-xl font-black" id="job-order-print-title">
+              Print Job Order
+            </h2>
+            <p className="mt-2 text-sm font-semibold text-muted-foreground">
+              Review the job order before printing.
+            </p>
+          </div>
+          <Button aria-label="Close modal" onClick={onClose} size="icon-sm" type="button" variant="outline">
+            <X aria-hidden="true" className="size-4" />
+          </Button>
+        </div>
+
+        <div className="overflow-y-auto p-4">
+          <div className="print-area rounded-lg border border-border bg-background p-6 text-foreground">
+            <div className="border-b pb-4 text-center">
+              <p className="text-xs font-black uppercase tracking-[0.25em] text-muted-foreground">
+                CDO Car Trading
+              </p>
+              <h3 className="mt-2 text-2xl font-black">Job Order</h3>
+              <p className="mt-1 text-sm font-semibold text-muted-foreground">
+                {getJobOrderNumber(record)}
+              </p>
+            </div>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {printRows.map(([label, value]) => (
+                <div className="rounded-lg border border-border p-3" key={label}>
+                  <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">{label}</p>
+                  <p className="mt-2 break-words text-sm font-semibold">{value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 grid gap-3">
+              <div className="rounded-lg border border-border p-3">
+                <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Concern</p>
+                <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6">
+                  {record["Concern/Description"] ?? record.Concern ?? "N/A"}
+                </p>
+              </div>
+              <div className="rounded-lg border border-border p-3">
+                <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Remarks</p>
+                <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6">
+                  {record["Completion Remarks"] ?? record.Remarks ?? "N/A"}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-8 grid gap-6 text-sm font-semibold sm:grid-cols-2">
+              <div className="border-t pt-3">
+                Prepared By
+              </div>
+              <div className="border-t pt-3">
+                Received / Verified By
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-2 border-t p-4">
+          <Button onClick={onClose} type="button" variant="outline">
+            Close
+          </Button>
+          <Button onClick={() => window.print()} type="button">
+            <Printer aria-hidden="true" className="size-4" />
+            Print
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function JobOrderFormDialog({
+  customerOptions,
+  formValues,
+  isSubmitting = false,
+  mode,
+  onChange,
+  onClose,
+  onSubmit,
+  staffOptions,
+  vehicleOptions,
+}: {
+  customerOptions: SelectOption[]
+  formValues: Record<string, string>
+  isSubmitting?: boolean
+  mode: "create" | "edit"
+  onChange: (column: string, value: string) => void
+  onClose: () => void
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void
+  staffOptions: SelectOption[]
+  vehicleOptions: SelectOption[]
+}) {
+  const isEdit = mode === "edit"
+  const title = isEdit ? "Edit Job Order" : "Create Job Order"
+  const submitLabel = isEdit ? "Update Job Order" : "Save"
+  const [serviceOptions, setServiceOptions] = useState<SelectOption[]>(jobOrderServiceOptions)
+  const [customServiceTypes, setCustomServiceTypes] = useState<string[]>([])
+  const [isAddingService, setIsAddingService] = useState(false)
+  const [newServiceType, setNewServiceType] = useState("")
+  const addServiceType = () => {
+    const normalizedServiceType = newServiceType.trim()
+
+    if (!normalizedServiceType) {
+      return
+    }
+
+    const nextOption = {
+      id: normalizedServiceType,
+      label: normalizedServiceType,
+      meta: { custom: "true" },
+    }
+
+    setServiceOptions((current) => {
+      if (current.some((option) => option.label.toLowerCase() === normalizedServiceType.toLowerCase())) {
+        return current
+      }
+
+      return [...current, nextOption]
+    })
+    setCustomServiceTypes((current) =>
+      current.includes(normalizedServiceType) ? current : [...current, normalizedServiceType],
+    )
+    onChange("Service Type", normalizedServiceType)
+    setNewServiceType("")
+    setIsAddingService(false)
+  }
+  const deleteServiceType = (serviceType: string) => {
+    setServiceOptions((current) => current.filter((option) => option.label !== serviceType))
+    setCustomServiceTypes((current) => current.filter((item) => item !== serviceType))
+
+    if (formValues["Service Type"] === serviceType) {
+      onChange("Service Type", "")
+    }
+  }
+
+  return (
+    <div
+      aria-labelledby="job-order-form-title"
+      aria-modal="true"
+      className="fixed inset-0 z-50 grid place-items-center bg-background/75 p-4 backdrop-blur-sm"
+      role="dialog"
+    >
+      <div className="grid max-h-[90svh] w-full max-w-4xl grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b p-4">
+          <div>
+            <p className="text-xs font-black uppercase tracking-wider text-primary">
+              Job Order
+            </p>
+            <h2 className="mt-1 text-xl font-black" id="job-order-form-title">
+              {title}
+            </h2>
+            <p className="mt-2 text-sm font-semibold text-muted-foreground">
+              {isEdit
+                ? "Update the editable job order details. Job Order No. and Date Created are read-only."
+                : "Enter the required job order details before saving."}
+            </p>
+          </div>
+          <Button aria-label="Close modal" disabled={isSubmitting} onClick={onClose} size="icon-sm" type="button" variant="outline">
+            <X aria-hidden="true" className="size-4" />
+          </Button>
+        </div>
+
+        <form className="grid min-h-0 grid-rows-[minmax(0,1fr)_auto]" onSubmit={onSubmit}>
+          <div className="grid gap-4 overflow-y-auto p-4 md:grid-cols-2">
+            <ReadonlyJobOrderField
+              label="Job Order No."
+              value={`${getJobOrderNumber(formValues)}${isEdit ? "" : " (Auto)"}`}
+            />
+            {isEdit ? (
+              <ReadonlyJobOrderField label="Date Created" value={formValues["Date Created"] ?? "N/A"} />
+            ) : null}
+
+            <JobOrderCommandSelect
+              label="Vehicle"
+              name="Vehicle"
+              onChange={onChange}
+              options={vehicleOptions}
+              valueId={formValues._vehicleId}
+              value={formValues.Vehicle}
+            />
+            <JobOrderCommandSelect
+              label="Customer"
+              name="Customer"
+              onChange={onChange}
+              options={customerOptions}
+              valueId={formValues._customerId}
+              value={formValues.Customer}
+            />
+            <JobOrderCommandSelect
+              label="Assigned Staff"
+              name="Assigned Staff"
+              onChange={onChange}
+              options={staffOptions}
+              valueId={formValues._assignedStaffId}
+              value={formValues["Assigned Staff"]}
+            />
+            <JobOrderCommandSelect
+              addAction={
+                isAddingService ? (
+                  <div className="grid gap-2 border-t pt-2">
+                    <input
+                      className="min-h-9 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                      onChange={(event) => setNewServiceType(event.target.value)}
+                      placeholder="Enter service type"
+                      value={newServiceType}
+                    />
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        onClick={() => {
+                          setIsAddingService(false)
+                          setNewServiceType("")
+                        }}
+                        size="sm"
+                        type="button"
+                        variant="outline"
+                      >
+                        Cancel
+                      </Button>
+                      <Button onClick={addServiceType} size="sm" type="button">
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <Button
+                    className="w-full justify-start"
+                    onClick={() => setIsAddingService(true)}
+                    size="sm"
+                    type="button"
+                    variant="outline"
+                  >
+                    <Plus aria-hidden="true" className="size-4" />
+                    Add new Service Type
+                  </Button>
+                )
+              }
+              label="Service Type"
+              name="Service Type"
+              onChange={onChange}
+              options={serviceOptions}
+              renderOptionAction={(option) =>
+                customServiceTypes.includes(option.label) ? (
+                  <Button
+                    aria-label={`Delete ${option.label}`}
+                    className="size-7 shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      deleteServiceType(option.label)
+                    }}
+                    size="icon-sm"
+                    title="Delete service type"
+                    type="button"
+                    variant="ghost"
+                  >
+                    <Trash2 aria-hidden="true" className="size-3.5" />
+                  </Button>
+                ) : null
+              }
+              value={formValues["Service Type"]}
+            />
+
+            <label className="grid gap-2 md:col-span-2">
+              <span className="text-sm font-black text-muted-foreground">Concern</span>
+              <textarea
+                className="min-h-28 resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm font-semibold leading-6 outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/15"
+                onChange={(event) => onChange("Concern/Description", event.target.value)}
+                placeholder="Describe the concern or service request"
+                value={formValues["Concern/Description"] ?? ""}
+              />
+            </label>
+
+            <fieldset className="grid gap-2 rounded-lg border border-border p-3">
+              <legend className="px-1 text-sm font-black text-muted-foreground">Priority</legend>
+              <div className="grid gap-2">
+                {["Low", "Medium", "High"].map((priority) => (
+                  <label className="flex items-center gap-2 text-sm font-semibold" key={priority}>
+                    <input
+                      checked={(formValues.Priority || "Medium") === priority}
+                      className="size-4 accent-primary"
+                      onChange={() => onChange("Priority", priority)}
+                      type="radio"
+                    />
+                    {priority}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            <label className="grid gap-2">
+              <span className="text-sm font-black text-muted-foreground">Target Completion Date</span>
+              <input
+                className="date-input min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                onChange={(event) => onChange("Target Completion Date", event.target.value)}
+                type="date"
+                value={dateInputValue(formValues["Target Completion Date"])}
+              />
+            </label>
+
+            <JobOrderMoneyInput
+              label="Estimated Labor Cost"
+              name="Estimated Labor Cost"
+              onChange={onChange}
+              value={formValues["Estimated Labor Cost"]}
+            />
+            <JobOrderMoneyInput
+              label="Estimated Parts Cost"
+              name="Estimated Parts Cost"
+              onChange={onChange}
+              value={formValues["Estimated Parts Cost"]}
+            />
+
+            {isEdit ? (
+              <label className="grid gap-2 md:col-span-2">
+                <span className="text-sm font-black text-muted-foreground">Remarks</span>
+                <textarea
+                  className="min-h-24 resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm font-semibold leading-6 outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  onChange={(event) => onChange("Remarks", event.target.value)}
+                  value={formValues.Remarks ?? ""}
+                />
+              </label>
+            ) : null}
+          </div>
+
+          <div className="flex justify-end gap-2 border-t p-4">
+            <Button disabled={isSubmitting} onClick={onClose} type="button" variant="outline">
+              Cancel
+            </Button>
+            <Button disabled={isSubmitting} type="submit">
+              {isSubmitting ? (
+                <LoaderCircle aria-hidden="true" className="size-4 animate-spin" />
+              ) : (
+                <Save aria-hidden="true" className="size-4" />
+              )}
+              {isSubmitting ? "Saving..." : submitLabel}
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+function JobOrderWorkflowDialog({
+  action,
+  onClose,
+  onSave,
+  record,
+}: {
+  action: "Waiting for Parts" | "Resume Job" | "Complete" | "Cancel Job" | "Restore"
+  onClose: () => void
+  onSave: (updates: Record<string, string>) => void
+  record: Record<string, string>
+}) {
+  const [requiredPart, setRequiredPart] = useState(record["Required Part"] || "Oil Filter")
+  const [expectedArrival, setExpectedArrival] = useState(dateInputValue(record["Expected Arrival Date"]) || "2026-06-29")
+  const [reason, setReason] = useState(record["Parts Reason"] || "Oil filter is currently out of stock. Waiting for supplier delivery.")
+  const [partsReceived, setPartsReceived] = useState(true)
+  const [remarks, setRemarks] = useState(record.Remarks || "")
+  const [actualLaborCost, setActualLaborCost] = useState(record["Actual Labor Cost"] || record["Estimated Labor Cost"] || "")
+  const [actualPartsCost, setActualPartsCost] = useState(record["Actual Parts Cost"] || record["Estimated Parts Cost"] || "")
+  const [completionDate, setCompletionDate] = useState(dateInputValue(record["Date Completed"]) || "2026-06-28")
+  const [cancellationReason, setCancellationReason] = useState(record["Cancellation Reason"] || "Customer Cancelled Request")
+  const [otherCancellationReason, setOtherCancellationReason] = useState("")
+  const [cancelledBy, setCancelledBy] = useState(record["Cancelled By"] || "Admin")
+  const [cancellationDate, setCancellationDate] = useState(dateInputValue(record["Cancellation Date"]) || new Date().toISOString().slice(0, 10))
+  const [restoreReason, setRestoreReason] = useState(record["Restore Reason"] || "Customer decided to continue the service.")
+  const [restoreStatus, setRestoreStatus] = useState(record["Restore Status To"] || "Pending")
+  const restoredBy = record["Restored By"] || "Admin"
+  const [restoreDate, setRestoreDate] = useState(dateInputValue(record["Restore Date"]) || new Date().toISOString().slice(0, 10))
+  const title =
+    action === "Waiting for Parts"
+      ? "Waiting for Parts"
+      : action === "Resume Job"
+      ? "Resume Job"
+      : action === "Cancel Job"
+      ? "Cancel Job Order"
+      : action === "Restore"
+      ? "Restore Job Order"
+      : "Complete Job"
+  const description =
+    action === "Waiting for Parts"
+      ? "Update the required part details and move this job order to Waiting for Parts."
+      : action === "Resume Job"
+      ? "Confirm that parts were received and move this job order back to In Progress."
+      : action === "Cancel Job"
+      ? "Record the cancellation reason and move this job order to Cancelled."
+      : action === "Restore"
+      ? "Restore this cancelled job order and choose the next status."
+      : "Record completion details and mark this job order as Completed."
+
+  const save = () => {
+    if (action === "Waiting for Parts") {
+      onSave({
+        "Required Part": requiredPart || "N/A",
+        "Expected Arrival Date": displayDateValue(expectedArrival),
+        "Parts Reason": reason || "N/A",
+        Status: "Waiting for Parts",
+      })
+      return
+    }
+
+    if (action === "Resume Job") {
+      onSave({
+        "Parts Received": partsReceived ? "Yes" : "No",
+        Remarks: remarks || record.Remarks || "Parts received from supplier.",
+        Status: "In Progress",
+      })
+      return
+    }
+
+    if (action === "Cancel Job") {
+      onSave({
+        "Cancellation Reason":
+          cancellationReason === "Others"
+            ? otherCancellationReason || "Others"
+            : cancellationReason,
+        "Cancelled By": cancelledBy || "Admin",
+        "Cancellation Date": displayDateValue(cancellationDate),
+        Status: "Cancelled",
+      })
+      return
+    }
+
+    if (action === "Restore") {
+      onSave({
+        "Previous Status": record.Status ?? "Cancelled",
+        "Restore Reason": restoreReason || "N/A",
+        "Restore Status To": restoreStatus,
+        "Restored By": restoredBy || "Admin",
+        "Restore Date": displayDateValue(restoreDate),
+        Status: restoreStatus,
+      })
+      return
+    }
+
+    onSave({
+      "Actual Labor Cost": actualLaborCost || "PHP 0",
+      "Actual Parts Cost": actualPartsCost || "PHP 0",
+      "Date Completed": displayDateValue(completionDate),
+      "Completion Remarks": remarks || "Vehicle successfully serviced and tested. Ready for release.",
+      Remarks: remarks || record.Remarks || "Completed.",
+      Status: "Completed",
+    })
+  }
+
+  return (
+    <div
+      aria-labelledby="job-order-workflow-title"
+      aria-modal="true"
+      className="fixed inset-0 z-50 grid place-items-center bg-background/75 p-4 backdrop-blur-sm"
+      role="dialog"
+    >
+      <div className="grid max-h-[90svh] w-full max-w-3xl grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b p-4">
+          <div>
+            <p className="text-xs font-black uppercase tracking-wider text-primary">
+              Job Order Workflow
+            </p>
+            <h2 className="mt-1 text-xl font-black" id="job-order-workflow-title">
+              {title}
+            </h2>
+            <p className="mt-2 text-sm font-semibold text-muted-foreground">{description}</p>
+          </div>
+          <Button aria-label="Close modal" onClick={onClose} size="icon-sm" type="button" variant="outline">
+            <X aria-hidden="true" className="size-4" />
+          </Button>
+        </div>
+
+        <div className="grid gap-4 overflow-y-auto p-4">
+          <div className="grid gap-3 rounded-lg border border-border bg-background p-4 sm:grid-cols-3">
+            <div>
+              <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Job Order</p>
+              <p className="mt-2 text-sm font-black">{getJobOrderNumber(record)}</p>
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Vehicle</p>
+              <p className="mt-2 text-sm font-black">{record.Vehicle ?? "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Service Type</p>
+              <p className="mt-2 text-sm font-black">{record["Service Type"] ?? "N/A"}</p>
+            </div>
+          </div>
+
+          {action === "Waiting for Parts" ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="grid gap-2">
+                <span className="text-sm font-black text-muted-foreground">Required Part</span>
+                <input
+                  className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  onChange={(event) => setRequiredPart(event.target.value)}
+                  value={requiredPart}
+                />
+              </label>
+              <label className="grid gap-2">
+                <span className="text-sm font-black text-muted-foreground">Expected Arrival</span>
+                <input
+                  className="date-input min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  onChange={(event) => setExpectedArrival(event.target.value)}
+                  type="date"
+                  value={expectedArrival}
+                />
+              </label>
+              <label className="grid gap-2 sm:col-span-2">
+                <span className="text-sm font-black text-muted-foreground">Reason</span>
+                <textarea
+                  className="min-h-28 resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm font-semibold leading-6 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  onChange={(event) => setReason(event.target.value)}
+                  value={reason}
+                />
+              </label>
+            </div>
+          ) : null}
+
+          {action === "Resume Job" ? (
+            <div className="grid gap-4">
+              <fieldset className="grid gap-2 rounded-lg border border-border p-3">
+                <legend className="px-1 text-sm font-black text-muted-foreground">Parts Received?</legend>
+                <label className="flex items-center gap-2 text-sm font-semibold">
+                  <input
+                    checked={partsReceived}
+                    className="size-4 accent-primary"
+                    onChange={() => setPartsReceived(true)}
+                    type="radio"
+                  />
+                  Yes
+                </label>
+                <label className="flex items-center gap-2 text-sm font-semibold">
+                  <input
+                    checked={!partsReceived}
+                    className="size-4 accent-primary"
+                    onChange={() => setPartsReceived(false)}
+                    type="radio"
+                  />
+                  No
+                </label>
+              </fieldset>
+              <label className="grid gap-2">
+                <span className="text-sm font-black text-muted-foreground">Remarks</span>
+                <textarea
+                  className="min-h-24 resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm font-semibold leading-6 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  onChange={(event) => setRemarks(event.target.value)}
+                  value={remarks}
+                />
+              </label>
+            </div>
+          ) : null}
+
+          {action === "Complete" ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <JobOrderMoneyInput
+                label="Actual Labor Cost"
+                name="Actual Labor Cost"
+                onChange={(_, value) => setActualLaborCost(value)}
+                value={actualLaborCost}
+              />
+              <JobOrderMoneyInput
+                label="Actual Parts Cost"
+                name="Actual Parts Cost"
+                onChange={(_, value) => setActualPartsCost(value)}
+                value={actualPartsCost}
+              />
+              <label className="grid gap-2">
+                <span className="text-sm font-black text-muted-foreground">Completion Date</span>
+                <input
+                  className="date-input min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  onChange={(event) => setCompletionDate(event.target.value)}
+                  type="date"
+                  value={completionDate}
+                />
+              </label>
+              <div className="grid gap-2">
+                <span className="text-sm font-black text-muted-foreground">Service Performed</span>
+                <div className="rounded-lg border border-border bg-background p-3 text-sm font-semibold leading-6">
+                  <p>{record["Service Type"] ?? "N/A"}</p>
+                  {requiredPart ? <p>{requiredPart} Replacement</p> : null}
+                </div>
+              </div>
+              <label className="grid gap-2 sm:col-span-2">
+                <span className="text-sm font-black text-muted-foreground">Completion Remarks</span>
+                <textarea
+                  className="min-h-24 resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm font-semibold leading-6 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  onChange={(event) => setRemarks(event.target.value)}
+                  value={remarks}
+                />
+              </label>
+            </div>
+          ) : null}
+
+          {action === "Cancel Job" ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="grid gap-2 sm:col-span-2">
+                <span className="text-sm font-black text-muted-foreground">Reason for Cancellation</span>
+                <select
+                  className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  onChange={(event) => setCancellationReason(event.target.value)}
+                  value={cancellationReason}
+                >
+                  {jobOrderCancellationReasons.map((reasonOption) => (
+                    <option key={reasonOption}>{reasonOption}</option>
+                  ))}
+                </select>
+              </label>
+
+              {cancellationReason === "Others" ? (
+                <label className="grid gap-2 sm:col-span-2">
+                  <span className="text-sm font-black text-muted-foreground">Other Reason</span>
+                  <textarea
+                    className="min-h-24 resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm font-semibold leading-6 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                    onChange={(event) => setOtherCancellationReason(event.target.value)}
+                    value={otherCancellationReason}
+                  />
+                </label>
+              ) : null}
+
+              <label className="grid gap-2">
+                <span className="text-sm font-black text-muted-foreground">Cancelled By</span>
+                <input
+                  className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  onChange={(event) => setCancelledBy(event.target.value)}
+                  value={cancelledBy}
+                />
+              </label>
+
+              <label className="grid gap-2">
+                <span className="text-sm font-black text-muted-foreground">Cancellation Date</span>
+                <input
+                  className="date-input min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  onChange={(event) => setCancellationDate(event.target.value)}
+                  type="date"
+                  value={cancellationDate}
+                />
+              </label>
+            </div>
+          ) : null}
+
+          {action === "Restore" ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <ReadonlyJobOrderField label="Current Status" value={record.Status ?? "Cancelled"} />
+              <fieldset className="grid gap-2 rounded-lg border border-border p-3">
+                <legend className="px-1 text-sm font-black text-muted-foreground">Restore Status To</legend>
+                {["Pending", "In Progress"].map((statusOption) => (
+                  <label className="flex items-center gap-2 text-sm font-semibold" key={statusOption}>
+                    <input
+                      checked={restoreStatus === statusOption}
+                      className="size-4 accent-primary"
+                      onChange={() => setRestoreStatus(statusOption)}
+                      type="radio"
+                    />
+                    {statusOption}
+                  </label>
+                ))}
+              </fieldset>
+              <label className="grid gap-2 sm:col-span-2">
+                <span className="text-sm font-black text-muted-foreground">Reason for Restore</span>
+                <textarea
+                  className="min-h-24 resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm font-semibold leading-6 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  onChange={(event) => setRestoreReason(event.target.value)}
+                  value={restoreReason}
+                />
+              </label>
+              <label className="grid gap-2">
+                <span className="text-sm font-black text-muted-foreground">Restore Date</span>
+                <input
+                  className="date-input min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  onChange={(event) => setRestoreDate(event.target.value)}
+                  type="date"
+                  value={restoreDate}
+                />
+              </label>
+            </div>
+          ) : null}
+        </div>
+
+        <div className="flex justify-end gap-2 border-t p-4">
+          <Button onClick={onClose} type="button" variant="outline">
+            Cancel
+          </Button>
+          <Button onClick={save} type="button">
+            <CheckCircle2 aria-hidden="true" className="size-4" />
+            {action === "Waiting for Parts"
+              ? "Confirm"
+              : action === "Resume Job"
+              ? "Resume"
+              : action === "Cancel Job"
+              ? "Confirm Cancel"
+              : action === "Restore"
+              ? "Restore"
+              : "Complete Job"}
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ReadonlyJobOrderField({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid gap-2">
+      <span className="text-sm font-black text-muted-foreground">{label}</span>
+      <div className="min-h-10 rounded-lg border border-border bg-muted px-3 py-2 text-sm font-black">
+        {value}
+      </div>
+    </div>
+  )
+}
+
+function JobOrderCommandSelect({
+  addAction,
+  label,
+  name,
+  onChange,
+  options,
+  renderOptionAction,
+  value,
+  valueId,
+}: {
+  addAction?: React.ReactNode
+  label: string
+  name: string
+  onChange: (column: string, value: string) => void
+  options: SelectOption[]
+  renderOptionAction?: (option: SelectOption) => React.ReactNode
+  value?: string
+  valueId?: string
+}) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [search, setSearch] = useState("")
+  const idFieldMap: Record<string, string> = {
+    "Assigned Staff": "_assignedStaffId",
+    Customer: "_customerId",
+    Vehicle: "_vehicleId",
+  }
+  const selectedId = valueId || options.find((option) => option.label === value)?.id || ""
+  const selectedLabel = options.find((option) => option.id === selectedId)?.label || value || ""
+  const filteredOptions = options.filter((option) =>
+    option.label.toLowerCase().includes(search.trim().toLowerCase()),
+  )
+  const selectOption = (selectedOption: SelectOption) => {
+    onChange(name, selectedOption.label)
+
+    const idField = idFieldMap[name]
+
+    if (idField) {
+      onChange(idField, selectedOption.id)
+    }
+
+    if (name === "Vehicle") {
+      onChange("Plate Number", selectedOption.meta?.plateNumber ?? "")
+    }
+
+    setSearch("")
+    setIsOpen(false)
+  }
+
+  return (
+    <div className="relative grid gap-2">
+      <span className="text-sm font-black text-muted-foreground">{label}</span>
+      <Button
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        className="h-10 w-full justify-between"
+        onClick={() => setIsOpen((open) => !open)}
+        type="button"
+        variant="outline"
+      >
+        <span className={cn("truncate", !selectedLabel && "text-muted-foreground")}>
+          {selectedLabel || `Select ${label}`}
+        </span>
+        <ChevronsUpDown aria-hidden="true" className="size-4 opacity-70" />
+      </Button>
+
+      {isOpen ? (
+        <div className="absolute left-0 right-0 top-[4.5rem] z-[80] overflow-hidden rounded-lg border bg-popover p-2 text-popover-foreground shadow-2xl">
+          <div className="flex min-h-9 items-center gap-2 rounded-md border border-input bg-background px-2">
+            <Search aria-hidden="true" className="size-4 text-muted-foreground" />
+            <input
+              autoFocus
+              className="w-full border-0 bg-transparent text-sm font-semibold outline-none placeholder:text-muted-foreground"
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder={`Search ${label.toLowerCase()}`}
+              type="search"
+              value={search}
+            />
+          </div>
+
+          <div className="mt-2 grid max-h-56 gap-1 overflow-y-auto" role="listbox">
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option) => (
+                <div
+                  className={cn(
+                    "flex items-center gap-1 rounded-md transition hover:bg-muted",
+                    selectedId === option.id && "bg-muted",
+                  )}
+                  key={option.id}
+                  role="option"
+                  aria-selected={selectedId === option.id}
+                >
+                  <button
+                    className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-2 text-left text-sm font-bold transition focus-visible:bg-muted focus-visible:outline-none"
+                    onClick={() => selectOption(option)}
+                    type="button"
+                  >
+                    <span className="min-w-0 flex-1 truncate">{option.label}</span>
+                    {selectedId === option.id ? (
+                      <Check aria-hidden="true" className="size-4 text-primary" />
+                    ) : null}
+                  </button>
+                  {renderOptionAction?.(option)}
+                </div>
+              ))
+            ) : (
+              <div className="px-2 py-3 text-sm font-bold text-muted-foreground">
+                No {label.toLowerCase()} found.
+              </div>
+            )}
+          </div>
+
+          {addAction ? (
+            <div className="mt-2 border-t pt-2">
+              {addAction}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+function JobOrderMoneyInput({
+  label,
+  name,
+  onChange,
+  value,
+}: {
+  label: string
+  name: string
+  onChange: (column: string, value: string) => void
+  value?: string
+}) {
+  return (
+    <label className="grid gap-2">
+      <span className="text-sm font-black text-muted-foreground">{label}</span>
+      <input
+        className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+        inputMode="decimal"
+        onChange={(event) => onChange(name, formatPesoInput(event.target.value))}
+        placeholder="PHP 0"
+        type="text"
+        value={value ?? ""}
+      />
+    </label>
+  )
+}
+
+function CustomerVerifyDialog({
+  onApprove,
+  onClose,
+  onReject,
+  record,
+}: {
+  onApprove: () => Promise<void>
+  onClose: () => void
+  onReject: (note: string) => Promise<void>
+  record: Record<string, string>
+}) {
+  const [isApproving, setIsApproving] = useState(false)
+  const [isRejecting, setIsRejecting] = useState(false)
+  const validIdUrl = resolveImageUrl(record._validIdUrl || record._uploadedValidId)
+  const reviewFields = [
+    { key: "Customer", label: "Customer" },
+    { key: "Email", label: "Email" },
+    { key: "Contact", label: "Contact" },
+    { key: "_address", label: "Address" },
+    { key: "_validIdType", label: "Valid ID Type" },
+    { key: "_uploadedValidId", label: "Uploaded Valid ID" },
+    { key: "_userAccount", label: "User Account" },
+    { key: "Status", label: "Status" },
+  ]
+
+  const approveCustomer = async () => {
+    setIsApproving(true)
+
+    try {
+      await onApprove()
+    } finally {
+      setIsApproving(false)
+    }
+  }
+
+  const rejectCustomer = async () => {
+    const result = await Swal.fire({
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#dc2626",
+      confirmButtonText: "Reject",
+      input: "textarea",
+      inputAttributes: {
+        "aria-label": "Rejection note",
+      },
+      inputPlaceholder: "Enter rejection note...",
+      inputValidator: (value) => {
+        if (!value.trim()) {
+          return "Please enter a rejection note."
+        }
+
+        return null
+      },
+      showCancelButton: true,
+      title: "Reject customer registration?",
+    })
+
+    if (!result.isConfirmed || typeof result.value !== "string") {
+      return
+    }
+
+    setIsRejecting(true)
+
+    try {
+      await onReject(result.value.trim())
+    } finally {
+      setIsRejecting(false)
+    }
+  }
+
+  return (
+    <div
+      aria-labelledby="customer-verify-title"
+      aria-modal="true"
+      className="fixed inset-0 z-50 grid place-items-center bg-background/75 p-4 backdrop-blur-sm"
+      role="dialog"
+    >
+      <div className="grid max-h-[90svh] w-full max-w-3xl grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b p-4">
+          <div>
+            <p className="text-xs font-black uppercase tracking-wider text-primary">
+              Customer Verification
+            </p>
+            <h2 className="mt-1 text-xl font-black" id="customer-verify-title">
+              Verify Registration
+            </h2>
+            <p className="mt-2 text-sm font-semibold text-muted-foreground">
+              Review the customer information before approving the user account.
+            </p>
+          </div>
+          <Button
+            aria-label="Close verification modal"
+            onClick={onClose}
+            size="icon-sm"
+            type="button"
+            variant="outline"
+          >
+            <X aria-hidden="true" className="size-4" />
+          </Button>
+        </div>
+
+        <div className="grid gap-3 overflow-y-auto p-4 sm:grid-cols-2">
+          {reviewFields.map((field) => (
+            <div
+              className={cn(
+                "rounded-lg border border-border p-3",
+                field.label === "Address" && "sm:col-span-2",
+                field.label === "Uploaded Valid ID" && "sm:col-span-2",
+              )}
+              key={field.key}
+            >
+              <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">
+                {field.label}
+              </p>
+              {field.label === "Uploaded Valid ID" && validIdUrl ? (
+                <a
+                  className="mt-2 inline-flex font-black text-primary hover:underline"
+                  href={validIdUrl}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  View uploaded valid ID
+                </a>
+              ) : (
+                <p className="mt-2 break-words text-sm font-semibold">
+                  {record[field.key] || "N/A"}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-2 border-t p-4 sm:flex-row sm:items-center sm:justify-between">
+          <Button onClick={onClose} type="button" variant="outline">
+            Cancel
+          </Button>
+          <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+            <Button
+              disabled={isApproving || isRejecting}
+              onClick={() => void rejectCustomer()}
+              type="button"
+              variant="destructive"
+            >
+              {isRejecting ? <LoaderCircle aria-hidden="true" className="animate-spin" /> : null}
+              Reject
+            </Button>
+            <Button disabled={isApproving || isRejecting} onClick={() => void approveCustomer()} type="button">
+              {isApproving ? <LoaderCircle aria-hidden="true" className="animate-spin" /> : null}
+              Approved
+            </Button>
+          </div>
         </div>
       </div>
     </div>
@@ -2093,6 +3698,31 @@ function DocumentBadges({ value }: { value: string }) {
 }
 
 function WorkflowActionDialog({
+  action,
+  actionSet,
+  onClose,
+  record,
+}: {
+  action: string
+  actionSet: string
+  onClose: () => void
+  record: Record<string, string>
+}) {
+  if (actionSet === "customers" && action === "View Transaction") {
+    return <CustomerTransactionDialog onClose={onClose} record={record} />
+  }
+
+  return (
+    <GenericWorkflowActionDialog
+      action={action}
+      actionSet={actionSet}
+      onClose={onClose}
+      record={record}
+    />
+  )
+}
+
+function GenericWorkflowActionDialog({
   action,
   actionSet,
   onClose,
@@ -2266,6 +3896,262 @@ function WorkflowActionDialog({
   )
 }
 
+function CustomerTransactionDialog({
+  onClose,
+  record,
+}: {
+  onClose: () => void
+  record: Record<string, string>
+}) {
+  const [activeTab, setActiveTab] = useState("Profile")
+  const validIdUrl = resolveImageUrl(record._validIdUrl || record._uploadedValidId)
+  const accountStatus = record._userAccount || "Inactive"
+  const profileRows = [
+    { label: "Customer ID", value: record._id ? `CUS-${record._id.padStart(5, "0")}` : "N/A" },
+    { label: "Full Name", value: record.Customer ?? "N/A" },
+    { label: "Mobile Number", value: record.Contact ?? "N/A" },
+    { label: "Email", value: record.Email ?? "N/A" },
+    { label: "Address", value: record._address ?? "N/A" },
+    { label: "Valid ID", value: record._validIdType ?? "N/A", href: validIdUrl ?? undefined },
+    { label: "Date Registered", value: record._dateRegistered ?? "N/A" },
+    { label: "Account Status", value: accountStatus },
+  ]
+  const transactions = [
+    { label: "Transaction No.", value: record.Transaction ?? "TRN-0001" },
+    { label: "Date", value: record.Date ?? record._dateRegistered ?? "N/A" },
+    { label: "Vehicle", value: record.Vehicle ?? "N/A" },
+    { label: "Payment Method", value: record["Payment Method"] ?? "Cash / Financing" },
+    { label: "Amount", value: record.Amount ?? "PHP 750,000" },
+    { label: "Down Payment", value: record["Down Payment"] ?? "PHP 150,000" },
+    { label: "Balance", value: record.Balance ?? "PHP 600,000" },
+    { label: "Status", value: record["Transaction Status"] ?? "Reserved / Processing / Completed / Cancelled" },
+  ]
+  const requirements = [
+    { item: "Valid ID", status: validIdUrl ? "Approved" : "Pending" },
+    { item: "Proof of Income", status: "Pending" },
+    { item: "Application Form", status: "Pending" },
+    { item: "Proof of Payment", status: "Pending" },
+  ]
+  const financingPayments = [
+    { date: "June 1", amount: "PHP 15,000", or: "OR-0001", status: "Paid" },
+    { date: "July 1", amount: "PHP 15,000", or: "OR-0002", status: "Paid" },
+  ]
+  const cashPayment = [
+    { label: "Payment Type", value: "Full Payment" },
+    { label: "Official Receipt Number", value: record.Receipt ?? "N/A" },
+    { label: "Payment Date", value: record["Payment Date"] ?? "N/A" },
+  ]
+  const vehicleRows = [
+    { label: "Plate No.", value: record["Plate No."] ?? "N/A" },
+    { label: "Make", value: record.Make ?? record.Brand ?? "N/A" },
+    { label: "Model", value: record.Model ?? "N/A" },
+    { label: "Year Model", value: record.Year ?? record["Year Model"] ?? "N/A" },
+    { label: "Color", value: record.Color ?? "N/A" },
+    { label: "Chassis No.", value: record["Chassis No."] ?? "N/A" },
+    { label: "Engine No.", value: record["Engine No."] ?? "N/A" },
+    { label: "Selling Price", value: record["Selling Price"] ?? record.Amount ?? "N/A" },
+  ]
+  const tabs = ["Profile", "Transactions", "Requirements", "Payments", "Notes"]
+
+  return (
+    <div
+      aria-labelledby="customer-transaction-title"
+      aria-modal="true"
+      className="fixed inset-0 z-50 grid place-items-center bg-background/75 p-4 backdrop-blur-sm"
+      role="dialog"
+    >
+      <div className="grid max-h-[calc(100svh-2rem)] w-full max-w-6xl grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-lg border border-primary/25 bg-card text-card-foreground shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b border-primary/20 bg-primary/5 p-4">
+          <div className="min-w-0">
+            <p className="text-xs font-black uppercase tracking-wider text-primary">
+              Customer Details
+            </p>
+            <h2 className="mt-1 text-xl font-black" id="customer-transaction-title">
+              {record.Customer ?? "Customer"} Transaction View
+            </h2>
+            <p className="mt-2 text-sm font-semibold text-muted-foreground">
+              Profile, transaction, requirement, payment, and note records for admin review.
+            </p>
+          </div>
+          <Button
+            aria-label="Close transaction modal"
+            onClick={onClose}
+            size="icon-sm"
+            type="button"
+            variant="outline"
+          >
+            <X aria-hidden="true" className="size-4" />
+          </Button>
+        </div>
+
+        <div className="grid min-h-0 overflow-hidden lg:grid-cols-[240px_minmax(0,1fr)]">
+          <aside className="border-b border-primary/15 bg-primary/5 p-3 lg:border-b-0 lg:border-r">
+            <div className="rounded-lg border border-primary/20 bg-background p-3">
+              <p className="text-xs font-black uppercase tracking-wider text-primary">Customer ID</p>
+              <p className="mt-1 text-lg font-black">
+                {record._id ? `CUS-${record._id.padStart(5, "0")}` : "N/A"}
+              </p>
+              <p className="mt-2 text-sm font-semibold text-muted-foreground">{record.Email ?? "N/A"}</p>
+              <StatusPill value={accountStatus} />
+            </div>
+            <div className="mt-3 grid gap-1">
+              {tabs.map((tab) => (
+                <button
+                  className={cn(
+                    "rounded-lg px-3 py-2 text-left text-sm font-black transition",
+                    activeTab === tab
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-primary/10 hover:text-foreground",
+                  )}
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  type="button"
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </aside>
+
+          <div className="min-h-0 overflow-y-auto p-4">
+            {activeTab === "Profile" ? (
+              <section className="grid gap-4">
+                <SectionHeader title="Profile" />
+                <InfoGrid rows={profileRows} />
+              </section>
+            ) : null}
+
+            {activeTab === "Transactions" ? (
+              <section className="grid gap-4">
+                <SectionHeader title="Transaction History" />
+                <InfoTable rows={transactions} />
+                <SectionHeader title="Purchased Vehicle" />
+                <InfoGrid rows={vehicleRows} />
+              </section>
+            ) : null}
+
+            {activeTab === "Requirements" ? (
+              <section className="grid gap-4">
+                <SectionHeader title="Submitted Requirements" />
+                <div className="overflow-hidden rounded-lg border border-primary/20">
+                  {requirements.map((requirement) => (
+                    <div className="grid gap-3 border-b border-primary/10 p-3 last:border-b-0 sm:grid-cols-[1fr_auto]" key={requirement.item}>
+                      <div className="flex items-center gap-2 font-black">
+                        <span className="grid size-6 place-items-center rounded-full bg-primary/10 text-primary">
+                          <Check aria-hidden="true" className="size-4" />
+                        </span>
+                        {requirement.item}
+                      </div>
+                      <StatusPill value={requirement.status} />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {activeTab === "Payments" ? (
+              <section className="grid gap-4">
+                <SectionHeader title="Payment History" />
+                <div className="overflow-x-auto rounded-lg border border-primary/20">
+                  <table className="w-full min-w-[560px] text-sm">
+                    <thead className="bg-primary/10 text-left text-xs font-black uppercase tracking-wider text-primary">
+                      <tr>
+                        <th className="px-3 py-2">Date</th>
+                        <th className="px-3 py-2">Amount</th>
+                        <th className="px-3 py-2">OR No.</th>
+                        <th className="px-3 py-2">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {financingPayments.map((payment) => (
+                        <tr className="border-t border-primary/10" key={payment.or}>
+                          <td className="px-3 py-3 font-semibold">{payment.date}</td>
+                          <td className="px-3 py-3 font-semibold">{payment.amount}</td>
+                          <td className="px-3 py-3 font-semibold">{payment.or}</td>
+                          <td className="px-3 py-3"><StatusPill value={payment.status} /></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <SectionHeader title="Cash Payment" />
+                <InfoGrid rows={cashPayment} />
+              </section>
+            ) : null}
+
+            {activeTab === "Notes" ? (
+              <section className="grid gap-4">
+                <SectionHeader title="Notes" />
+                <textarea
+                  className="min-h-56 resize-none rounded-lg border border-primary/20 bg-background p-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  defaultValue={`Customer status: ${record.Status ?? "N/A"}\nAccount status: ${accountStatus}\nRejection note: ${record._rejectionNote || "N/A"}\n\nAdd admin notes here.`}
+                />
+              </section>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="flex justify-end border-t border-primary/20 bg-primary/5 p-4">
+          <Button onClick={onClose} type="button" variant="outline">
+            Close
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <div>
+      <h3 className="text-base font-black text-primary">{title}</h3>
+      <div className="mt-2 h-px bg-primary/20" />
+    </div>
+  )
+}
+
+function InfoGrid({ rows }: { rows: { href?: string; label: string; value: string }[] }) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      {rows.map((row) => (
+        <div className="rounded-lg border border-primary/20 bg-background p-3" key={row.label}>
+          <p className="text-xs font-black uppercase tracking-wider text-primary">{row.label}</p>
+          {row.href ? (
+            <a className="mt-2 inline-flex font-black text-primary hover:underline" href={row.href} rel="noreferrer" target="_blank">
+              View uploaded valid ID
+            </a>
+          ) : (
+            <p className="mt-2 break-words text-sm font-semibold">{row.value || "N/A"}</p>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function InfoTable({ rows }: { rows: { label: string; value: string }[] }) {
+  return (
+    <div className="overflow-hidden rounded-lg border border-primary/20">
+      {rows.map((row) => (
+        <div className="grid border-b border-primary/10 last:border-b-0 sm:grid-cols-[220px_minmax(0,1fr)]" key={row.label}>
+          <div className="bg-primary/10 px-3 py-3 text-xs font-black uppercase tracking-wider text-primary">
+            {row.label}
+          </div>
+          <div className="px-3 py-3 text-sm font-semibold">{row.value || "N/A"}</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function StatusPill({ value }: { value: string }) {
+  return (
+    <span className="mt-2 inline-flex w-fit rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs font-black text-primary">
+      {value || "N/A"}
+    </span>
+  )
+}
+
 function WorkflowActionPreview({
   action,
   output,
@@ -2409,12 +4295,14 @@ function getWorkflowActionOutput(action: string, record: Record<string, string>)
     record.Reference ??
     record.Receipt ??
     record.Reservation ??
+    record["JO No."] ??
     record["Job Order"] ??
     record.Release ??
     record.Record ??
     record.Report ??
     "AUTO-DRAFT"
   const customer = record.Customer ?? "N/A"
+  const hasJobOrderReference = Boolean(record["JO No."] ?? record["Job Order"])
   const vehicle = record.Vehicle ?? "N/A"
   const today = new Date().toLocaleDateString("en-PH")
   const timestamp = new Date().toLocaleTimeString("en-PH", {
@@ -2429,11 +4317,11 @@ function getWorkflowActionOutput(action: string, record: Record<string, string>)
   }> = {
     Assign: {
       title: "Assignment Notice Prepared",
-      summary: `${record.Assigned ?? "Selected staff"} will receive the work assignment for ${vehicle}.`,
+      summary: `${record["Assigned To"] ?? record.Assigned ?? "Selected staff"} will receive the work assignment for ${vehicle}.`,
       items: [
         { label: "Assignment Ref", value: `${reference}-ASN` },
-        { label: "Assigned To", value: record.Assigned ?? "Unassigned" },
-        { label: "Schedule", value: record.Schedule ?? "For scheduling" },
+        { label: "Assigned To", value: record["Assigned To"] ?? record.Assigned ?? "Unassigned" },
+        { label: "Target Date", value: record["Target Date"] ?? record.Schedule ?? "For scheduling" },
         { label: "Notification", value: "Ready to send" },
       ],
     },
@@ -2441,9 +4329,9 @@ function getWorkflowActionOutput(action: string, record: Record<string, string>)
       title: "Monitoring Update Prepared",
       summary: `Progress board was prepared for ${reference}.`,
       items: [
-        { label: "Repair Status", value: record["Repair Status"] ?? record.Findings ?? "N/A" },
-        { label: "Washing Status", value: record["Washing Status"] ?? record.Cleaning ?? "N/A" },
-        { label: "Assigned Staff", value: record.Assigned ?? "Unassigned" },
+        { label: "Service Type", value: record["Service Type"] ?? record.Activity ?? "N/A" },
+        { label: "Progress", value: record.Progress ?? record["Repair Status"] ?? record.Findings ?? "N/A" },
+        { label: "Assigned Staff", value: record["Assigned To"] ?? record.Assigned ?? "Unassigned" },
         { label: "Updated", value: `${today} ${timestamp}` },
       ],
     },
@@ -2473,8 +4361,68 @@ function getWorkflowActionOutput(action: string, record: Record<string, string>)
       items: [
         { label: "Receipt No.", value: record.Receipt ?? reference },
         { label: "Customer", value: customer },
-        { label: "Amount", value: record.Payment ?? record.Paid ?? record.Amount ?? "N/A" },
+        { label: "Amount", value: record.Payment ?? record.Paid ?? record["Reservation Fee"] ?? record.Amount ?? "N/A" },
         { label: "Output", value: "Printable PDF receipt" },
+      ],
+    },
+    "Start Job": {
+      title: "Job Started",
+      summary: `${reference} is ready to move from Pending to In Progress.`,
+      items: [
+        { label: "Job Order", value: reference },
+        { label: "Vehicle", value: vehicle },
+        { label: "Next Status", value: "In Progress" },
+        { label: "Started", value: `${today} ${timestamp}` },
+      ],
+    },
+    "Waiting for Parts": {
+      title: "Parts Waiting Status Prepared",
+      summary: `${reference} is ready to be marked as Waiting for Parts.`,
+      items: [
+        { label: "Job Order", value: reference },
+        { label: "Vehicle", value: vehicle },
+        { label: "Next Status", value: "Waiting for Parts" },
+        { label: "Parts Used", value: record["Parts Used"] ?? "For update" },
+      ],
+    },
+    "Resume Job": {
+      title: "Job Resume Prepared",
+      summary: `${reference} is ready to resume from Waiting for Parts.`,
+      items: [
+        { label: "Job Order", value: reference },
+        { label: "Vehicle", value: vehicle },
+        { label: "Next Status", value: "In Progress" },
+        { label: "Resumed", value: `${today} ${timestamp}` },
+      ],
+    },
+    "Cancel Job": {
+      title: "Cancellation Prepared",
+      summary: `${reference} is ready to be cancelled.`,
+      items: [
+        { label: "Job Order", value: reference },
+        { label: "Vehicle", value: vehicle },
+        { label: "Next Status", value: "Cancelled" },
+        { label: "Reason", value: "For remarks" },
+      ],
+    },
+    "Print Job Order": {
+      title: "Job Order Print Ready",
+      summary: `${reference} is ready for printing.`,
+      items: [
+        { label: "Job Order", value: reference },
+        { label: "Vehicle", value: vehicle },
+        { label: "Service Type", value: record["Service Type"] ?? "N/A" },
+        { label: "Output", value: "Printable job order" },
+      ],
+    },
+    Restore: {
+      title: "Restore Prepared",
+      summary: `${reference} is ready to be restored or reopened.`,
+      items: [
+        { label: "Job Order", value: reference },
+        { label: "Vehicle", value: vehicle },
+        { label: "Next Status", value: "Pending / In Progress" },
+        { label: "Restored", value: `${today} ${timestamp}` },
       ],
     },
     Collect: {
@@ -2618,14 +4566,23 @@ function getWorkflowActionOutput(action: string, record: Record<string, string>)
       ],
     },
     Complete: {
-      title: "Completion Output Prepared",
-      summary: `${reference} is ready to be marked completed.`,
-      items: [
-        { label: "Reference", value: reference },
-        { label: "Vehicle", value: vehicle },
-        { label: "Completion Date", value: today },
-        { label: "Status", value: "Completed" },
-      ],
+      title: hasJobOrderReference ? "Completion Update Prepared" : "Completion Output Prepared",
+      summary: hasJobOrderReference
+        ? `${reference} is ready to be marked as Completed.`
+        : `${reference} is ready to be marked completed.`,
+      items: hasJobOrderReference
+        ? [
+            { label: "Job Order", value: reference },
+            { label: "Vehicle", value: vehicle },
+            { label: "Labor Cost", value: record["Labor Cost"] ?? "N/A" },
+            { label: "Next Status", value: "Completed" },
+          ]
+        : [
+            { label: "Reference", value: reference },
+            { label: "Vehicle", value: vehicle },
+            { label: "Completion Date", value: today },
+            { label: "Status", value: "Completed" },
+          ],
     },
     Reserve: {
       title: "Reservation Draft Prepared",
@@ -2724,12 +4681,8 @@ function getWorkflowVisualProfile(actionSet: string, action: string): WorkflowVi
     return jobOrderAssignVisualProfile()
   }
 
-  if (actionSet === "customers" && action === "History") {
+  if (actionSet === "customers" && action === "View Transaction") {
     return customerHistoryVisualProfile()
-  }
-
-  if (actionSet === "customers" && action === "Follow Up") {
-    return followUpVisualProfile()
   }
 
   if (actionSet === "sales-payments" && action === "Receipt") {
@@ -3025,38 +4978,6 @@ function customerHistoryVisualProfile(): WorkflowVisualProfile {
     resultClass: "border-fuchsia-200 dark:border-fuchsia-900/50",
     resultTitle: "Timeline Preview",
     widthClass: "max-w-6xl",
-  }
-}
-
-function followUpVisualProfile(): WorkflowVisualProfile {
-  return {
-    ...defaultWorkflowVisualProfile(),
-    actionPanelClass: "border-pink-200 dark:border-pink-900/50",
-    actionTitle: "Follow-Up Task",
-    borderClass: "border-pink-200 dark:border-pink-900/50",
-    checkboxClass: "accent-pink-600",
-    checklistClass: "border-pink-200 bg-pink-50 dark:border-pink-900/50 dark:bg-pink-950/20",
-    checklistTitle: "Contact Steps",
-    confirmButtonClass: "bg-pink-600 text-white hover:bg-pink-700",
-    confirmedClass: "border-pink-200 bg-pink-50 text-pink-700 dark:border-pink-900/60 dark:bg-pink-950/30 dark:text-pink-200",
-    confirmLabel: "Queue",
-    descriptionClass: "text-pink-950/70 dark:text-pink-100/75",
-    eyebrowClass: "text-pink-700 dark:text-pink-200",
-    fieldLabelClass: "text-pink-700 dark:text-pink-200",
-    focusClass: "focus:border-pink-500 focus:ring-4 focus:ring-pink-500/15",
-    footerClass: "bg-pink-50/60 dark:bg-pink-950/10",
-    headerClass: "bg-pink-50 dark:bg-pink-950/20",
-    icon: Send,
-    iconClass: "bg-pink-100 text-pink-700 dark:bg-pink-900/50 dark:text-pink-100",
-    layoutClass: "lg:grid-cols-[0.8fr_1.2fr]",
-    panelHeaderClass: "bg-pink-50/70 dark:bg-pink-950/10",
-    recordFieldClass: "border-pink-100 dark:border-pink-900/40",
-    recordGridClass: "sm:grid-cols-2",
-    recordPanelClass: "border-pink-200 dark:border-pink-900/50",
-    recordTitle: "Contact Profile",
-    resultClass: "border-pink-200 dark:border-pink-900/50",
-    resultTitle: "Follow-Up Queue",
-    widthClass: "max-w-5xl",
   }
 }
 
@@ -3367,6 +5288,7 @@ function getWorkflowDialogContent(
     record.Report ??
     record.Reference ??
     record.Reservation ??
+    record["JO No."] ??
     record["Job Order"] ??
     record.Name ??
     "selected record"
@@ -3374,6 +5296,7 @@ function getWorkflowDialogContent(
     { label: "Handled By", value: "Current User" },
     { label: "Action Date", value: new Date().toLocaleDateString("en-PH") },
   ]
+  const hasJobOrderReference = Boolean(record["JO No."] ?? record["Job Order"])
   const commonChecklist = [
     "Review all displayed record information.",
     "Check supporting details before confirming.",
@@ -3386,10 +5309,10 @@ function getWorkflowDialogContent(
       context: "Job Order Monitoring",
       description: `Monitor work progress and service status for ${primaryName}.`,
       fields: [
-        { label: "Job Order", value: record["Job Order"] ?? "Not created" },
-        { label: "Assigned Staff", value: record.Assigned ?? "Unassigned" },
-        { label: "Repair Status", value: record["Repair Status"] ?? record.Findings ?? "N/A" },
-        { label: "Washing Status", value: record["Washing Status"] ?? record.Cleaning ?? "N/A" },
+        { label: "Job Order", value: record["JO No."] ?? record["Job Order"] ?? "Not created" },
+        { label: "Assigned Staff", value: record["Assigned To"] ?? record.Assigned ?? "Unassigned" },
+        { label: "Service Type", value: record["Service Type"] ?? record.Activity ?? "N/A" },
+        { label: "Progress", value: record.Progress ?? record["Repair Status"] ?? record.Findings ?? "N/A" },
         { label: "Next Update", value: "Progress note for monitoring board" },
         { label: "Current Status", value: record.Status ?? "In Progress" },
       ],
@@ -3400,14 +5323,98 @@ function getWorkflowDialogContent(
       context: "Personnel Assignment",
       description: `Assign a mechanic, carwasher, or staff member for ${primaryName}.`,
       fields: [
-        { label: "Service Type", value: record.Activity ?? record.Service ?? record.Task ?? "N/A" },
-        { label: "Assign To", value: record.Assigned ?? "Unassigned" },
-        { label: "Team Role", value: "Mechanic / Carwasher" },
-        { label: "Schedule", value: record.Schedule ?? "For scheduling" },
-        { label: "Priority", value: record.Status === "Pending" ? "For approval" : "Normal" },
+        { label: "Service Type", value: record["Service Type"] ?? record.Activity ?? record.Service ?? record.Task ?? "N/A" },
+        { label: "Assign To", value: record["Assigned To"] ?? record.Assigned ?? "Unassigned" },
+        { label: "Team Role", value: "Mechanic / Staff" },
+        { label: "Target Date", value: record["Target Date"] ?? record.Schedule ?? "For scheduling" },
+        { label: "Priority", value: record.Priority ?? (record.Status === "Pending" ? "For approval" : "Normal") },
         { label: "Notify Staff", value: "Yes" },
       ],
       resultPreview: "Assignment card will be prepared with staff, schedule, role, and notification details.",
+    },
+    "Start Job": {
+      checklist: ["Confirm vehicle is available for work.", "Verify assigned staff and service type.", "Record start remarks."],
+      context: "Job Order Workflow",
+      description: `Start work for ${primaryName} and move the job order to in progress.`,
+      fields: [
+        { label: "Job Order", value: record["JO No."] ?? record["Job Order"] ?? "N/A" },
+        { label: "Vehicle", value: record.Vehicle ?? "N/A" },
+        { label: "Service Type", value: record["Service Type"] ?? "N/A" },
+        { label: "Assigned To", value: record["Assigned To"] ?? "Unassigned" },
+        { label: "Current Status", value: record.Status ?? "Pending" },
+        { label: "Next Status", value: "In Progress" },
+      ],
+      resultPreview: "The job order will be prepared for in-progress monitoring.",
+    },
+    "Waiting for Parts": {
+      checklist: ["Record missing or pending parts.", "Update progress remarks.", "Notify staff or purchasing if needed."],
+      context: "Job Order Workflow",
+      description: `Mark ${primaryName} as waiting for parts.`,
+      fields: [
+        { label: "Job Order", value: record["JO No."] ?? record["Job Order"] ?? "N/A" },
+        { label: "Vehicle", value: record.Vehicle ?? "N/A" },
+        { label: "Parts Used", value: record["Parts Used"] ?? "For update" },
+        { label: "Progress", value: record.Progress ?? "N/A" },
+        { label: "Current Status", value: record.Status ?? "In Progress" },
+        { label: "Next Status", value: "Waiting for Parts" },
+      ],
+      resultPreview: "The job order will be prepared for parts-waiting follow-up.",
+    },
+    "Resume Job": {
+      checklist: ["Confirm parts are available.", "Check staff schedule.", "Set updated progress notes."],
+      context: "Job Order Workflow",
+      description: `Resume work for ${primaryName}.`,
+      fields: [
+        { label: "Job Order", value: record["JO No."] ?? record["Job Order"] ?? "N/A" },
+        { label: "Vehicle", value: record.Vehicle ?? "N/A" },
+        { label: "Assigned To", value: record["Assigned To"] ?? "Unassigned" },
+        { label: "Parts Used", value: record["Parts Used"] ?? "N/A" },
+        { label: "Current Status", value: record.Status ?? "Waiting for Parts" },
+        { label: "Next Status", value: "In Progress" },
+      ],
+      resultPreview: "The job order will be prepared to return to active work.",
+    },
+    "Cancel Job": {
+      checklist: ["Confirm cancellation reason.", "Record final remarks.", "Review vehicle status after cancellation."],
+      context: "Job Order Workflow",
+      description: `Cancel ${primaryName}.`,
+      fields: [
+        { label: "Job Order", value: record["JO No."] ?? record["Job Order"] ?? "N/A" },
+        { label: "Vehicle", value: record.Vehicle ?? "N/A" },
+        { label: "Current Status", value: record.Status ?? "N/A" },
+        { label: "Remarks", value: record.Remarks ?? "For cancellation reason" },
+        { label: "Vehicle Follow-up", value: "Return to queue / management review" },
+        { label: "Next Status", value: "Cancelled" },
+      ],
+      resultPreview: "The job order cancellation will be prepared with remarks.",
+    },
+    "Print Job Order": {
+      checklist: ["Review job order details.", "Confirm costs, parts, and remarks.", "Prepare printable output."],
+      context: "Job Order Printing",
+      description: `Print job order form for ${primaryName}.`,
+      fields: [
+        { label: "Job Order", value: record["JO No."] ?? record["Job Order"] ?? "N/A" },
+        { label: "Vehicle", value: record.Vehicle ?? "N/A" },
+        { label: "Service Type", value: record["Service Type"] ?? "N/A" },
+        { label: "Labor Cost", value: record["Labor Cost"] ?? "N/A" },
+        { label: "Parts Used", value: record["Parts Used"] ?? "N/A" },
+        { label: "Print Format", value: "Job Order Form" },
+      ],
+      resultPreview: "A printable job order form will be prepared.",
+    },
+    Restore: {
+      checklist: ["Review cancellation remarks.", "Confirm restore reason.", "Choose whether to reopen as pending or in progress."],
+      context: "Job Order Workflow",
+      description: `Restore or reopen ${primaryName}.`,
+      fields: [
+        { label: "Job Order", value: record["JO No."] ?? record["Job Order"] ?? "N/A" },
+        { label: "Vehicle", value: record.Vehicle ?? "N/A" },
+        { label: "Current Status", value: record.Status ?? "Cancelled" },
+        { label: "Restore Option", value: "Pending / In Progress" },
+        { label: "Assigned To", value: record["Assigned To"] ?? "Unassigned" },
+        { label: "Remarks", value: record.Remarks ?? "For restore note" },
+      ],
+      resultPreview: "The cancelled job order will be prepared for restoration.",
     },
     History: {
       checklist: ["Review purchases.", "Check reservations.", "Scan payment and financing activity."],
@@ -3473,7 +5480,8 @@ function getWorkflowDialogContent(
         { label: "Reservation", value: record.Reservation ?? "N/A" },
         { label: "Customer", value: record.Customer ?? "N/A" },
         { label: "Vehicle", value: record.Vehicle ?? "N/A" },
-        { label: "Reservation Amount", value: record.Amount ?? "N/A" },
+        { label: "Reservation Amount", value: record["Reservation Fee"] ?? record.Amount ?? "N/A" },
+        { label: "Requirements", value: record.Requirements ?? "For verification" },
         { label: "Current Status", value: record.Status ?? "N/A" },
         { label: "Verification Result", value: "Verified for next decision" },
       ],
@@ -3592,17 +5600,32 @@ function getWorkflowDialogContent(
       resultPreview: "Progress update will be prepared.",
     },
     Complete: {
-      checklist: ["Confirm task completion.", "Add completion notes.", "Mark service record completed."],
-      context: "Completion",
-      description: `Complete the assigned work for ${primaryName}.`,
-      fields: [...baseFields, { label: "Completion Status", value: "Completed" }],
-      resultPreview: "Completion details will be prepared.",
+      checklist: hasJobOrderReference
+        ? ["Confirm service work is done.", "Review labor cost and parts used.", "Attach or confirm after photos if available."]
+        : ["Confirm task completion.", "Add completion notes.", "Mark service record completed."],
+      context: hasJobOrderReference ? "Job Order Workflow" : "Completion",
+      description: hasJobOrderReference
+        ? `Mark ${primaryName} as completed.`
+        : `Complete the assigned work for ${primaryName}.`,
+      fields: hasJobOrderReference
+        ? [
+            { label: "Job Order", value: record["JO No."] ?? record["Job Order"] ?? "N/A" },
+            { label: "Vehicle", value: record.Vehicle ?? "N/A" },
+            { label: "Labor Cost", value: record["Labor Cost"] ?? "N/A" },
+            { label: "Parts Used", value: record["Parts Used"] ?? "N/A" },
+            { label: "Photos", value: record.Photos ?? "Optional" },
+            { label: "Next Status", value: "Completed" },
+          ]
+        : [...baseFields, { label: "Completion Status", value: "Completed" }],
+      resultPreview: hasJobOrderReference
+        ? "The job order will be prepared for completion and print-ready history."
+        : "Completion details will be prepared.",
     },
     Reserve: {
       checklist: ["Confirm vehicle availability.", "Record reservation amount.", "Submit reservation request."],
       context: "Vehicle Reservation",
       description: `Prepare reservation request for ${primaryName}.`,
-      fields: [...baseFields, { label: "Reservation Amount", value: record.Amount ?? "0" }],
+      fields: [...baseFields, { label: "Reservation Amount", value: record["Reservation Fee"] ?? record.Amount ?? "0" }],
       resultPreview: "Reservation details will be prepared.",
     },
     Track: {
@@ -3756,23 +5779,40 @@ function DeedOfSalePdfButton({ endpoint }: { endpoint: string }) {
 
 async function createVehicleRecord(
   values: Record<string, string>,
-  photo: File | null,
+  files: Record<string, File | File[] | null>,
   onUploadProgress?: (progress: number) => void,
 ) {
   const formData = new FormData()
+  const vehicleName = [
+    values.Brand,
+    values.Model,
+    values["Year Model"],
+    values.Variant,
+  ].filter(Boolean).join(" ")
   const mappedValues: Record<string, string> = {
     brand: values.Brand,
     chassis_number: values["Chassis Number"],
     color: values.Color,
+    description: values.Description,
     engine_number: values["Engine Number"],
-    location: values.Location,
+    features: values.Features,
+    fuel_type: values["Fuel Type"],
+    insurance: values.Insurance,
     mileage: numericText(values.Mileage),
     model: values.Model,
-    name: values.Vehicle,
+    name: values.Vehicle || vehicleName || values["Stock No."],
+    or_cr_number: values["OR/CR Number"],
     plate_number: values["Plate Number"],
+    purchase_price: numericText(values["Purchase Price"]),
+    registration_expiry: values["Registration Expiry"],
+    remarks: values["Remarks/Notes"],
+    reservation_fee: numericText(values["Reservation Fee"]),
     selling_price: numericText(values["Selling Price"]),
     status: values.Status?.toLowerCase() || "available",
-    year: numericText(values.Year),
+    stock_no: values["Stock No."],
+    transmission: values.Transmission,
+    variant: values.Variant,
+    year: numericText(values["Year Model"]),
   }
 
   Object.entries(mappedValues).forEach(([key, value]) => {
@@ -3783,12 +5823,22 @@ async function createVehicleRecord(
     }
   })
 
-  if (photo) {
-    formData.append("photo", photo)
+  const mainPhoto = fileValue(files["Main Photo"])
+
+  if (mainPhoto) {
+    formData.append("main_photo", mainPhoto)
+  }
+
+  for (const file of fileListValue(files["Interior Photos"])) {
+    formData.append("interior_photos[]", file)
+  }
+
+  for (const file of fileListValue(files["Exterior Photos"])) {
+    formData.append("exterior_photos[]", file)
   }
 
   const { data } = await api.post<{
-    data: Record<string, string | number | null | undefined>
+    data: Record<string, string | number | string[] | null | undefined>
   }>("/api/vehicles", formData, {
     headers: { "Content-Type": "multipart/form-data" },
     onUploadProgress: (event) => {
@@ -3803,29 +5853,64 @@ async function createVehicleRecord(
   return vehicleRecordFromApi(data.data)
 }
 
-function vehicleRecordFromApi(vehicle: Record<string, string | number | null | undefined>) {
+function vehicleRecordFromApi(vehicle: Record<string, string | number | string[] | null | undefined>) {
+  const vehicleName = [
+    vehicle.brand,
+    vehicle.model,
+    vehicle.year,
+    vehicle.variant,
+  ].filter(Boolean).join(" ")
+
   return {
-    Vehicle: String(vehicle.name ?? "N/A"),
-    Photo: String(vehicle.photo_url ?? vehicle.photo_path ?? vehicle.photo ?? vehicle.image_url ?? ""),
+    "Vehicle ID": vehicle.id ? `VEH-${String(vehicle.id).padStart(5, "0")}` : "N/A",
+    Vehicle: String(vehicle.name ?? vehicleName ?? "N/A"),
+    "Main Photo": String(vehicle.photo_url ?? vehicle.photo_path ?? vehicle.photo ?? vehicle.image_url ?? ""),
+    "Interior Photos": photoUrlsText(vehicle.interior_photo_urls),
+    "Exterior Photos": photoUrlsText(vehicle.exterior_photo_urls),
+    "Stock No.": String(vehicle.stock_no ?? "N/A"),
+    "Plate Number": String(vehicle.plate_number ?? "N/A"),
     Brand: String(vehicle.brand ?? "N/A"),
     Model: String(vehicle.model ?? "N/A"),
-    Year: String(vehicle.year ?? "N/A"),
+    "Year Model": String(vehicle.year ?? "N/A"),
+    Variant: String(vehicle.variant ?? "N/A"),
     Color: String(vehicle.color ?? "N/A"),
+    Transmission: String(vehicle.transmission ?? "N/A"),
+    "Fuel Type": String(vehicle.fuel_type ?? "N/A"),
+    Mileage: vehicle.mileage ? `${Number(vehicle.mileage).toLocaleString()} km` : "N/A",
     "Engine Number": String(vehicle.engine_number ?? "N/A"),
     "Chassis Number": String(vehicle.chassis_number ?? "N/A"),
-    "Plate Number": String(vehicle.plate_number ?? "N/A"),
-    Mileage: vehicle.mileage ? `${Number(vehicle.mileage).toLocaleString()} km` : "N/A",
+    "Purchase Price": formatPesoValue(vehicle.purchase_price),
     "Selling Price": formatPesoValue(vehicle.selling_price),
-    Location: String(vehicle.location ?? "N/A"),
-    Status: titleCaseText(String(vehicle.status ?? "available")),
+    "Reservation Fee": formatPesoValue(vehicle.reservation_fee),
+    "OR/CR Number": String(vehicle.or_cr_number ?? "N/A"),
+    "Registration Expiry": String(vehicle.registration_expiry ?? "N/A"),
+    Insurance: String(vehicle.insurance ?? "N/A"),
+    Description: String(vehicle.description ?? "N/A"),
+    Features: String(vehicle.features ?? "N/A"),
+    "Remarks/Notes": String(vehicle.remarks ?? "N/A"),
+    Status: formatVehicleStatus(vehicle.status),
   }
+}
+
+function formatVehicleStatus(value: string | number | string[] | null | undefined) {
+  const normalizedValue = String(value ?? "available").trim().toLowerCase()
+
+  if (!normalizedValue || normalizedValue === "active") {
+    return "Available"
+  }
+
+  return titleCaseText(normalizedValue)
 }
 
 function numericText(value?: string) {
   return value?.replace(/[^\d.]/g, "") ?? ""
 }
 
-function formatPesoValue(value: string | number | null | undefined) {
+function formatPesoValue(value: string | number | string[] | null | undefined) {
+  if (Array.isArray(value)) {
+    return "N/A"
+  }
+
   const amount = Number(value ?? 0)
 
   if (!amount) {
@@ -3833,6 +5918,82 @@ function formatPesoValue(value: string | number | null | undefined) {
   }
 
   return `PHP ${amount.toLocaleString()}`
+}
+
+async function loadJobOrderSelectOptions() {
+  const [vehiclesResponse, customersResponse, staffResponse] = await Promise.all([
+    api.get<{ data: Array<Record<string, string | number | null | undefined>> }>("/api/vehicles"),
+    api.get<{ data: Array<Record<string, string | number | null | undefined>> }>("/api/customers"),
+    api.get<{ data: Array<Record<string, string | number | null | undefined>> }>("/api/staff"),
+  ])
+
+  return {
+    customers: toSelectOptions(customersResponse.data.data, "name"),
+    staff: toSelectOptions(staffResponse.data.data, "name"),
+    vehicles: toSelectOptions(vehiclesResponse.data.data, "name", (item) => ({
+      plateNumber: String(item.plate_number ?? ""),
+    })),
+  }
+}
+
+function toSelectOptions(
+  data: Array<Record<string, string | number | null | undefined>>,
+  labelKey: string,
+  meta?: (item: Record<string, string | number | null | undefined>) => Record<string, string>,
+): SelectOption[] {
+  const options = data.reduce<SelectOption[]>((current, item) => {
+      const id = item.id ? String(item.id) : ""
+      const label = item[labelKey] ? String(item[labelKey]) : ""
+
+      if (!id || !label) {
+        return current
+      }
+
+      current.push({
+        id,
+        label,
+        meta: meta?.(item),
+      })
+
+      return current
+    }, [])
+
+  return options
+}
+
+async function createJobOrderRecord(values: Record<string, string>) {
+  const fallbackRecord = buildJobOrderRecord(values)
+  const vehicleId = numericIdOrNull(values._vehicleId)
+
+  if (!vehicleId) {
+    throw new Error("Please select a vehicle from the backend list.")
+  }
+
+  const payload = {
+    activity: values["Service Type"] || "N/A",
+    assigned_staff_id: numericIdOrNull(values._assignedStaffId),
+    maintenance_record: values["Concern/Description"] || null,
+    reference: values["JO No."] || `JO-${Date.now()}`,
+    scheduled_at: dateInputValue(values["Target Completion Date"]) || null,
+    status: "pending",
+    vehicle_id: vehicleId,
+  }
+
+  const { data } = await api.post<{ data: Record<string, string | number | null | undefined> }>("/api/job-orders", payload)
+
+  return {
+    ...fallbackRecord,
+    _id: data.data.id ? String(data.data.id) : "",
+    "JO No.": data.data.reference ? String(data.data.reference) : fallbackRecord["JO No."],
+  }
+}
+
+function numericIdOrNull(value?: string) {
+  if (!value || Number.isNaN(Number(value))) {
+    return null
+  }
+
+  return Number(value)
 }
 
 function titleCaseText(value: string) {
@@ -3843,30 +6004,231 @@ function titleCaseText(value: string) {
     .join(" ")
 }
 
+function isJobOrderRecord(record: Record<string, string>) {
+  return Boolean(record["JO No."] ?? record["Job Order"] ?? record["Job Order No."])
+}
+
+function getJobOrderNumber(record: Record<string, string>) {
+  return record["JO No."] ?? record["Job Order"] ?? record["Job Order No."] ?? "N/A"
+}
+
+function getJobOrderPrintRows(record: Record<string, string>): [string, string][] {
+  return [
+    ["Job Order No.", getJobOrderNumber(record)],
+    ["Date Created", record["Date Created"] ?? "N/A"],
+    ["Vehicle", record.Vehicle ?? "N/A"],
+    ["Plate Number", record["Plate Number"] ?? "N/A"],
+    ["Customer", record.Customer ?? "N/A"],
+    ["Assigned Staff", record["Assigned Staff"] ?? "Unassigned"],
+    ["Service Type", record["Service Type"] ?? "N/A"],
+    ["Priority", record.Priority ?? "N/A"],
+    ["Target Completion", record["Target Completion Date"] ?? "N/A"],
+    ["Estimated Labor", record["Estimated Labor Cost"] ?? "N/A"],
+    ["Estimated Parts", record["Estimated Parts Cost"] ?? "N/A"],
+    ["Actual Labor", record["Actual Labor Cost"] ?? "N/A"],
+    ["Actual Parts", record["Actual Parts Cost"] ?? "N/A"],
+    ["Status", record.Status ?? "N/A"],
+    ["Date Started", record["Date Started"] ?? "N/A"],
+    ["Date Completed", record["Date Completed"] ?? "N/A"],
+  ]
+}
+
+function getJobOrderInitialValues(records: Record<string, string>[]) {
+  const nextNumber = records.length + 1
+
+  return {
+    "JO No.": `JO-${String(nextNumber).padStart(3, "0")}`,
+    "Date Created": new Date().toLocaleDateString("en-PH", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }),
+    Vehicle: "",
+    "Plate Number": "",
+    Customer: "",
+    "Assigned Staff": "",
+    "Service Type": "",
+    "Concern/Description": "",
+    Priority: "Medium",
+    "Target Completion Date": "2026-06-30",
+    "Estimated Labor Cost": "",
+    "Estimated Parts Cost": "",
+    Status: "Pending",
+    "Date Started": "N/A",
+    "Date Completed": "N/A",
+    Remarks: "",
+    _assignedStaffId: "",
+    _customerId: "",
+    _vehicleId: "",
+  }
+}
+
+function buildJobOrderRecord(values: Record<string, string>) {
+  return {
+    "JO No.": values["JO No."] || `JO-${Date.now()}`,
+    "Date Created": values["Date Created"] || "N/A",
+    Vehicle: values.Vehicle || "N/A",
+    "Plate Number": values["Plate Number"] || "N/A",
+    Customer: values.Customer || "N/A",
+    "Assigned Staff": values["Assigned Staff"] || "Unassigned",
+    "Service Type": values["Service Type"] || "N/A",
+    "Concern/Description": values["Concern/Description"] || "N/A",
+    Priority: values.Priority || "Medium",
+    "Target Completion Date": displayDateValue(values["Target Completion Date"]),
+    "Estimated Labor Cost": values["Estimated Labor Cost"] || "PHP 0",
+    "Estimated Parts Cost": values["Estimated Parts Cost"] || "PHP 0",
+    Status: values.Status || "Pending",
+    "Date Started": values["Date Started"] || "N/A",
+    "Date Completed": values["Date Completed"] || "N/A",
+    Remarks: values.Remarks || "N/A",
+    _assignedStaffId: values._assignedStaffId || "",
+    _customerId: values._customerId || "",
+    _vehicleId: values._vehicleId || "",
+  }
+}
+
+function getJobOrderEditableColumns() {
+  return [
+    "Vehicle",
+    "Assigned Staff",
+    "Service Type",
+    "Concern/Description",
+    "Priority",
+    "Target Completion Date",
+    "Estimated Labor Cost",
+    "Estimated Parts Cost",
+    "Remarks",
+  ]
+}
+
+function pickFormValues(values: Record<string, string>, keys: string[]) {
+  return Object.fromEntries(
+    keys.map((key) => [
+      key,
+      key === "Target Completion Date"
+        ? displayDateValue(values[key])
+        : values[key] || "N/A",
+    ]),
+  )
+}
+
+function dateInputValue(value?: string) {
+  if (!value || value === "N/A") {
+    return ""
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return value
+  }
+
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return ""
+  }
+
+  return date.toISOString().slice(0, 10)
+}
+
+function displayDateValue(value?: string) {
+  if (!value) {
+    return "N/A"
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return value
+  }
+
+  return new Date(`${value}T00:00:00`).toLocaleDateString("en-PH", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  })
+}
+
 function getDefaultModuleColumns(moduleId: string, actionSet?: string) {
   const key = actionSet ?? moduleId
   const columnsByActionSet: Record<string, string[]> = {
     "activity-logs": ["Time", "User", "Module", "Action"],
-    "admin-job-orders": ["Job Order", "Vehicle", "Assigned To", "Service Type", "Progress", "Status"],
+    "admin-job-orders": [
+      "JO No.",
+      "Vehicle",
+      "Status",
+    ],
     "customer-documents": ["Document", "Type", "Related Record", "Status"],
     "customer-history": ["Reference", "Vehicle", "Transaction", "Payment", "Status"],
     "customer-payments": ["Reference", "Vehicle", "Payment", "Balance", "Status"],
     "customer-reservations": ["Reservation", "Vehicle", "Amount", "Status"],
     "customer-service": ["Request", "Vehicle", "Issue", "Progress", "Status"],
-    "customer-vehicles": ["Photo", "Vehicle", "Brand", "Model", "Year", "Selling Price", "Location", "Status"],
-    customers: ["Customer", "Contact", "Email", "Last Transaction", "Status"],
+    "customer-vehicles": ["Main Photo", "Vehicle", "Brand", "Model", "Year Model", "Selling Price", "Status"],
+    customers: ["Customer", "Contact", "Email", "Status"],
     documents: ["Document", "Type", "Owner", "Related Record", "Status"],
     financing: ["Reference", "Customer", "Vehicle", "Financing Company", "Approved Amount", "Status"],
     "mechanic-job-orders": ["Job Order", "Vehicle", "Service Type", "Progress", "Findings", "Status"],
-    reports: ["Report", "Coverage", "Generated By", "Status"],
+    reports: ["Report", "Category", "Coverage", "Included Data", "Generated By", "Last Generated", "Status"],
     requirements: ["Requirement", "Category", "Required From", "Documents", "Status"],
-    reservations: ["Reservation", "Customer", "Vehicle", "Amount", "Status"],
+    reservations: [
+      "Reservation",
+      "Customer",
+      "Vehicle",
+      "Reservation Fee",
+      "Payment Method",
+      "Expiry Date",
+      "Documents",
+      "Requirements",
+      "History",
+      "Status",
+    ],
     "role-access": ["Role", "Permissions", "Status"],
-    "sales-payments": ["Reference", "Customer", "Vehicle", "Payment", "Balance", "Status"],
+    "sales-payments": [
+      "Reference",
+      "Customer",
+      "Vehicle",
+      "Method",
+      "Selling Price",
+      "Discount",
+      "Down Payment",
+      "Paid",
+      "Balance",
+      "Invoice",
+      "Receipt",
+      "Proof",
+      "Schedule",
+      "Release",
+      "Status",
+    ],
     staff: ["Name", "Position", "Contact", "Status"],
     "user-access": ["Name", "Email", "Role", "Status"],
     "vehicle-condition": ["Vehicle", "Condition", "Affected Part", "Action Taken", "Status"],
-    "vehicle-inventory": ["Photo", "Vehicle", "Brand", "Model", "Year", "Selling Price", "Location", "Status"],
+    "vehicle-inventory": [
+      "Main Photo",
+      "Vehicle ID",
+      "Vehicle",
+      "Stock No.",
+      "Plate Number",
+      "Brand",
+      "Model",
+      "Year Model",
+      "Variant",
+      "Color",
+      "Transmission",
+      "Fuel Type",
+      "Mileage",
+      "Engine Number",
+      "Chassis Number",
+      "Purchase Price",
+      "Selling Price",
+      "Reservation Fee",
+      "Status",
+      "OR/CR Number",
+      "Registration Expiry",
+      "Insurance",
+      "Interior Photos",
+      "Exterior Photos",
+      "Description",
+      "Features",
+      "Remarks/Notes",
+    ],
     "vehicle-release": ["Release Ref", "Customer", "Vehicle", "Release Date", "Checklist", "Status"],
   }
 
@@ -3879,7 +6241,7 @@ function getFormColumns(moduleId: string, columns: string[]) {
   }
 
   if (moduleId === "vehicles") {
-    const orderedColumns = columns.filter((column) => column !== "Status")
+    const orderedColumns = columns.filter((column) => column !== "Status" && column !== "Vehicle ID" && column !== "Vehicle")
     const vehicleIndex = orderedColumns.indexOf("Vehicle")
 
     if (vehicleIndex >= 0) {
@@ -3893,9 +6255,17 @@ function getFormColumns(moduleId: string, columns: string[]) {
   return columns
 }
 
+function isVisibleColumn(column: string) {
+  return !column.startsWith("_")
+}
+
 function getFormFieldLabel(column: string, isVehicleForm: boolean) {
   if (isVehicleForm && isPhotoColumn(column)) {
-    return "Upload Photo"
+    return column
+  }
+
+  if (isVehicleForm && column === "Location") {
+    return "Vehicle Storage Location"
   }
 
   if (isVehicleForm && column === "Status") {
@@ -3907,10 +6277,42 @@ function getFormFieldLabel(column: string, isVehicleForm: boolean) {
 
 function getStatusOptions(isVehicleForm: boolean) {
   if (isVehicleForm) {
-    return ["Available", "Reserved", "Sold", "For Repair", "Inactive"]
+    return ["Available", "Reserved", "Sold", "Under Maintenance", "Unavailable"]
   }
 
-  return ["Active", "Pending", "Available", "Reserved", "Draft", "Inactive"]
+  return [
+    "Active",
+    "Pending",
+    "Confirmed",
+    "In Progress",
+    "Waiting for Parts",
+    "Completed",
+    "Cancelled",
+    "Converted to Sale",
+    "Expired",
+    "Processing",
+    "Partial",
+    "Paid",
+    "Ready",
+    "Scheduled",
+    "Inactive",
+  ]
+}
+
+function getDefaultFormValue(column: string, isVehicleForm: boolean) {
+  if (isVehicleForm && column === "Status") {
+    return "Available"
+  }
+
+  if (column === "Required From") {
+    return "Customer"
+  }
+
+  if (column.toLowerCase() === "status") {
+    return "Active"
+  }
+
+  return ""
 }
 
 function resolveImageUrl(src?: string) {
@@ -3934,18 +6336,47 @@ function getFieldPlaceholder(column: string) {
     Brand: "Enter brand",
     "Chassis Number": "Enter chassis number",
     Color: "Enter color",
+    Description: "Enter vehicle description",
     "Engine Number": "Enter engine number",
-    Location: "Select or enter location",
+    Features: "Enter features",
+    "Fuel Type": "Select fuel type",
+    Insurance: "Enter insurance details",
+    Location: "Select or enter storage/display location",
     Mileage: "Enter mileage",
     Model: "Enter model",
+    "OR/CR Number": "Enter OR/CR number",
     Category: "Enter requirement category",
     Documents: "Enter required documents",
+    "Down Payment": "Enter down payment",
+    "Expiry Date": "Select reservation expiry date",
+    "Generated By": "Enter report owner",
+    History: "Enter latest history note",
+    "Included Data": "Enter included report data",
+    Invoice: "Enter invoice status",
+    "Labor Cost": "Enter labor cost",
+    "Last Generated": "Enter latest generated date",
+    Method: "Select payment method",
     "Plate Number": "Enter plate number",
+    "Parts Used": "Enter parts used",
+    "Payment Method": "Select payment method",
+    Photos: "Enter photo upload status",
+    Priority: "Select priority",
+    Progress: "Enter progress update",
+    Proof: "Enter proof of payment status",
+    "Purchase Price": "Enter purchase price",
     Requirement: "Enter requirement name",
     "Required From": "Enter who must submit this",
+    "Registration Expiry": "Select registration expiry",
+    "Remarks/Notes": "Enter remarks or notes",
+    "Reservation Fee": "Enter reservation fee",
+    "Service Type": "Enter service type",
     "Selling Price": "Enter selling price",
+    Schedule: "Enter payment schedule",
+    "Stock No.": "Enter stock number",
+    Transmission: "Select transmission",
+    Variant: "Enter variant",
     Vehicle: "Enter vehicle name",
-    Year: "Enter year",
+    "Year Model": "Enter year model",
   }
 
   return placeholders[column] ?? `Enter ${column.toLowerCase()}`
@@ -3953,39 +6384,57 @@ function getFieldPlaceholder(column: string) {
 
 function isRequiredVehicleColumn(column: string) {
   return [
-    "Photo",
-    "Vehicle",
+    "Main Photo",
+    "Stock No.",
+    "Plate Number",
     "Brand",
     "Model",
-    "Year",
+    "Year Model",
     "Selling Price",
-    "Location",
   ].includes(column)
 }
 
 function isDecimalNumberColumn(column: string) {
-  return ["Selling Price", "Purchase Price"].includes(column)
+  return [
+    "Selling Price",
+    "Purchase Price",
+    "Reservation Fee",
+    "Discount",
+    "Down Payment",
+    "Paid",
+    "Balance",
+    "Labor Cost",
+  ].includes(column)
 }
 
 function isLongTextColumn(column: string) {
-  return ["Documents"].includes(column)
+  return [
+    "Documents",
+    "Description",
+    "Features",
+    "History",
+    "Included Data",
+    "Parts Used",
+    "Remarks",
+    "Remarks/Notes",
+  ].includes(column)
 }
 
 function validateVehicleForm(values: Record<string, string>, photo: File | null) {
   const errors: Record<string, string> = {}
 
-  if (!photo && !values.Photo?.trim()) {
-    errors.Photo = "Vehicle photo is required."
+  if (!photo && !values["Main Photo"]?.trim()) {
+    errors["Main Photo"] = "Main photo is required."
   }
 
-  for (const column of ["Vehicle", "Brand", "Model", "Year", "Selling Price", "Location"]) {
+  for (const column of ["Stock No.", "Plate Number", "Brand", "Model", "Year Model", "Selling Price"]) {
     if (!values[column]?.trim()) {
       errors[column] = `${column} is required.`
     }
   }
 
-  if (values.Year?.trim() && !/^\d{4}$/.test(values.Year.trim())) {
-    errors.Year = "Use a valid 4-digit year."
+  if (values["Year Model"]?.trim() && !/^\d{4}$/.test(values["Year Model"].trim())) {
+    errors["Year Model"] = "Use a valid 4-digit year."
   }
 
   if (values.Mileage?.trim() && Number.isNaN(Number(numericText(values.Mileage)))) {
@@ -4003,7 +6452,44 @@ function validateVehicleForm(values: Record<string, string>, photo: File | null)
 }
 
 function isPhotoColumn(column: string) {
-  return ["avatar", "photo", "profile picture"].includes(column.toLowerCase())
+  return ["avatar", "photo", "profile picture", "main photo", "interior photos", "exterior photos"].includes(column.toLowerCase())
+}
+
+function isMultiPhotoColumn(column: string) {
+  return ["interior photos", "exterior photos"].includes(column.toLowerCase())
+}
+
+function isVehicleSelectColumn(column: string) {
+  return ["Transmission", "Fuel Type"].includes(column)
+}
+
+function getVehicleSelectOptions(column: string) {
+  const options: Record<string, string[]> = {
+    "Fuel Type": ["Gasoline", "Diesel", "Hybrid"],
+    Transmission: ["Automatic", "Manual"],
+  }
+
+  return options[column] ?? []
+}
+
+function fileValue(value: File | File[] | null | undefined) {
+  return Array.isArray(value) ? value[0] ?? null : value ?? null
+}
+
+function fileListValue(value: File | File[] | null | undefined) {
+  if (!value) {
+    return []
+  }
+
+  return Array.isArray(value) ? value : [value]
+}
+
+function photoUrlsText(value: string | number | string[] | null | undefined) {
+  if (Array.isArray(value)) {
+    return value.length > 0 ? value.join(", ") : "N/A"
+  }
+
+  return value ? String(value) : "N/A"
 }
 
 function formatPesoInput(value: string) {
@@ -4097,11 +6583,11 @@ function StatusBadge({ value }: { value: string }) {
 function getStatusColor(value: string) {
   const status = value.toLowerCase()
 
-  if (["active", "approved", "available", "completed", "paid", "ready", "released"].includes(status)) {
+  if (["active", "approved", "available", "completed", "converted to sale", "paid", "ready", "released"].includes(status)) {
     return "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-200"
   }
 
-  if (["reserved", "for approval", "partial", "pending", "pending parts", "draft", "expiring"].includes(status)) {
+  if (["reserved", "for approval", "partial", "pending", "pending parts", "waiting for parts", "draft", "expiring", "processing"].includes(status)) {
     return "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200"
   }
 
@@ -4117,9 +6603,17 @@ function getStatusColor(value: string) {
 }
 
 function StatusSwitch({ value }: { value: string }) {
+  const normalizedValue = value.toLowerCase()
   const [checked, setChecked] = useState(() =>
-    !["cancelled", "draft", "inactive"].includes(value.toLowerCase()),
+    !["cancelled", "draft", "inactive", "pending", "rejected"].includes(normalizedValue),
   )
+  const label = checked
+    ? normalizedValue === "pending"
+      ? "Approved"
+      : value || "Active"
+    : normalizedValue === "pending"
+      ? "Pending"
+      : value || "Inactive"
 
   return (
     <button
@@ -4147,7 +6641,7 @@ function StatusSwitch({ value }: { value: string }) {
           )}
         />
       </span>
-      {checked ? "Active" : "Inactive"}
+      {label}
     </button>
   )
 }

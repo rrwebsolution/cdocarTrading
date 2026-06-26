@@ -131,6 +131,44 @@
   }
 }
 
+.date-input {
+  color-scheme: light;
+}
+
+.dark .date-input {
+  color-scheme: light;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.dark .date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.8) contrast(1.2);
+  opacity: 1;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border: 0 !important;
+    background: white !important;
+    color: black !important;
+  }
+}
+
 .outlet-loader {
   width: 120px;
   height: 22px;

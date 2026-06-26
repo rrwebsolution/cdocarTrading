@@ -11,26 +11,43 @@ type ApiModulePageProps = {
 }
 
 type RelatedName = {
+  email?: string
   name?: string
+  status?: string
 }
 
 type VehicleRecord = {
   brand?: string
   chassis_number?: string
   color?: string
+  description?: string
   engine_number?: string
+  exterior_photo_urls?: string[]
+  features?: string
+  fuel_type?: string
   image_url?: string
+  insurance?: string
+  interior_photo_urls?: string[]
   location?: string
   mileage?: number
   model?: string
   name?: string
+  or_cr_number?: string
   plate_number?: string
   photo?: string
   photo_path?: string
   photo_url?: string
+  purchase_price?: string
+  registration_expiry?: string
+  remarks?: string
+  reservation_fee?: string
   selling_price?: string
   status?: string
+  stock_no?: string
+  transmission?: string
+  variant?: string
   year?: number
+  id?: number
 }
 
 type ApiDocumentRecord = {
@@ -41,6 +58,29 @@ type ApiDocumentRecord = {
   title?: string
   type?: string
   uploaded_at?: string
+}
+
+type ApiJobOrderRecord = {
+  activity?: string
+  assigned_staff?: RelatedName & { id?: number }
+  created_at?: string
+  id?: number
+  labor_cost?: string
+  maintenance_record?: string
+  parts_cost?: string
+  parts_used?: string
+  priority?: string
+  progress?: string
+  reference?: string
+  remarks?: string
+  repair_status?: string
+  scheduled_at?: string
+  service_request?: { customer?: RelatedName; reference?: string }
+  service_type?: string
+  status?: string
+  target_completion_date?: string
+  vehicle?: RelatedName & { id?: number; plate_number?: string }
+  washing_status?: string
 }
 
 type SummaryReport = {
@@ -77,11 +117,29 @@ const liveModules: Record<
   customers: {
     endpoint: "/api/customers",
     toRecords: (data) =>
-      (data as Array<{ contact?: string; email?: string; name?: string; status?: string }>).map(
+      (data as Array<{
+        address?: string
+        contact?: string
+        email?: string
+        id?: number
+        name?: string
+        status?: string
+        user?: RelatedName
+        valid_id_type?: string
+        valid_id_url?: string
+        created_at?: string
+      }>).map(
         (customer) => ({
+          _id: String(customer.id ?? ""),
+          _validIdUrl: customer.valid_id_url ?? "",
           Customer: customer.name ?? "N/A",
           Email: customer.email ?? "N/A",
           Contact: customer.contact ?? "N/A",
+          _address: customer.address ?? "N/A",
+          _dateRegistered: formatDateTime(customer.created_at),
+          _validIdType: customer.valid_id_type ?? "N/A",
+          _uploadedValidId: customer.valid_id_url ?? "N/A",
+          _userAccount: titleCase(customer.user?.status),
           Status: titleCase(customer.status),
         }),
       ),
@@ -122,24 +180,28 @@ const liveModules: Record<
   "job-orders": {
     endpoint: "/api/job-orders",
     toRecords: (data) =>
-      (data as Array<{
-        activity?: string
-        assigned_staff?: RelatedName
-        reference?: string
-        repair_status?: string
-        service_request?: { reference?: string }
-        status?: string
-        vehicle?: RelatedName
-        washing_status?: string
-      }>).map((jobOrder) => ({
-        "Job Order": jobOrder.reference ?? "N/A",
-        Request: jobOrder.service_request?.reference ?? "N/A",
+      (data as ApiJobOrderRecord[]).map((jobOrder) => ({
+        _id: jobOrder.id ? String(jobOrder.id) : "",
+        _assignedStaffId: jobOrder.assigned_staff?.id ? String(jobOrder.assigned_staff.id) : "",
+        _vehicleId: jobOrder.vehicle?.id ? String(jobOrder.vehicle.id) : "",
+        "JO No.": jobOrder.reference ?? "N/A",
+        "Date Created": formatDate(jobOrder.created_at),
         Vehicle: jobOrder.vehicle?.name ?? "N/A",
-        Activity: jobOrder.activity ?? "N/A",
-        Assigned: jobOrder.assigned_staff?.name ?? "Unassigned",
-        "Repair Status": jobOrder.repair_status ?? "N/A",
-        "Washing Status": jobOrder.washing_status ?? "N/A",
+        "Plate Number": jobOrder.vehicle?.plate_number ?? "N/A",
+        Customer: jobOrder.service_request?.customer?.name ?? "N/A",
+        "Service Type": jobOrder.service_type ?? jobOrder.activity ?? "N/A",
+        "Assigned Staff": jobOrder.assigned_staff?.name ?? "Unassigned",
+        "Concern/Description": jobOrder.maintenance_record ?? "N/A",
+        Priority: titleCase(jobOrder.priority) === "N/A" ? "Medium" : titleCase(jobOrder.priority),
+        "Target Completion Date": formatDate(jobOrder.target_completion_date ?? jobOrder.scheduled_at),
+        "Estimated Labor Cost": formatPeso(jobOrder.labor_cost),
+        "Estimated Parts Cost": formatPeso(jobOrder.parts_cost),
+        Progress: jobOrder.progress ?? jobOrder.repair_status ?? jobOrder.washing_status ?? "N/A",
+        "Parts Used": jobOrder.parts_used ?? "N/A",
+        Remarks: jobOrder.remarks ?? jobOrder.service_request?.reference ?? "N/A",
         Status: titleCase(jobOrder.status),
+        "Date Started": "N/A",
+        "Date Completed": "N/A",
       })),
   },
   payments: {
@@ -185,7 +247,11 @@ const liveModules: Record<
       (data as Array<{
         amount?: string
         customer?: RelatedName
+        documents_status?: string
+        expiry_date?: string
+        payment_method?: string
         reference?: string
+        requirements_status?: string
         reserved_at?: string
         status?: string
         vehicle?: RelatedName
@@ -193,8 +259,12 @@ const liveModules: Record<
         Reservation: reservation.reference ?? "N/A",
         Customer: reservation.customer?.name ?? "N/A",
         Vehicle: reservation.vehicle?.name ?? "N/A",
-        Date: reservation.reserved_at ?? "N/A",
-        Amount: formatPeso(reservation.amount),
+        "Reservation Fee": formatPeso(reservation.amount),
+        "Payment Method": titleCase(reservation.payment_method),
+        "Expiry Date": formatDate(reservation.expiry_date),
+        Documents: reservation.documents_status ?? "N/A",
+        Requirements: reservation.requirements_status ?? "For verification",
+        History: reservation.reserved_at ? `Created ${formatDate(reservation.reserved_at)}` : "N/A",
         Status: titleCase(reservation.status),
       })),
   },
@@ -263,19 +333,33 @@ const liveModules: Record<
     endpoint: "/api/vehicles",
     toRecords: (data) =>
       (data as VehicleRecord[]).map((vehicle) => ({
+        "Vehicle ID": vehicle.id ? `VEH-${String(vehicle.id).padStart(5, "0")}` : "N/A",
         Vehicle: vehicle.name ?? "N/A",
-        Photo: vehicle.photo_url ?? vehicle.photo_path ?? vehicle.photo ?? vehicle.image_url ?? "",
+        "Main Photo": vehicle.photo_url ?? vehicle.photo_path ?? vehicle.photo ?? vehicle.image_url ?? "",
+        "Interior Photos": formatPhotoList(vehicle.interior_photo_urls),
+        "Exterior Photos": formatPhotoList(vehicle.exterior_photo_urls),
+        "Stock No.": vehicle.stock_no ?? "N/A",
+        "Plate Number": vehicle.plate_number ?? "N/A",
         Brand: vehicle.brand ?? "N/A",
         Model: vehicle.model ?? "N/A",
-        Year: String(vehicle.year ?? "N/A"),
+        "Year Model": String(vehicle.year ?? "N/A"),
+        Variant: vehicle.variant ?? "N/A",
         Color: vehicle.color ?? "N/A",
+        Transmission: vehicle.transmission ?? "N/A",
+        "Fuel Type": vehicle.fuel_type ?? "N/A",
+        Mileage: vehicle.mileage ? `${vehicle.mileage.toLocaleString()} km` : "N/A",
         "Engine Number": vehicle.engine_number ?? "N/A",
         "Chassis Number": vehicle.chassis_number ?? "N/A",
-        "Plate Number": vehicle.plate_number ?? "N/A",
-        Mileage: vehicle.mileage ? `${vehicle.mileage.toLocaleString()} km` : "N/A",
+        "Purchase Price": formatPeso(vehicle.purchase_price),
         "Selling Price": formatPeso(vehicle.selling_price),
-        Location: vehicle.location ?? "N/A",
-        Status: titleCase(vehicle.status),
+        "Reservation Fee": formatPeso(vehicle.reservation_fee),
+        "OR/CR Number": vehicle.or_cr_number ?? "N/A",
+        "Registration Expiry": formatDate(vehicle.registration_expiry),
+        Insurance: vehicle.insurance ?? "N/A",
+        Description: vehicle.description ?? "N/A",
+        Features: vehicle.features ?? "N/A",
+        "Remarks/Notes": vehicle.remarks ?? "N/A",
+        Status: formatVehicleStatus(vehicle.status),
       })),
   },
   "vehicle-status": {
@@ -285,7 +369,7 @@ const liveModules: Record<
         Vehicle: vehicle.name ?? "N/A",
         Location: vehicle.location ?? "N/A",
         Condition: vehicle.status ?? "N/A",
-        Status: titleCase(vehicle.status),
+        Status: formatVehicleStatus(vehicle.status),
       })),
   },
   "vehicle-release": {
@@ -323,8 +407,13 @@ function ApiModulePage({ fallbackModule, moduleLabel }: ApiModulePageProps) {
     const data = config.object
       ? await getApiObject<unknown>(config.endpoint, forceRefresh)
       : await getApiList<unknown>(config.endpoint, forceRefresh)
-    setRecords(config.toRecords(data))
-  }, [config])
+    const mappedRecords = config.toRecords(data)
+    setRecords(
+      mappedRecords.length > 0 || fallbackModule.id === "job-orders"
+        ? mappedRecords
+        : fallbackModule.records,
+    )
+  }, [config, fallbackModule.records])
 
   useEffect(() => {
     if (!config || hasLoaded.current) {
@@ -363,9 +452,15 @@ function salesRecords(data: unknown) {
     id?: number
     balance?: string
     customer?: RelatedName
+    discount?: string
+    down_payment?: string
     paid_amount?: string
     payment_method?: string
+    proof_of_payment_url?: string
     reference?: string
+    receipt_number?: string
+    release_status?: string
+    selling_price?: string
     status?: string
     total_amount?: string
     vehicle?: RelatedName
@@ -374,9 +469,16 @@ function salesRecords(data: unknown) {
     Customer: sale.customer?.name ?? "N/A",
     Vehicle: sale.vehicle?.name ?? "N/A",
     Method: titleCase(sale.payment_method),
-    Total: formatPeso(sale.total_amount),
+    "Selling Price": formatPeso(sale.selling_price ?? sale.total_amount),
+    Discount: formatPeso(sale.discount),
+    "Down Payment": formatPeso(sale.down_payment),
     Paid: formatPeso(sale.paid_amount),
     Balance: formatPeso(sale.balance),
+    Invoice: "Generated",
+    Receipt: sale.receipt_number ?? "For generation",
+    Proof: sale.proof_of_payment_url ? "Uploaded" : "Pending",
+    Schedule: titleCase(sale.payment_method) === "Financing" ? "Monthly schedule" : "Full payment",
+    Release: titleCase(sale.release_status),
     "Deed of Sale": sale.id ? `/api/sales-transactions/${sale.id}/deed-of-sale/pdf` : "N/A",
     Status: titleCase(sale.status),
   }))
@@ -399,6 +501,16 @@ function formatDateTime(value?: string | null) {
   }).format(new Date(value))
 }
 
+function formatDate(value?: string | null) {
+  if (!value) {
+    return "N/A"
+  }
+
+  return new Intl.DateTimeFormat("en-PH", {
+    dateStyle: "medium",
+  }).format(new Date(value))
+}
+
 function titleCase(value?: string | null) {
   if (!value) {
     return "N/A"
@@ -408,6 +520,20 @@ function titleCase(value?: string | null) {
     .split(/[\s_-]+/)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ")
+}
+
+function formatVehicleStatus(value?: string | null) {
+  const normalizedValue = value?.trim().toLowerCase()
+
+  if (!normalizedValue || normalizedValue === "active") {
+    return "Available"
+  }
+
+  return titleCase(normalizedValue)
+}
+
+function formatPhotoList(value?: string[]) {
+  return value && value.length > 0 ? value.join(", ") : "N/A"
 }
 
 export default ApiModulePage

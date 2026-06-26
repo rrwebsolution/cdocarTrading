@@ -8,6 +8,7 @@ import {
   LockKeyhole,
   Mail,
   ShieldCheck,
+  UserRound,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
@@ -66,25 +67,27 @@ function getEmailRolePreview(email: string) {
 
 function Login({ onLogin, onNavigate }: LoginProps) {
   const [email, setEmail] = useState("");
+  const [loginType, setLoginType] = useState<"email" | "username">("email");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(getAuthPersistencePreference);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({});
   const [isLoading, setIsLoading] = useState(false);
-  const emailRolePreview = getEmailRolePreview(email);
+  const emailRolePreview = loginType === "email" ? getEmailRolePreview(email) : "";
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
     setFieldErrors({});
 
-    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedLogin = loginType === "email" ? email.trim().toLowerCase() : email.trim();
     const nextFieldErrors: LoginFieldErrors = {};
 
-    if (!normalizedEmail) {
-      nextFieldErrors.email = "Email address is required.";
-    } else if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
+    if (!normalizedLogin) {
+      nextFieldErrors.email =
+        loginType === "email" ? "Email address is required." : "Username is required.";
+    } else if (loginType === "email" && !/^\S+@\S+\.\S+$/.test(normalizedLogin)) {
       nextFieldErrors.email = "Please enter a valid email address.";
     }
 
@@ -99,7 +102,7 @@ function Login({ onLogin, onNavigate }: LoginProps) {
 
     setIsLoading(true);
     try {
-      const auth = await loginUser(normalizedEmail, password);
+      const auth = await loginUser(normalizedLogin, password, loginType);
       saveAuthSession(auth, rememberMe);
       toast.success(`Welcome back, ${auth.user.name}.`);
       onLogin(getRouteForRole(auth.user.role?.name), auth.user);
@@ -128,7 +131,7 @@ function Login({ onLogin, onNavigate }: LoginProps) {
 
   return (
     <main
-      className=" min-h-svh grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] bg-background pt-[10px] "
+      className="grid min-h-svh grid-cols-1 bg-background pt-[70px] lg:h-svh lg:grid-cols-[1.05fr_0.95fr] lg:overflow-hidden"
       style={{
         backgroundImage:
           "linear-gradient(120deg, rgba(8, 17, 35, 0.96), rgba(15, 23, 42, 0.78)), url('https://images.unsplash.com/photo-1562141961-b5d1fd9e24e3?auto=format&fit=crop&w=1800&q=85')",
@@ -137,30 +140,30 @@ function Login({ onLogin, onNavigate }: LoginProps) {
       }}
     >
       <section
-        className="hidden lg:flex min-h-[calc(100svh-68px)]"
+        className="hidden min-h-0 lg:flex"
         aria-labelledby="system-title"
       >
-        <div className="flex w-full flex-col justify-between gap-2 bg-[radial-gradient(circle_at_15%_20%,rgba(234,88,12,0.22),transparent_31rem),linear-gradient(90deg,rgba(2,6,23,0.45),rgba(2,6,23,0.12))] p-8 lg:p-20">
+        <div className="flex min-h-0 w-full flex-col justify-between gap-5 bg-[radial-gradient(circle_at_15%_20%,rgba(234,88,12,0.22),transparent_31rem),linear-gradient(90deg,rgba(2,6,23,0.45),rgba(2,6,23,0.12))] p-10 xl:p-14 2xl:p-16">
           <div className="max-w-3xl">
             <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.13em] text-primary">
               Auto CDO Car Trading
             </p>
             <h1
               id="system-title"
-              className="text-5xl font-black leading-none tracking-normal lg:text-7xl"
+              className="text-5xl font-black leading-none tracking-normal xl:text-6xl 2xl:text-7xl"
             >
               {systemTitle}
             </h1>
-            <p className="mt-6 max-w-3xl text-base leading-8 text-primary-foreground/80 lg:text-lg">
+            <p className="mt-5 max-w-3xl text-base leading-7 text-primary-foreground/80 xl:text-lg">
               {systemSubtitle}
             </p>
           </div>
 
-          <div className="grid w-full max-w-3xl gap-1" aria-hidden="true">
-            <div className="grid justify-items-center">
+          <div className="grid min-h-0 w-full max-w-3xl gap-4" aria-hidden="true">
+            <div className="grid min-h-0 justify-items-center">
               <img
                 alt=""
-                className="max-h-[40vh] lg:max-h-[50vh] object-contain"
+                className="max-h-[26vh] object-contain xl:max-h-[32vh] 2xl:max-h-[36vh]"
                 src="/cdocarlogo.png"
               />
             </div>
@@ -190,15 +193,15 @@ function Login({ onLogin, onNavigate }: LoginProps) {
       </section>
 
       <section
-        className="min-h-[calc(100svh-68px)] overflow-y-auto grid place-items-center p-4 md:p-6 lg:p-12"
+        className="grid min-h-[calc(100svh-70px)] place-items-center overflow-y-auto p-4 md:p-6 lg:min-h-0 lg:p-8 xl:p-10"
         aria-label="Login form"
       >
         <form
-          className="w-full max-w-md sm:max-w-lg rounded-lg border bg-card/95 p-5 sm:p-8"
+          className="w-full max-w-md rounded-lg border bg-card/95 p-5 shadow-2xl shadow-black/20 sm:p-7 xl:max-w-lg xl:p-8"
           onSubmit={handleSubmit}
           noValidate
         >
-          <div className="mx-auto mb-7 grid w-32 h-32 sm:w-40 sm:h-40 place-items-center overflow-hidden">
+          <div className="mx-auto mb-5 grid size-28 place-items-center overflow-hidden sm:size-32 xl:size-36">
             <img
               alt="Auto CDO Car Trading logo"
               className="w-full h-full object-contain"
@@ -228,7 +231,7 @@ function Login({ onLogin, onNavigate }: LoginProps) {
             <h2 className="text-3xl font-black leading-tight text-foreground">
               Login to your account
             </h2>
-            <p className="mt-3 leading-7 text-muted-foreground">
+            <p className="mt-2 leading-6 text-muted-foreground">
               Enter your account credentials to continue.
             </p>
           </div>
@@ -246,25 +249,39 @@ function Login({ onLogin, onNavigate }: LoginProps) {
             className="mt-4 grid gap-2 text-sm font-bold text-foreground"
             htmlFor="email"
           >
-            <span>Email Address</span>
+            <span className="flex items-center justify-between gap-3">
+              <span>{loginType === "email" ? "Email Address" : "Username"}</span>
+              <button
+                className="text-xs font-extrabold text-primary transition hover:underline focus-visible:outline-2 focus-visible:outline-primary"
+                onClick={() => {
+                  setLoginType((current) => (current === "email" ? "username" : "email"));
+                  setEmail("");
+                  setError("");
+                  setFieldErrors((current) => ({ ...current, email: undefined }));
+                }}
+                type="button"
+              >
+                {loginType === "email" ? "Use username" : "Use email"}
+              </button>
+            </span>
             <div className={`flex min-h-13 items-center gap-3 rounded-lg border bg-background px-3 transition focus-within:ring-4 ${
               fieldErrors.email
                 ? "border-destructive focus-within:border-destructive focus-within:ring-destructive/15"
                 : "border-input focus-within:border-primary focus-within:ring-primary/15"
             }`}>
-              <Mail
+              {loginType === "email" ? <Mail
                 aria-hidden="true"
                 className="size-4 text-muted-foreground"
-              />
+              /> : <UserRound aria-hidden="true" className="size-4 text-muted-foreground" />}
               <input
                 aria-describedby={
                   fieldErrors.email ? "email-error" : undefined
                 }
                 aria-invalid={fieldErrors.email ? "true" : undefined}
                 className="w-full border-0 bg-transparent font-medium text-foreground outline-none placeholder:text-muted-foreground"
-                autoComplete="email"
+                autoComplete={loginType === "email" ? "email" : "username"}
                 id="email"
-                inputMode="email"
+                inputMode={loginType === "email" ? "email" : "text"}
                 onChange={(event) => {
                   setEmail(event.target.value);
                   setError("");
@@ -273,8 +290,8 @@ function Login({ onLogin, onNavigate }: LoginProps) {
                     email: undefined,
                   }));
                 }}
-                placeholder="admin@autocdo.com"
-                type="email"
+                placeholder={loginType === "email" ? "admin@autocdo.com" : "Enter username"}
+                type={loginType === "email" ? "email" : "text"}
                 value={email}
               />
             </div>

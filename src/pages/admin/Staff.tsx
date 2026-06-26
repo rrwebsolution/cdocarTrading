@@ -1179,8 +1179,9 @@ function buildSchedule({
 
 function parseSchedule(schedule?: string | null) {
   const timeMatch = schedule?.match(/(\d{2}:\d{2})\s-\s(\d{2}:\d{2})/)
-  const dayOffMatch = schedule?.match(/Day Off:\s*(.+)$/)
-  const days = weekDays.filter((day) => schedule?.includes(day))
+  const dayOffMatch = schedule?.match(/Day Off:\s*(.+)$/i)
+  const workingDaysText = schedule?.split(/\|\s*Day Off:/i)[0] ?? ""
+  const days = weekDays.filter((day) => workingDaysText.includes(day))
 
   return {
     days: days.length ? days : ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],

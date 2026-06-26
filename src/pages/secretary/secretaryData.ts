@@ -10,6 +10,7 @@ import {
   Users,
 } from "lucide-react"
 
+import { adminModuleMap } from "@/pages/admin/adminData"
 import type { AdminModule, SidebarGroup } from "@/pages/admin/types"
 
 export const secretaryModules: AdminModule[] = [
@@ -54,27 +55,29 @@ export const secretaryModules: AdminModule[] = [
     title: "Manage Reservations",
     navLabel: "Reservations",
     description:
-      "Process vehicle reservations and maintain reservation records.",
+      "Create reservations, search available vehicles, select customers and vehicles, verify documents, update status, cancel reservations, and print reservation forms.",
     icon: CalendarCheck,
-    primaryAction: "Process Reservation",
+    primaryAction: "Create Reservation",
     stats: [
-      { label: "For Approval", value: "0" },
-      { label: "Approved", value: "0" },
-      { label: "Expiring Soon", value: "0" },
+      { label: "Active Reservations", value: "8" },
+      { label: "Pending", value: "3" },
+      { label: "Expiring Soon", value: "2" },
     ],
+    columns: adminModuleMap.reservations.columns,
     recordsTitle: "Reservation History",
     recordsDescription:
-      "Review reservation history by status, with approved and for approval requests shown first.",
-    defaultStatusFilter: "Approved + For Approval",
+      "Reserve available vehicles before purchase and track fees, payment method, requirements, expiry, cancellation, and conversion to sale.",
+    defaultStatusFilter: "Active Reservations",
     statusNavigation: [
-      { label: "Approved + For Approval", statuses: ["Approved", "For Approval"] },
-      { label: "For Approval", statuses: ["For Approval"] },
-      { label: "Approved", statuses: ["Approved"] },
-      { label: "Expiring", statuses: ["Expiring"] },
+      { label: "Active Reservations", statuses: ["Pending", "Confirmed"] },
+      { label: "Pending", statuses: ["Pending"] },
+      { label: "Confirmed", statuses: ["Confirmed"] },
+      { label: "Expired", statuses: ["Expired"] },
       { label: "Cancelled", statuses: ["Cancelled"] },
+      { label: "Converted", statuses: ["Converted to Sale"] },
       { label: "All History" },
     ],
-    records: [],
+    records: adminModuleMap.reservations.records,
   },
   {
     id: "job-orders",
@@ -83,28 +86,29 @@ export const secretaryModules: AdminModule[] = [
     title: "Manage Job Orders",
     navLabel: "Job Orders",
     description:
-      "Create job orders, assign mechanics or carwashers, view job orders, monitor progress, and view maintenance records.",
+      "Create job orders, assign mechanics or staff, select vehicles and service type, set priority and target completion, update progress, record costs, and print job orders.",
     icon: ClipboardList,
     primaryAction: "Create Job Order",
     stats: [
       { label: "Open Job Orders", value: "0" },
-      { label: "Assigned Staff", value: "0" },
-      { label: "Completed", value: "0" },
+      { label: "Waiting Parts", value: "0" },
+      { label: "Completed Today", value: "0" },
     ],
-    recordsTitle: "Job Orders & Maintenance Records",
+    columns: adminModuleMap["job-orders"].columns,
+    recordsTitle: "Job Order Lists",
     recordsDescription:
-      "Manage job order creation, personnel assignment, repair progress, washing status, and maintenance records.",
-    defaultStatusFilter: "Active Work",
+      "Manage vehicle preparation, repair, detailing, maintenance history, parts usage, labor cost, remarks, and before/after photos.",
+    defaultStatusFilter: "All Records",
     statusNavigation: [
-      { label: "Active Work", statuses: ["Pending", "Approved", "In Progress", "Inspection", "Carwash", "Detailing"] },
-      { label: "Pending", statuses: ["Pending"] },
-      { label: "Approved", statuses: ["Approved"] },
-      { label: "In Progress", statuses: ["In Progress"] },
-      { label: "Carwash", statuses: ["Carwash", "Detailing"] },
-      { label: "Completed", statuses: ["Completed"] },
       { label: "All Records" },
+      { label: "Active Work", statuses: ["Pending", "In Progress", "Waiting for Parts"] },
+      { label: "Pending", statuses: ["Pending"] },
+      { label: "In Progress", statuses: ["In Progress"] },
+      { label: "Waiting Parts", statuses: ["Waiting for Parts"] },
+      { label: "Completed", statuses: ["Completed"] },
+      { label: "Cancelled", statuses: ["Cancelled"] },
     ],
-    records: [],
+    records: adminModuleMap["job-orders"].records,
   },
   {
     id: "sales",
@@ -113,15 +117,19 @@ export const secretaryModules: AdminModule[] = [
     title: "Manage Sales & Payments",
     navLabel: "Sales & Payments",
     description:
-      "Record sales transactions, process customer payments, and generate receipts.",
+      "Create sales transactions, convert reservations to sales, generate invoices, record cash or financing payments, monitor balances, release vehicles, and print receipts.",
     icon: BadgeDollarSign,
-    primaryAction: "Record Payment",
+    primaryAction: "Create Sales Transaction",
     stats: [
-      { label: "Sales Today", value: "0" },
-      { label: "Receipts", value: "0" },
-      { label: "Partial Payments", value: "0" },
+      { label: "Monthly Sales", value: "PHP 2.4M" },
+      { label: "Payments Today", value: "PHP 185K" },
+      { label: "Outstanding", value: "PHP 890K" },
     ],
-    records: [],
+    columns: adminModuleMap.sales.columns,
+    recordsTitle: "Sales & Payment History",
+    recordsDescription:
+      "Process full cash payments, financing down payments, monthly collections, receipts, vehicle release, proof uploads, and outstanding balances.",
+    records: adminModuleMap.sales.records,
   },
   {
     id: "financing",
@@ -184,15 +192,19 @@ export const secretaryModules: AdminModule[] = [
     title: "Generate Reports",
     navLabel: "Reports",
     description:
-      "Generate customer, reservation, sales, and payment reports.",
+      "Generate sales, reservation, job order, payment, vehicle, and customer reports for monitoring business operations.",
     icon: BarChart3,
     primaryAction: "Generate Report",
     stats: [
-      { label: "Report Types", value: "0" },
-      { label: "Generated Today", value: "0" },
-      { label: "Scheduled", value: "0" },
+      { label: "Report Types", value: "25" },
+      { label: "Generated Today", value: "5" },
+      { label: "Scheduled", value: "4" },
     ],
-    records: [],
+    columns: adminModuleMap.reports.columns,
+    recordsTitle: "Report Center",
+    recordsDescription:
+      "Generate daily, weekly, monthly, annual, inventory, reservation, job order, payment, customer, and collection reports.",
+    records: adminModuleMap.reports.records,
   },
 ]
 
