@@ -151,18 +151,37 @@ const jobOrderCancellationReasons = [
   "Others",
 ]
 
+const jobOrderRequiredPartOptions: SelectOption[] = [
+  { id: "Oil Filter", label: "Oil Filter" },
+  { id: "Air Filter", label: "Air Filter" },
+  { id: "Fuel Filter", label: "Fuel Filter" },
+  { id: "Brake Pads", label: "Brake Pads" },
+  { id: "Brake Fluid", label: "Brake Fluid" },
+  { id: "Engine Oil", label: "Engine Oil" },
+  { id: "Spark Plugs", label: "Spark Plugs" },
+  { id: "Battery", label: "Battery" },
+  { id: "Tires", label: "Tires" },
+  { id: "Wiper Blades", label: "Wiper Blades" },
+]
+
 type ModulePageBaseProps = {
+  createActionToken?: number
+  hideHeader?: boolean
   isLoading?: boolean
   module: AdminModule
   moduleLabel: string
   onRefresh?: () => Promise<void>
+  refreshActionToken?: number
 }
 
 function ModulePageBase({
+  createActionToken = 0,
+  hideHeader = false,
   isLoading = false,
   module,
   moduleLabel,
   onRefresh,
+  refreshActionToken = 0,
 }: ModulePageBaseProps) {
   const [page, setPage] = useState(1)
   const [slideDirection, setSlideDirection] = useState<"next" | "previous">("next")
@@ -190,6 +209,8 @@ function ModulePageBase({
   const columns =
     moduleKey === "admin-job-orders"
       ? fallbackColumns
+      : ["documents", "customer-documents", "customer-reservations", "reservations"].includes(moduleKey)
+      ? fallbackColumns
       : moduleKey === "customers"
       ? getDefaultModuleColumns(module.id, module.actionSet)
       : module.id === "vehicles" && !baseColumns.includes("Main Photo")
@@ -205,6 +226,8 @@ function ModulePageBase({
   const [jobOrderCustomers, setJobOrderCustomers] = useState<SelectOption[]>([])
   const [jobOrderStaff, setJobOrderStaff] = useState<SelectOption[]>([])
   const [uploadProgress, setUploadProgress] = useState<number | null>(null)
+  const createActionTokenRef = useRef(createActionToken)
+  const refreshActionTokenRef = useRef(refreshActionToken)
   const Icon = module.icon
   const isJobOrderModule = moduleKey === "admin-job-orders"
   const isVehicleCards =
@@ -549,46 +572,66 @@ function ModulePageBase({
     })
   }
 
+  useEffect(() => {
+    if (createActionTokenRef.current === createActionToken) {
+      return
+    }
+
+    createActionTokenRef.current = createActionToken
+    openCreateDialog()
+  }, [createActionToken])
+
+  useEffect(() => {
+    if (refreshActionTokenRef.current === refreshActionToken) {
+      return
+    }
+
+    refreshActionTokenRef.current = refreshActionToken
+    void refreshData()
+  }, [refreshActionToken])
+
   return (
     <div className="grid gap-4">
-      <Card>
-        <CardHeader className="flex-row items-start justify-between gap-4 max-lg:flex-col">
-          <div className="flex min-w-0 items-start gap-4 max-sm:flex-col">
-            <span className="grid size-12 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground">
-              <Icon aria-hidden="true" className="size-5" />
-            </span>
-            <div className="min-w-0">
-              <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.13em] text-primary">
-                {moduleLabel}
-              </p>
-              <CardTitle className="text-3xl font-black tracking-normal max-sm:text-2xl">
-                {module.title}
-              </CardTitle>
-              <CardDescription className="mt-3 max-w-3xl leading-7">
-                {module.description}
-              </CardDescription>
+      {!hideHeader ? (
+        <Card>
+          <CardHeader className="flex-row items-start justify-between gap-4 max-lg:flex-col">
+            <div className="flex min-w-0 items-start gap-4 max-sm:flex-col">
+              <span className="grid size-12 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground">
+                <Icon aria-hidden="true" className="size-5" />
+              </span>
+              <div className="min-w-0">
+                <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.13em] text-primary">
+                  {moduleLabel}
+                </p>
+                <CardTitle className="text-3xl font-black tracking-normal max-sm:text-2xl">
+                  {module.title}
+                </CardTitle>
+                <CardDescription className="mt-3 max-w-3xl leading-7">
+                  {module.description}
+                </CardDescription>
+              </div>
             </div>
-          </div>
-          <div className="flex shrink-0 items-center gap-2 max-lg:w-full max-sm:flex-col">
-            <Button
-              className="max-lg:flex-1 max-sm:w-full"
-              disabled={isDataLoading}
-              onClick={() => void refreshData()}
-              variant="outline"
-            >
-              <RefreshCw
-                aria-hidden="true"
-                className={cn("size-4", isDataLoading && "animate-spin")}
-              />
-              {isDataLoading ? "Refreshing..." : "Refresh Data"}
-            </Button>
-            <Button className="max-lg:flex-1 max-sm:w-full" onClick={openCreateDialog}>
-              <Plus aria-hidden="true" className="size-4" />
-              {module.primaryAction}
-            </Button>
-          </div>
-        </CardHeader>
-      </Card>
+            <div className="flex shrink-0 items-center gap-2 max-lg:w-full max-sm:flex-col">
+              <Button
+                className="max-lg:flex-1 max-sm:w-full"
+                disabled={isDataLoading}
+                onClick={() => void refreshData()}
+                variant="outline"
+              >
+                <RefreshCw
+                  aria-hidden="true"
+                  className={cn("size-4", isDataLoading && "animate-spin")}
+                />
+                {isDataLoading ? "Refreshing..." : "Refresh Data"}
+              </Button>
+              <Button className="max-lg:flex-1 max-sm:w-full" onClick={openCreateDialog}>
+                <Plus aria-hidden="true" className="size-4" />
+                {module.primaryAction}
+              </Button>
+            </div>
+          </CardHeader>
+        </Card>
+      ) : null}
 
       <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-1">
         {isDataLoading ? (
@@ -819,9 +862,6 @@ function ModulePageBase({
             errors={formErrors}
             formValues={formValues}
             isVehicleForm={module.id === "vehicles"}
-            twoColumnFields={
-              module.id === "requirements" ? ["Requirement", "Category"] : undefined
-            }
             locationOptions={vehicleLocations}
             moduleTitle={module.title}
             onChange={(column, value) => {
@@ -967,9 +1007,6 @@ function ModulePageBase({
             errors={formErrors}
             formValues={formValues}
             isVehicleForm={module.id === "vehicles"}
-            twoColumnFields={
-              module.id === "requirements" ? ["Requirement", "Category"] : undefined
-            }
             locationOptions={vehicleLocations}
             moduleTitle={module.title}
             onChange={(column, value) => {
@@ -2138,11 +2175,6 @@ function getRecordActions(actionSet: string, record: Record<string, string>): Re
         { icon: ClipboardCheck, label: "Checklist", variant: "outline" },
         { icon: Send, label: "Release Unit", variant: "default" },
       ]
-    case "requirements":
-      return [
-        update,
-        { icon: Trash2, kind: "delete", label: "Delete", variant: "destructive" },
-      ]
     case "documents":
       return [
         view,
@@ -2177,13 +2209,9 @@ function getRecordActions(actionSet: string, record: Record<string, string>): Re
           : { icon: FileText, label: "Inquiry", variant: "outline" },
       ]
     case "customer-reservations":
-      return [
-        view,
-        { icon: ClipboardCheck, label: "Track", variant: "outline" },
-        status.includes("cancelled")
-          ? { icon: FileText, label: "Reason", variant: "outline" }
-          : { icon: X, label: "Cancel", variant: "destructive" },
-      ]
+      return status === "pending"
+        ? [view, { icon: X, label: "Cancel", variant: "destructive" }]
+        : [view]
     case "customer-payments":
       return [
         view,
@@ -2205,12 +2233,18 @@ function getRecordActions(actionSet: string, record: Record<string, string>): Re
         download,
       ]
     case "customer-documents":
-      return [
-        view,
-        status.includes("missing") || status.includes("pending")
-          ? { icon: Send, label: "Upload", variant: "default" }
-          : download,
-      ]
+      if (status.includes("not uploaded")) {
+        return [{ icon: Send, label: "Upload", variant: "default" }]
+      }
+
+      if (status.includes("rejected")) {
+        return [
+          view,
+          { icon: Send, label: "Re-upload", variant: "default" },
+        ]
+      }
+
+      return [view]
     default:
       return [
         view,
@@ -2245,7 +2279,6 @@ function RecordTable({
   records: Record<string, string>[]
   searchTerm: string
 }) {
-  const isRequirementsModule = moduleId === "requirements"
   const isJobOrderModule = (actionSet ?? moduleId) === "admin-job-orders"
   const rowsWithActions = records.map((record) => ({
     actions: getRecordActions(actionSet ?? moduleId, record),
@@ -2292,8 +2325,6 @@ function RecordTable({
                         name={record.Employee ?? record.Name ?? "Staff member"}
                         src={record[column]}
                       />
-                    ) : isRequirementsModule && column.toLowerCase() === "documents" ? (
-                      <DocumentBadges value={record[column]} />
                     ) : column.toLowerCase() === "description" ? (
                       <ExpandableText value={record[column]} />
                     ) : column.toLowerCase() === "permissions" ? (
@@ -2316,7 +2347,7 @@ function RecordTable({
                     <div className="flex items-center gap-2">
                       {recordActions.map((action) => {
                         const Icon = action.icon
-                        const shouldHideActionText = !isJobOrderModule || isRequirementsModule
+                        const shouldHideActionText = !isJobOrderModule
 
                         return (
                           <Button
@@ -2340,7 +2371,7 @@ function RecordTable({
 
                               onWorkflowAction(action.workflowAction ?? action.label, record)
                             }}
-                            size={isRequirementsModule ? "icon-sm" : "sm"}
+                            size="sm"
                             title={action.label}
                             type="button"
                             variant={action.variant}
@@ -2349,7 +2380,6 @@ function RecordTable({
                             <span
                               className={cn(
                                 shouldHideActionText && "max-xl:sr-only",
-                                isRequirementsModule && "sr-only",
                               )}
                             >
                               {action.label}
@@ -2550,7 +2580,20 @@ function StartJobOrderDialog({
       ? [{ id: initialAssignedStaff, label: initialAssignedStaff }, ...staffOptions]
       : staffOptions
   const [assignedStaff, setAssignedStaff] = useState(initialAssignedStaff)
+  const [assignedStaffId, setAssignedStaffId] = useState(
+    staffSelectOptions.find((option) => option.label === initialAssignedStaff)?.id ?? "",
+  )
   const [remarks, setRemarks] = useState("")
+  const changeAssignedStaff = (column: string, value: string) => {
+    if (column === "Assigned Staff") {
+      setAssignedStaff(value)
+      return
+    }
+
+    if (column === "_assignedStaffId") {
+      setAssignedStaffId(value)
+    }
+  }
 
   return (
     <div
@@ -2593,21 +2636,14 @@ function StartJobOrderDialog({
             </div>
           </div>
 
-          <label className="grid gap-2">
-            <span className="text-sm font-black text-muted-foreground">Assigned Staff</span>
-            <select
-              className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
-              onChange={(event) => setAssignedStaff(event.target.value)}
-              value={assignedStaff}
-            >
-              {staffSelectOptions.length === 0 ? (
-                <option value="">No staff available</option>
-              ) : null}
-              {staffSelectOptions.map((staff) => (
-                <option key={staff.id} value={staff.label}>{staff.label}</option>
-              ))}
-            </select>
-          </label>
+          <JobOrderCommandSelect
+            label="Assigned Staff"
+            name="Assigned Staff"
+            onChange={changeAssignedStaff}
+            options={staffSelectOptions}
+            value={assignedStaff}
+            valueId={assignedStaffId}
+          />
 
           <label className="grid gap-2">
             <span className="text-sm font-black text-muted-foreground">Remarks</span>
@@ -3014,7 +3050,16 @@ function JobOrderWorkflowDialog({
   onSave: (updates: Record<string, string>) => void
   record: Record<string, string>
 }) {
-  const [requiredPart, setRequiredPart] = useState(record["Required Part"] || "Oil Filter")
+  const initialRequiredParts = splitPartList(record["Required Part"]).length
+    ? splitPartList(record["Required Part"])
+    : ["Oil Filter"]
+  const requiredPartSelectOptions = [
+    ...jobOrderRequiredPartOptions,
+    ...initialRequiredParts
+      .filter((part) => !jobOrderRequiredPartOptions.some((option) => option.label === part))
+      .map((part) => ({ id: part, label: part })),
+  ]
+  const [requiredParts, setRequiredParts] = useState(initialRequiredParts)
   const [expectedArrival, setExpectedArrival] = useState(dateInputValue(record["Expected Arrival Date"]) || "2026-06-29")
   const [reason, setReason] = useState(record["Parts Reason"] || "Oil filter is currently out of stock. Waiting for supplier delivery.")
   const [partsReceived, setPartsReceived] = useState(true)
@@ -3054,7 +3099,7 @@ function JobOrderWorkflowDialog({
   const save = () => {
     if (action === "Waiting for Parts") {
       onSave({
-        "Required Part": requiredPart || "N/A",
+        "Required Part": requiredParts.length > 0 ? requiredParts.join(", ") : "N/A",
         "Expected Arrival Date": displayDateValue(expectedArrival),
         "Parts Reason": reason || "N/A",
         Status: "Waiting for Parts",
@@ -3147,14 +3192,12 @@ function JobOrderWorkflowDialog({
 
           {action === "Waiting for Parts" ? (
             <div className="grid gap-4 sm:grid-cols-2">
-              <label className="grid gap-2">
-                <span className="text-sm font-black text-muted-foreground">Required Part</span>
-                <input
-                  className="min-h-10 rounded-lg border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15"
-                  onChange={(event) => setRequiredPart(event.target.value)}
-                  value={requiredPart}
-                />
-              </label>
+              <JobOrderMultiCommandSelect
+                label="Required Part"
+                onChange={setRequiredParts}
+                options={requiredPartSelectOptions}
+                value={requiredParts}
+              />
               <label className="grid gap-2">
                 <span className="text-sm font-black text-muted-foreground">Expected Arrival</span>
                 <input
@@ -3236,7 +3279,9 @@ function JobOrderWorkflowDialog({
                 <span className="text-sm font-black text-muted-foreground">Service Performed</span>
                 <div className="rounded-lg border border-border bg-background p-3 text-sm font-semibold leading-6">
                   <p>{record["Service Type"] ?? "N/A"}</p>
-                  {requiredPart ? <p>{requiredPart} Replacement</p> : null}
+                  {requiredParts.length > 0 ? (
+                    <p>{requiredParts.join(", ")} Replacement</p>
+                  ) : null}
                 </div>
               </div>
               <label className="grid gap-2 sm:col-span-2">
@@ -3490,6 +3535,111 @@ function JobOrderCommandSelect({
   )
 }
 
+function JobOrderMultiCommandSelect({
+  label,
+  onChange,
+  options,
+  value,
+}: {
+  label: string
+  onChange: (value: string[]) => void
+  options: SelectOption[]
+  value: string[]
+}) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [search, setSearch] = useState("")
+  const selectedValues = new Set(value)
+  const filteredOptions = options.filter((option) =>
+    option.label.toLowerCase().includes(search.trim().toLowerCase()),
+  )
+  const selectedLabel =
+    value.length > 0
+      ? value.length === 1
+        ? value[0]
+        : `${value.length} parts selected`
+      : ""
+
+  const toggleOption = (option: SelectOption) => {
+    if (selectedValues.has(option.label)) {
+      onChange(value.filter((part) => part !== option.label))
+      return
+    }
+
+    onChange([...value, option.label])
+  }
+
+  return (
+    <div className="relative grid gap-2">
+      <span className="text-sm font-black text-muted-foreground">{label}</span>
+      <Button
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        className="h-10 w-full justify-between"
+        onClick={() => setIsOpen((open) => !open)}
+        type="button"
+        variant="outline"
+      >
+        <span className={cn("truncate", !selectedLabel && "text-muted-foreground")}>
+          {selectedLabel || `Select ${label}`}
+        </span>
+        <ChevronsUpDown aria-hidden="true" className="size-4 opacity-70" />
+      </Button>
+
+      {isOpen ? (
+        <div className="absolute left-0 right-0 top-[4.5rem] z-[80] overflow-hidden rounded-lg border bg-popover p-2 text-popover-foreground shadow-2xl">
+          <div className="flex min-h-9 items-center gap-2 rounded-md border border-input bg-background px-2">
+            <Search aria-hidden="true" className="size-4 text-muted-foreground" />
+            <input
+              autoFocus
+              className="w-full border-0 bg-transparent text-sm font-semibold outline-none placeholder:text-muted-foreground"
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder={`Search ${label.toLowerCase()}`}
+              type="search"
+              value={search}
+            />
+          </div>
+
+          <div className="mt-2 grid max-h-56 gap-1 overflow-y-auto" role="listbox">
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option) => {
+                const isSelected = selectedValues.has(option.label)
+
+                return (
+                  <button
+                    aria-selected={isSelected}
+                    className={cn(
+                      "flex min-w-0 items-center gap-2 rounded-md px-2 py-2 text-left text-sm font-bold transition hover:bg-muted focus-visible:bg-muted focus-visible:outline-none",
+                      isSelected && "bg-muted",
+                    )}
+                    key={option.id}
+                    onClick={() => toggleOption(option)}
+                    role="option"
+                    type="button"
+                  >
+                    <span
+                      className={cn(
+                        "grid size-4 shrink-0 place-items-center rounded border",
+                        isSelected ? "border-primary bg-primary text-primary-foreground" : "border-input",
+                      )}
+                    >
+                      {isSelected ? <Check aria-hidden="true" className="size-3" /> : null}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate">{option.label}</span>
+                  </button>
+                )
+              })
+            ) : (
+              <div className="px-2 py-3 text-sm font-bold text-muted-foreground">
+                No {label.toLowerCase()} found.
+              </div>
+            )}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 function JobOrderMoneyInput({
   label,
   name,
@@ -3668,31 +3818,6 @@ function CustomerVerifyDialog({
           </div>
         </div>
       </div>
-    </div>
-  )
-}
-
-function DocumentBadges({ value }: { value: string }) {
-  const documents = value
-    .split(",")
-    .map((document) => document.trim())
-    .filter(Boolean)
-
-  if (documents.length === 0) {
-    return <span className="font-semibold text-muted-foreground">N/A</span>
-  }
-
-  return (
-    <div className="flex max-w-sm flex-wrap gap-2">
-      {documents.map((document) => (
-        <span
-          className="inline-flex max-w-full items-center rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs font-black text-primary"
-          key={document}
-          title={document}
-        >
-          <span className="max-w-48 truncate">{document}</span>
-        </span>
-      ))}
     </div>
   )
 }
@@ -3926,7 +4051,7 @@ function CustomerTransactionDialog({
     { label: "Balance", value: record.Balance ?? "PHP 600,000" },
     { label: "Status", value: record["Transaction Status"] ?? "Reserved / Processing / Completed / Cancelled" },
   ]
-  const requirements = [
+  const customerDocuments = [
     { item: "Valid ID", status: validIdUrl ? "Approved" : "Pending" },
     { item: "Proof of Income", status: "Pending" },
     { item: "Application Form", status: "Pending" },
@@ -3951,7 +4076,7 @@ function CustomerTransactionDialog({
     { label: "Engine No.", value: record["Engine No."] ?? "N/A" },
     { label: "Selling Price", value: record["Selling Price"] ?? record.Amount ?? "N/A" },
   ]
-  const tabs = ["Profile", "Transactions", "Requirements", "Payments", "Notes"]
+  const tabs = ["Profile", "Transactions", "Documents", "Payments", "Notes"]
 
   return (
     <div
@@ -3970,7 +4095,7 @@ function CustomerTransactionDialog({
               {record.Customer ?? "Customer"} Transaction View
             </h2>
             <p className="mt-2 text-sm font-semibold text-muted-foreground">
-              Profile, transaction, requirement, payment, and note records for admin review.
+              Profile, transaction, document, payment, and note records for admin review.
             </p>
           </div>
           <Button
@@ -4030,19 +4155,19 @@ function CustomerTransactionDialog({
               </section>
             ) : null}
 
-            {activeTab === "Requirements" ? (
+            {activeTab === "Documents" ? (
               <section className="grid gap-4">
-                <SectionHeader title="Submitted Requirements" />
+                <SectionHeader title="Submitted Documents" />
                 <div className="overflow-hidden rounded-lg border border-primary/20">
-                  {requirements.map((requirement) => (
-                    <div className="grid gap-3 border-b border-primary/10 p-3 last:border-b-0 sm:grid-cols-[1fr_auto]" key={requirement.item}>
+                  {customerDocuments.map((document) => (
+                    <div className="grid gap-3 border-b border-primary/10 p-3 last:border-b-0 sm:grid-cols-[1fr_auto]" key={document.item}>
                       <div className="flex items-center gap-2 font-black">
                         <span className="grid size-6 place-items-center rounded-full bg-primary/10 text-primary">
                           <Check aria-hidden="true" className="size-4" />
                         </span>
-                        {requirement.item}
+                        {document.item}
                       </div>
-                      <StatusPill value={requirement.status} />
+                      <StatusPill value={document.status} />
                     </div>
                   ))}
                 </div>
@@ -4736,7 +4861,7 @@ function getWorkflowVisualProfile(actionSet: string, action: string): WorkflowVi
       borderClass: "border-emerald-200 dark:border-emerald-900/50",
       checkboxClass: "accent-emerald-600",
       checklistClass: "border-emerald-200 bg-emerald-50 dark:border-emerald-900/50 dark:bg-emerald-950/20",
-      checklistTitle: "Financing Requirements",
+      checklistTitle: "Financing Documents",
       confirmButtonClass: "bg-emerald-600 text-white hover:bg-emerald-700",
       confirmedClass: "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-200",
       confirmLabel: "Record",
@@ -5481,7 +5606,7 @@ function getWorkflowDialogContent(
         { label: "Customer", value: record.Customer ?? "N/A" },
         { label: "Vehicle", value: record.Vehicle ?? "N/A" },
         { label: "Reservation Amount", value: record["Reservation Fee"] ?? record.Amount ?? "N/A" },
-        { label: "Requirements", value: record.Requirements ?? "For verification" },
+        { label: "Documents", value: record.Documents ?? "Pending" },
         { label: "Current Status", value: record.Status ?? "N/A" },
         { label: "Verification Result", value: "Verified for next decision" },
       ],
@@ -5544,7 +5669,7 @@ function getWorkflowDialogContent(
       resultPreview: "Report schedule will prepare recurring generation and delivery settings.",
     },
     Approve: {
-      checklist: ["Review record details.", "Verify requirements.", "Confirm approval decision."],
+      checklist: ["Review record details.", "Verify documents.", "Confirm approval decision."],
       context: "Approval",
       description: `Approve the selected request for ${primaryName}.`,
       fields: [...baseFields, { label: "Approval Status", value: "Approved" }],
@@ -5565,7 +5690,7 @@ function getWorkflowDialogContent(
       resultPreview: "Financing approval documentation will be prepared.",
     },
     Checklist: {
-      checklist: ["Inspect release requirements.", "Confirm documents.", "Validate vehicle condition."],
+      checklist: ["Inspect release documents.", "Confirm documents.", "Validate vehicle condition."],
       context: "Release Checklist",
       description: `Review turnover checklist for ${primaryName}.`,
       fields: [...baseFields, { label: "Checklist Status", value: record.Checklist ?? "For Review" }],
@@ -6146,6 +6271,17 @@ function displayDateValue(value?: string) {
   })
 }
 
+function splitPartList(value?: string) {
+  if (!value || value === "N/A") {
+    return []
+  }
+
+  return value
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean)
+}
+
 function getDefaultModuleColumns(moduleId: string, actionSet?: string) {
   const key = actionSet ?? moduleId
   const columnsByActionSet: Record<string, string[]> = {
@@ -6155,10 +6291,10 @@ function getDefaultModuleColumns(moduleId: string, actionSet?: string) {
       "Vehicle",
       "Status",
     ],
-    "customer-documents": ["Document", "Type", "Related Record", "Status"],
+    "customer-documents": ["Document", "Upload Date", "Status", "Admin Remarks"],
     "customer-history": ["Reference", "Vehicle", "Transaction", "Payment", "Status"],
     "customer-payments": ["Reference", "Vehicle", "Payment", "Balance", "Status"],
-    "customer-reservations": ["Reservation", "Vehicle", "Amount", "Status"],
+    "customer-reservations": ["Reservation", "Vehicle", "Reservation Date", "Payment Method", "Status"],
     "customer-service": ["Request", "Vehicle", "Issue", "Progress", "Status"],
     "customer-vehicles": ["Main Photo", "Vehicle", "Brand", "Model", "Year Model", "Selling Price", "Status"],
     customers: ["Customer", "Contact", "Email", "Status"],
@@ -6166,7 +6302,6 @@ function getDefaultModuleColumns(moduleId: string, actionSet?: string) {
     financing: ["Reference", "Customer", "Vehicle", "Financing Company", "Approved Amount", "Status"],
     "mechanic-job-orders": ["Job Order", "Vehicle", "Service Type", "Progress", "Findings", "Status"],
     reports: ["Report", "Category", "Coverage", "Included Data", "Generated By", "Last Generated", "Status"],
-    requirements: ["Requirement", "Category", "Required From", "Documents", "Status"],
     reservations: [
       "Reservation",
       "Customer",
@@ -6175,7 +6310,6 @@ function getDefaultModuleColumns(moduleId: string, actionSet?: string) {
       "Payment Method",
       "Expiry Date",
       "Documents",
-      "Requirements",
       "History",
       "Status",
     ],
@@ -6236,10 +6370,6 @@ function getDefaultModuleColumns(moduleId: string, actionSet?: string) {
 }
 
 function getFormColumns(moduleId: string, columns: string[]) {
-  if (moduleId === "requirements") {
-    return columns.filter((column) => column !== "Status")
-  }
-
   if (moduleId === "vehicles") {
     const orderedColumns = columns.filter((column) => column !== "Status" && column !== "Vehicle ID" && column !== "Vehicle")
     const vehicleIndex = orderedColumns.indexOf("Vehicle")
@@ -6345,7 +6475,6 @@ function getFieldPlaceholder(column: string) {
     Mileage: "Enter mileage",
     Model: "Enter model",
     "OR/CR Number": "Enter OR/CR number",
-    Category: "Enter requirement category",
     Documents: "Enter required documents",
     "Down Payment": "Enter down payment",
     "Expiry Date": "Select reservation expiry date",
@@ -6364,8 +6493,6 @@ function getFieldPlaceholder(column: string) {
     Progress: "Enter progress update",
     Proof: "Enter proof of payment status",
     "Purchase Price": "Enter purchase price",
-    Requirement: "Enter requirement name",
-    "Required From": "Enter who must submit this",
     "Registration Expiry": "Select registration expiry",
     "Remarks/Notes": "Enter remarks or notes",
     "Reservation Fee": "Enter reservation fee",

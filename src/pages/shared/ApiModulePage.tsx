@@ -6,8 +6,11 @@ import ModulePageBase from "@/pages/shared/ModulePageBase"
 import type { AdminModule } from "@/pages/admin/types"
 
 type ApiModulePageProps = {
+  createActionToken?: number
   fallbackModule: AdminModule
+  hideHeader?: boolean
   moduleLabel: string
+  refreshActionToken?: number
 }
 
 type RelatedName = {
@@ -51,9 +54,11 @@ type VehicleRecord = {
 }
 
 type ApiDocumentRecord = {
+  admin_remarks?: string
   customer?: RelatedName
   owner_name?: string
   reference?: string
+  remarks?: string
   status?: string
   title?: string
   type?: string
@@ -151,8 +156,11 @@ const liveModules: Record<
         Document: document.title ?? "N/A",
         Owner: document.owner_name ?? document.customer?.name ?? "N/A",
         Reference: document.reference ?? "N/A",
+        "Related Record": document.reference ?? "N/A",
         Type: document.type ?? "N/A",
         Uploaded: document.uploaded_at ?? "N/A",
+        "Upload Date": formatDate(document.uploaded_at),
+        "Admin Remarks": document.admin_remarks ?? document.remarks ?? "N/A",
         Status: titleCase(document.status),
       })),
   },
@@ -248,10 +256,10 @@ const liveModules: Record<
         amount?: string
         customer?: RelatedName
         documents_status?: string
+        expires_at?: string
         expiry_date?: string
         payment_method?: string
         reference?: string
-        requirements_status?: string
         reserved_at?: string
         status?: string
         vehicle?: RelatedName
@@ -260,10 +268,11 @@ const liveModules: Record<
         Customer: reservation.customer?.name ?? "N/A",
         Vehicle: reservation.vehicle?.name ?? "N/A",
         "Reservation Fee": formatPeso(reservation.amount),
+        Amount: formatPeso(reservation.amount),
         "Payment Method": titleCase(reservation.payment_method),
-        "Expiry Date": formatDate(reservation.expiry_date),
-        Documents: reservation.documents_status ?? "N/A",
-        Requirements: reservation.requirements_status ?? "For verification",
+        "Reservation Date": formatDate(reservation.reserved_at),
+        "Expiry Date": formatDate(reservation.expiry_date ?? reservation.expires_at),
+        Documents: reservation.documents_status ?? "Pending",
         History: reservation.reserved_at ? `Created ${formatDate(reservation.reserved_at)}` : "N/A",
         Status: titleCase(reservation.status),
       })),
@@ -393,7 +402,13 @@ const liveModules: Record<
   },
 }
 
-function ApiModulePage({ fallbackModule, moduleLabel }: ApiModulePageProps) {
+function ApiModulePage({
+  createActionToken,
+  fallbackModule,
+  hideHeader,
+  moduleLabel,
+  refreshActionToken,
+}: ApiModulePageProps) {
   const config = liveModules[fallbackModule.id]
   const [records, setRecords] = useState(fallbackModule.records)
   const [isLoading, setIsLoading] = useState(Boolean(config))
@@ -439,10 +454,13 @@ function ApiModulePage({ fallbackModule, moduleLabel }: ApiModulePageProps) {
 
   return (
     <ModulePageBase
+      createActionToken={createActionToken}
+      hideHeader={hideHeader}
       isLoading={isLoading}
       module={module}
       moduleLabel={moduleLabel}
       onRefresh={config ? () => loadRecords(true) : undefined}
+      refreshActionToken={refreshActionToken}
     />
   )
 }

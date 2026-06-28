@@ -1,0 +1,200 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1220" viewBox="0 0 1900 1220">
+  <rect width="1900" height="1220" fill="#ffffff"/>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#464646"/></marker></defs>
+  <style>.entity{font:700 13px Arial,sans-serif;fill:#1c1c1c}.system{font:700 12.5px Arial,sans-serif;fill:#1c1c1c}.label{font:700 8.2px Arial,sans-serif;fill:#464646}.caption{font:700 18px 'Times New Roman',serif;fill:#1c1c1c}</style>
+  <rect x="95" y="70" width="260" height="210" fill="#ffffff" stroke="#282828" stroke-width="2"/>
+  <rect x="1545" y="70" width="260" height="210" fill="#ffffff" stroke="#282828" stroke-width="2"/>
+  <rect x="95" y="790" width="260" height="210" fill="#ffffff" stroke="#282828" stroke-width="2"/>
+  <rect x="1545" y="790" width="260" height="210" fill="#ffffff" stroke="#282828" stroke-width="2"/>
+  <rect x="760" y="475" width="380" height="220" fill="#f8f9fa" stroke="#282828" stroke-width="2"/>
+  <text x="225" y="175" text-anchor="middle" dominant-baseline="middle" class="entity">
+    <tspan x="225" dy="0">ADMIN / OWNER</tspan>
+  </text>
+  <text x="1675" y="175" text-anchor="middle" dominant-baseline="middle" class="entity">
+    <tspan x="1675" dy="0">SECRETARY</tspan>
+  </text>
+  <text x="225" y="895" text-anchor="middle" dominant-baseline="middle" class="entity">
+    <tspan x="225" dy="0">CUSTOMER</tspan>
+  </text>
+  <text x="1675" y="886" text-anchor="middle" dominant-baseline="middle" class="entity">
+    <tspan x="1675" dy="0">MECHANICS AND</tspan>
+    <tspan x="1675" dy="18">CAR WASHERS</tspan>
+  </text>
+  <text x="950" y="558" text-anchor="middle" dominant-baseline="middle" class="system">
+    <tspan x="950" dy="0">WEB AND MOBILE-BASED</tspan>
+    <tspan x="950" dy="18">INVENTORY AND SALES</tspan>
+    <tspan x="950" dy="18">MANAGEMENT SYSTEM</tspan>
+    <tspan x="950" dy="18">FOR CDO CAR TRADING</tspan>
+  </text>
+  <path d="M 355 74 L 495 74 L 495 447 L 782 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="287.5" y="56" width="275" height="20" fill="#ffffff"/>
+  <text x="425" y="66" text-anchor="middle" dominant-baseline="middle" class="label">LOGIN CREDENTIALS DETAILS</text>
+  <path d="M 355 96 L 531 96 L 531 447 L 822 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="305.5" y="78" width="275" height="20" fill="#ffffff"/>
+  <text x="443" y="88" text-anchor="middle" dominant-baseline="middle" class="label">USER AND ROLE DETAILS</text>
+  <path d="M 355 118 L 567 118 L 567 447 L 862 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="323.5" y="100" width="275" height="20" fill="#ffffff"/>
+  <text x="461" y="110" text-anchor="middle" dominant-baseline="middle" class="label">STAFF MANAGEMENT DETAILS</text>
+  <path d="M 355 140 L 603 140 L 603 447 L 902 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="341.5" y="122" width="275" height="20" fill="#ffffff"/>
+  <text x="479" y="132" text-anchor="middle" dominant-baseline="middle" class="label">VEHICLE DATA DETAILS</text>
+  <path d="M 355 162 L 639 162 L 639 447 L 942 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="359.5" y="144" width="275" height="20" fill="#ffffff"/>
+  <text x="497" y="154" text-anchor="middle" dominant-baseline="middle" class="label">CUSTOMER DETAILS</text>
+  <path d="M 355 184 L 675 184 L 675 447 L 982 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="377.5" y="166" width="275" height="20" fill="#ffffff"/>
+  <text x="515" y="176" text-anchor="middle" dominant-baseline="middle" class="label">RESERVATION DETAILS</text>
+  <path d="M 355 206 L 711 206 L 711 447 L 1022 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="395.5" y="188" width="275" height="20" fill="#ffffff"/>
+  <text x="533" y="198" text-anchor="middle" dominant-baseline="middle" class="label">JOB ORDER DATA DETAILS</text>
+  <path d="M 355 228 L 747 228 L 747 447 L 1062 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="413.5" y="210" width="275" height="20" fill="#ffffff"/>
+  <text x="551" y="220" text-anchor="middle" dominant-baseline="middle" class="label">SALES, PAYMENT AND REPORT REQUEST DETAILS</text>
+  <path d="M 760 501 L 130 501 L 130 280 L 130 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="322.5" y="484" width="245" height="20" fill="#ffffff"/>
+  <text x="445" y="494" text-anchor="middle" dominant-baseline="middle" class="label">DASHBOARD MONITORING INFO</text>
+  <path d="M 760 521 L 154 521 L 154 280 L 154 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="334.5" y="504" width="245" height="20" fill="#ffffff"/>
+  <text x="457" y="514" text-anchor="middle" dominant-baseline="middle" class="label">USER ACCOUNT AND ROLE INFO</text>
+  <path d="M 760 541 L 178 541 L 178 280 L 178 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="346.5" y="524" width="245" height="20" fill="#ffffff"/>
+  <text x="469" y="534" text-anchor="middle" dominant-baseline="middle" class="label">STAFF INFO</text>
+  <path d="M 760 561 L 202 561 L 202 280 L 202 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="358.5" y="544" width="245" height="20" fill="#ffffff"/>
+  <text x="481" y="554" text-anchor="middle" dominant-baseline="middle" class="label">VEHICLE INVENTORY INFO</text>
+  <path d="M 760 581 L 226 581 L 226 280 L 226 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="370.5" y="564" width="245" height="20" fill="#ffffff"/>
+  <text x="493" y="574" text-anchor="middle" dominant-baseline="middle" class="label">CUSTOMER INFO</text>
+  <path d="M 760 601 L 250 601 L 250 280 L 250 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="382.5" y="584" width="245" height="20" fill="#ffffff"/>
+  <text x="505" y="594" text-anchor="middle" dominant-baseline="middle" class="label">RESERVATION INFO</text>
+  <path d="M 760 621 L 274 621 L 274 280 L 274 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="394.5" y="604" width="245" height="20" fill="#ffffff"/>
+  <text x="517" y="614" text-anchor="middle" dominant-baseline="middle" class="label">JOB ORDER INFO</text>
+  <path d="M 760 641 L 298 641 L 298 280 L 298 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="406.5" y="624" width="245" height="20" fill="#ffffff"/>
+  <text x="529" y="634" text-anchor="middle" dominant-baseline="middle" class="label">SALES, PAYMENTS AND REPORT INFO</text>
+  <path d="M 1545 74 L 1405 74 L 1405 447 L 1118 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1332.5" y="56" width="285" height="20" fill="#ffffff"/>
+  <text x="1475" y="66" text-anchor="middle" dominant-baseline="middle" class="label">LOGIN CREDENTIALS DETAILS</text>
+  <path d="M 1545 96 L 1369 96 L 1369 447 L 1078 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1314.5" y="78" width="285" height="20" fill="#ffffff"/>
+  <text x="1457" y="88" text-anchor="middle" dominant-baseline="middle" class="label">MANAGE VEHICLE DETAILS</text>
+  <path d="M 1545 118 L 1333 118 L 1333 447 L 1038 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1296.5" y="100" width="285" height="20" fill="#ffffff"/>
+  <text x="1439" y="110" text-anchor="middle" dominant-baseline="middle" class="label">MANAGE CUSTOMER DETAILS</text>
+  <path d="M 1545 140 L 1297 140 L 1297 447 L 998 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1278.5" y="122" width="285" height="20" fill="#ffffff"/>
+  <text x="1421" y="132" text-anchor="middle" dominant-baseline="middle" class="label">MANAGE RESERVATION DETAILS</text>
+  <path d="M 1545 162 L 1261 162 L 1261 447 L 958 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1260.5" y="144" width="285" height="20" fill="#ffffff"/>
+  <text x="1403" y="154" text-anchor="middle" dominant-baseline="middle" class="label">MANAGE JOB ORDER DETAILS</text>
+  <path d="M 1545 184 L 1225 184 L 1225 447 L 918 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1242.5" y="166" width="285" height="20" fill="#ffffff"/>
+  <text x="1385" y="176" text-anchor="middle" dominant-baseline="middle" class="label">MANAGE SALES AND PAYMENT DETAILS</text>
+  <path d="M 1545 206 L 1189 206 L 1189 447 L 878 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1224.5" y="188" width="285" height="20" fill="#ffffff"/>
+  <text x="1367" y="198" text-anchor="middle" dominant-baseline="middle" class="label">FINANCING DOCUMENTATION DETAILS</text>
+  <path d="M 1545 228 L 1153 228 L 1153 447 L 838 475" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1206.5" y="210" width="285" height="20" fill="#ffffff"/>
+  <text x="1349" y="220" text-anchor="middle" dominant-baseline="middle" class="label">VEHICLE RELEASE AND DOCUMENT DETAILS</text>
+  <path d="M 1140 501 L 1770 501 L 1770 280 L 1770 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1330" y="484" width="250" height="20" fill="#ffffff"/>
+  <text x="1455" y="494" text-anchor="middle" dominant-baseline="middle" class="label">PROFILE INFO</text>
+  <path d="M 1140 521 L 1746 521 L 1746 280 L 1746 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1318" y="504" width="250" height="20" fill="#ffffff"/>
+  <text x="1443" y="514" text-anchor="middle" dominant-baseline="middle" class="label">VEHICLE INVENTORY INFO</text>
+  <path d="M 1140 541 L 1722 541 L 1722 280 L 1722 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1306" y="524" width="250" height="20" fill="#ffffff"/>
+  <text x="1431" y="534" text-anchor="middle" dominant-baseline="middle" class="label">CUSTOMER INFO</text>
+  <path d="M 1140 561 L 1698 561 L 1698 280 L 1698 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1294" y="544" width="250" height="20" fill="#ffffff"/>
+  <text x="1419" y="554" text-anchor="middle" dominant-baseline="middle" class="label">RESERVATION INFO</text>
+  <path d="M 1140 581 L 1674 581 L 1674 280 L 1674 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1282" y="564" width="250" height="20" fill="#ffffff"/>
+  <text x="1407" y="574" text-anchor="middle" dominant-baseline="middle" class="label">JOB ORDER INFO</text>
+  <path d="M 1140 601 L 1650 601 L 1650 280 L 1650 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1270" y="584" width="250" height="20" fill="#ffffff"/>
+  <text x="1395" y="594" text-anchor="middle" dominant-baseline="middle" class="label">PAYMENTS INFO</text>
+  <path d="M 1140 621 L 1626 621 L 1626 280 L 1626 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1258" y="604" width="250" height="20" fill="#ffffff"/>
+  <text x="1383" y="614" text-anchor="middle" dominant-baseline="middle" class="label">DOCUMENT AND FINANCING INFO</text>
+  <path d="M 1140 641 L 1602 641 L 1602 280 L 1602 279" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1246" y="624" width="250" height="20" fill="#ffffff"/>
+  <text x="1371" y="634" text-anchor="middle" dominant-baseline="middle" class="label">VEHICLE RELEASE AND REPORT INFO</text>
+  <path d="M 355 988 L 500 988 L 500 723 L 805 695" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="302.5" y="970" width="250" height="20" fill="#ffffff"/>
+  <text x="427.5" y="980" text-anchor="middle" dominant-baseline="middle" class="label">LOGIN / REGISTRATION DETAILS</text>
+  <path d="M 355 960 L 544 960 L 544 723 L 855 695" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="324.5" y="942" width="250" height="20" fill="#ffffff"/>
+  <text x="449.5" y="952" text-anchor="middle" dominant-baseline="middle" class="label">CUSTOMER PROFILE DETAILS</text>
+  <path d="M 355 932 L 588 932 L 588 723 L 905 695" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="346.5" y="914" width="250" height="20" fill="#ffffff"/>
+  <text x="471.5" y="924" text-anchor="middle" dominant-baseline="middle" class="label">RESERVE VEHICLE DETAILS</text>
+  <path d="M 355 904 L 632 904 L 632 723 L 955 695" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="368.5" y="886" width="250" height="20" fill="#ffffff"/>
+  <text x="493.5" y="896" text-anchor="middle" dominant-baseline="middle" class="label">SERVICE REQUEST DETAILS</text>
+  <path d="M 355 876 L 676 876 L 676 723 L 1005 695" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="390.5" y="858" width="250" height="20" fill="#ffffff"/>
+  <text x="515.5" y="868" text-anchor="middle" dominant-baseline="middle" class="label">DOCUMENT UPLOAD DETAILS</text>
+  <path d="M 355 848 L 720 848 L 720 723 L 1055 695" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="412.5" y="830" width="250" height="20" fill="#ffffff"/>
+  <text x="537.5" y="840" text-anchor="middle" dominant-baseline="middle" class="label">PAYMENT PROOF DETAILS</text>
+  <path d="M 796 695 L 796 733 L 390 733 L 390 820 L 355 820" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="460" y="716" width="230" height="20" fill="#ffffff"/>
+  <text x="575" y="726" text-anchor="middle" dominant-baseline="middle" class="label">PROFILE INFO</text>
+  <path d="M 838 695 L 838 757 L 418 757 L 418 847 L 355 847" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="474" y="740" width="230" height="20" fill="#ffffff"/>
+  <text x="589" y="750" text-anchor="middle" dominant-baseline="middle" class="label">VIEW VEHICLE INFO</text>
+  <path d="M 880 695 L 880 781 L 446 781 L 446 874 L 355 874" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="488" y="764" width="230" height="20" fill="#ffffff"/>
+  <text x="603" y="774" text-anchor="middle" dominant-baseline="middle" class="label">RESERVATION STATUS INFO</text>
+  <path d="M 922 695 L 922 805 L 474 805 L 474 901 L 355 901" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="502" y="788" width="230" height="20" fill="#ffffff"/>
+  <text x="617" y="798" text-anchor="middle" dominant-baseline="middle" class="label">PAYMENTS INFO</text>
+  <path d="M 964 695 L 964 829 L 502 829 L 502 928 L 355 928" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="516" y="812" width="230" height="20" fill="#ffffff"/>
+  <text x="631" y="822" text-anchor="middle" dominant-baseline="middle" class="label">DOCUMENT STATUS INFO</text>
+  <path d="M 1006 695 L 1006 853 L 530 853 L 530 955 L 355 955" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="530" y="836" width="230" height="20" fill="#ffffff"/>
+  <text x="645" y="846" text-anchor="middle" dominant-baseline="middle" class="label">SERVICE UPDATE AND HISTORY INFO</text>
+  <path d="M 1545 988 L 1400 988 L 1400 723 L 1095 695" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1332.5" y="970" width="280" height="20" fill="#ffffff"/>
+  <text x="1472.5" y="980" text-anchor="middle" dominant-baseline="middle" class="label">LOGIN CREDENTIALS DETAILS</text>
+  <path d="M 1545 960 L 1356 960 L 1356 723 L 1045 695" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1310.5" y="942" width="280" height="20" fill="#ffffff"/>
+  <text x="1450.5" y="952" text-anchor="middle" dominant-baseline="middle" class="label">JOB ORDER UPDATE DETAILS</text>
+  <path d="M 1545 932 L 1312 932 L 1312 723 L 995 695" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1288.5" y="914" width="280" height="20" fill="#ffffff"/>
+  <text x="1428.5" y="924" text-anchor="middle" dominant-baseline="middle" class="label">INSPECTION FINDINGS DETAILS</text>
+  <path d="M 1545 904 L 1268 904 L 1268 723 L 945 695" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1266.5" y="886" width="280" height="20" fill="#ffffff"/>
+  <text x="1406.5" y="896" text-anchor="middle" dominant-baseline="middle" class="label">REPAIR STATUS DETAILS</text>
+  <path d="M 1545 876 L 1224 876 L 1224 723 L 895 695" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1244.5" y="858" width="280" height="20" fill="#ffffff"/>
+  <text x="1384.5" y="868" text-anchor="middle" dominant-baseline="middle" class="label">CAR WASHING / DETAILING STATUS DETAILS</text>
+  <path d="M 1545 848 L 1180 848 L 1180 723 L 845 695" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1222.5" y="830" width="280" height="20" fill="#ffffff"/>
+  <text x="1362.5" y="840" text-anchor="middle" dominant-baseline="middle" class="label">VEHICLE CONDITION AND COST DETAILS</text>
+  <path d="M 1104 695 L 1104 733 L 1510 733 L 1510 820 L 1545 820" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1205" y="716" width="240" height="20" fill="#ffffff"/>
+  <text x="1325" y="726" text-anchor="middle" dominant-baseline="middle" class="label">PROFILE INFO</text>
+  <path d="M 1062 695 L 1062 757 L 1482 757 L 1482 847 L 1545 847" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1191" y="740" width="240" height="20" fill="#ffffff"/>
+  <text x="1311" y="750" text-anchor="middle" dominant-baseline="middle" class="label">ASSIGNED JOB ORDER INFORMATION</text>
+  <path d="M 1020 695 L 1020 781 L 1454 781 L 1454 874 L 1545 874" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1177" y="764" width="240" height="20" fill="#ffffff"/>
+  <text x="1297" y="774" text-anchor="middle" dominant-baseline="middle" class="label">SERVICE REQUEST INFORMATION</text>
+  <path d="M 978 695 L 978 805 L 1426 805 L 1426 901 L 1545 901" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1163" y="788" width="240" height="20" fill="#ffffff"/>
+  <text x="1283" y="798" text-anchor="middle" dominant-baseline="middle" class="label">VEHICLE INFO</text>
+  <path d="M 936 695 L 936 829 L 1398 829 L 1398 928 L 1545 928" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1149" y="812" width="240" height="20" fill="#ffffff"/>
+  <text x="1269" y="822" text-anchor="middle" dominant-baseline="middle" class="label">WORK PRIORITY INFO</text>
+  <path d="M 894 695 L 894 853 L 1370 853 L 1370 955 L 1545 955" fill="none" stroke="#464646" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="1135" y="836" width="240" height="20" fill="#ffffff"/>
+  <text x="1255" y="846" text-anchor="middle" dominant-baseline="middle" class="label">COMPLETION NOTIFICATION INFO</text>
+  <text x="950" y="1158" text-anchor="middle" dominant-baseline="middle" class="caption">
+    <tspan x="950" dy="0">Context Level Diagram of the CDO Car Trading Inventory and Sales Management System</tspan>
+  </text>
+</svg>

@@ -1,10 +1,12 @@
 import AdminLayout from "./admin/AdminLayout"
 import CustomerDashboard from "./customer/CustomerDashboard"
 import CustomerDocuments from "./customer/CustomerDocuments"
+import CustomerJobOrders from "./customer/CustomerJobOrders"
 import CustomerPayments from "./customer/CustomerPayments"
 import CustomerProfile from "./customer/CustomerProfile"
 import CustomerReservations from "./customer/CustomerReservations"
 import CustomerServiceRequests from "./customer/CustomerServiceRequests"
+import CustomerVehicleRelease from "./customer/CustomerVehicleRelease"
 import CustomerVehicles from "./customer/CustomerVehicles"
 import { customerSidebarGroups } from "./customer/customerData"
 import type { AuthUser } from "@/lib/auth"
@@ -26,10 +28,12 @@ type CustomerProps = {
 const customerPages = {
   "customer/dashboard": <CustomerDashboard />,
   "customer/documents": <CustomerDocuments />,
+  "customer/job-orders": <CustomerJobOrders />,
   "customer/payments": <CustomerPayments />,
   "customer/profile": <CustomerProfile />,
   "customer/reservations": <CustomerReservations />,
   "customer/service-requests": <CustomerServiceRequests />,
+  "customer/vehicle-release": <CustomerVehicleRelease />,
   "customer/vehicles": <CustomerVehicles />,
 }
 

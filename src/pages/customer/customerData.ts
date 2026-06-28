@@ -2,8 +2,10 @@ import {
   BadgeDollarSign,
   CalendarCheck,
   Car,
+  ClipboardList,
   FileText,
   History,
+  KeyRound,
   LayoutDashboard,
   Wrench,
 } from "lucide-react"
@@ -55,24 +57,25 @@ export const customerModules: AdminModule[] = [
     title: "Make Reservations",
     navLabel: "Reservations",
     description:
-      "Reserve vehicles, view reservation status, and cancel reservation requests when needed.",
+      "Create reservations by selecting a vehicle and payment method, then view, cancel, and track reservation status.",
     icon: CalendarCheck,
     primaryAction: "Reserve Vehicle",
     stats: [
-      { label: "Active Requests", value: "0" },
-      { label: "Approved", value: "0" },
-      { label: "For Review", value: "0" },
+      { label: "Pending", value: "0" },
+      { label: "Confirmed", value: "0" },
+      { label: "Completed", value: "0" },
     ],
     recordsTitle: "Reservation History",
     recordsDescription:
-      "Review reservation history by status, with current approved and for approval requests shown first.",
-    defaultStatusFilter: "Approved + For Approval",
+      "View reservation number, vehicle, reservation date, payment method, and current status.",
+    defaultStatusFilter: "Active Reservations",
     statusNavigation: [
-      { label: "Approved + For Approval", statuses: ["Approved", "For Approval"] },
-      { label: "For Approval", statuses: ["For Approval"] },
-      { label: "Approved", statuses: ["Approved"] },
-      { label: "Expiring", statuses: ["Expiring"] },
+      { label: "Active Reservations", statuses: ["Pending", "Confirmed"] },
+      { label: "Pending", statuses: ["Pending"] },
+      { label: "Confirmed", statuses: ["Confirmed"] },
       { label: "Cancelled", statuses: ["Cancelled"] },
+      { label: "Expired", statuses: ["Expired"] },
+      { label: "Completed", statuses: ["Completed"] },
       { label: "All History" },
     ],
     records: [],
@@ -99,7 +102,7 @@ export const customerModules: AdminModule[] = [
     actionSet: "customer-service",
     route: "customer/service-requests",
     title: "Service Requests",
-    navLabel: "Service Requests",
+    navLabel: "Service Request",
     description:
       "Submit repair or maintenance requests, upload vehicle photos, describe vehicle issues, and monitor repair progress.",
     icon: Wrench,
@@ -132,13 +135,59 @@ export const customerModules: AdminModule[] = [
     title: "My Documents",
     navLabel: "Documents",
     description:
-      "Upload and track documents required for reservations, payments, financing, and vehicle release.",
+      "Upload required documents after reservation confirmation, view admin remarks, re-upload rejected files, and track document status.",
     icon: FileText,
     primaryAction: "Upload Document",
     stats: [
-      { label: "Uploaded", value: "0" },
-      { label: "Pending Review", value: "0" },
-      { label: "Missing", value: "0" },
+      { label: "Not Uploaded", value: "0" },
+      { label: "Under Review", value: "0" },
+      { label: "Approved", value: "0" },
+    ],
+    recordsTitle: "Document Status",
+    recordsDescription:
+      "Track document name, upload date, status, and admin remarks for reservation processing.",
+    defaultStatusFilter: "Needs Action",
+    statusNavigation: [
+      { label: "Needs Action", statuses: ["Not Uploaded", "Rejected"] },
+      { label: "Pending", statuses: ["Pending"] },
+      { label: "Under Review", statuses: ["Under Review"] },
+      { label: "Approved", statuses: ["Approved"] },
+      { label: "Rejected", statuses: ["Rejected"] },
+      { label: "All Documents" },
+    ],
+    records: [],
+  },
+  {
+    id: "job-orders",
+    actionSet: "customer-job-orders",
+    route: "customer/job-orders",
+    title: "Job Order Progress",
+    navLabel: "Job Order",
+    description:
+      "View job order progress for repair, maintenance, and cleaning services connected to your requests.",
+    icon: ClipboardList,
+    primaryAction: "View Progress",
+    stats: [
+      { label: "Job Orders", value: "0" },
+      { label: "Active", value: "0" },
+      { label: "Completed", value: "0" },
+    ],
+    records: [],
+  },
+  {
+    id: "vehicle-release",
+    actionSet: "customer-vehicle-release",
+    route: "customer/vehicle-release",
+    title: "Vehicle Release Status",
+    navLabel: "Vehicle Release",
+    description:
+      "View release readiness, document verification, checklist status, and turnover details.",
+    icon: KeyRound,
+    primaryAction: "View Release Status",
+    stats: [
+      { label: "Release Records", value: "0" },
+      { label: "Ready", value: "0" },
+      { label: "Released", value: "0" },
     ],
     records: [],
   },
@@ -162,12 +211,24 @@ export const customerSidebarGroups: SidebarGroup[] = [
   },
   {
     label: "Portal",
-    items: customerModules.map(({ icon, id, navLabel, route }) => ({
-      icon,
-      id,
-      route,
-      title: navLabel,
-    })),
+    items: [
+      "vehicles",
+      "reservations",
+      "documents",
+      "payments",
+      "service-requests",
+      "job-orders",
+      "vehicle-release",
+    ].map((id) => {
+      const module = customerModuleMap[id]
+
+      return {
+        icon: module.icon,
+        id: module.id,
+        route: module.route,
+        title: module.navLabel,
+      }
+    }),
   },
 ]
 

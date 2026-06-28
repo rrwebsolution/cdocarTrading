@@ -5,10 +5,10 @@ type RoutePermissionMap = Record<string, string[]>
 
 export const adminRoutePermissions: RoutePermissionMap = {
   "admin/customers": ["Customer Records"],
+  "admin/documents": ["Documents"],
   "admin/job-orders-maintenance": ["Job Orders & Maintenance", "Job Orders"],
   "admin/reports": ["Reports"],
   "admin/reservations": ["Reservations"],
-  "admin/requirements": ["Requirements"],
   "admin/role-management": ["Role Management"],
   "admin/sales-payments": ["Sales & Payments"],
   "admin/staff": ["Staff Management"],
@@ -44,10 +44,12 @@ export const mechanicRoutePermissions: RoutePermissionMap = {
 
 export const customerRoutePermissions: RoutePermissionMap = {
   "customer/documents": ["Documents"],
+  "customer/job-orders": ["Job Orders", "Assigned Job Orders"],
   "customer/payments": ["Payments"],
   "customer/profile": ["Transaction History", "Customer Records"],
   "customer/reservations": ["Reservations"],
   "customer/service-requests": ["Service Requests"],
+  "customer/vehicle-release": ["Vehicle Release"],
   "customer/vehicles": ["View Vehicles", "Vehicle Inventory"],
 }
 

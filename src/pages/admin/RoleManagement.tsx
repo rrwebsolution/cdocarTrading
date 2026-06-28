@@ -47,7 +47,6 @@ const permissionOptions = [
   "Customer Records",
   "Documents",
   "Financing",
-  "Requirements",
   "Reports",
   "Vehicle Release",
   "Assigned Job Orders",

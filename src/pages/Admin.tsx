@@ -1,10 +1,10 @@
 import AdminLayout from "./admin/AdminLayout"
 import Customers from "./admin/Customers"
 import Dashboard from "./admin/Dashboard"
+import Documents from "./admin/Documents"
 import JobOrdersMaintenance from "./admin/JobOrdersMaintenance"
 import Reports from "./admin/Reports"
 import Reservations from "./admin/Reservations"
-import Requirements from "./admin/Requirements"
 import RoleManagement from "./admin/RoleManagement"
 import SalesPayments from "./admin/SalesPayments"
 import Staff from "./admin/Staff"
@@ -30,10 +30,10 @@ type AdminProps = {
 const adminPages = {
   "admin/customers": <Customers />,
   "admin/dashboard": <Dashboard />,
+  "admin/documents": <Documents />,
   "admin/job-orders-maintenance": <JobOrdersMaintenance />,
   "admin/reports": <Reports />,
   "admin/reservations": <Reservations />,
-  "admin/requirements": <Requirements />,
   "admin/role-management": <RoleManagement />,
   "admin/sales-payments": <SalesPayments />,
   "admin/staff": <Staff />,

@@ -1,0 +1,1002 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2350" height="1650" viewBox="0 0 2350 1650">
+  <rect width="2350" height="1650" fill="#ffffff"/>
+  <style>.title{font:700 8.6px Arial,sans-serif;fill:#232323}.cell{font:400 7.1px Arial,sans-serif;fill:#232323}.key{font:700 7.1px Arial,sans-serif;fill:#232323}.note{font:italic 8px Arial,sans-serif;fill:#5c5c5c}.caption{font:700 18px 'Times New Roman',serif;fill:#000}</style>
+  <polyline points="805,1260 805,1238 805,1238 805,1216" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="805" cy="1260" r="3" fill="#5c5c5c"/>
+  <circle cx="805" cy="1216" r="3" fill="#5c5c5c"/>
+  <text x="805" y="1248" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="805" y="1228" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="805,1216 645,1216 645,1221 485,1221" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="805" cy="1216" r="3" fill="#5c5c5c"/>
+  <circle cx="485" cy="1221" r="3" fill="#5c5c5c"/>
+  <text x="805" y="1204" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="485" y="1233" text-anchor="middle" dominant-baseline="middle" class="note">0..1</text>
+  <polyline points="947.5,1105 947.5,877.5 872.5,877.5 872.5,650" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="947.5" cy="1105" r="3" fill="#5c5c5c"/>
+  <circle cx="872.5" cy="650" r="3" fill="#5c5c5c"/>
+  <text x="947.5" y="1093" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="872.5" y="662" text-anchor="middle" dominant-baseline="middle" class="note">0..1</text>
+  <polyline points="872.5,410 735,410 735,247 597.5,247" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="872.5" cy="410" r="3" fill="#5c5c5c"/>
+  <circle cx="597.5" cy="247" r="3" fill="#5c5c5c"/>
+  <text x="872.5" y="398" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="597.5" y="259" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1585,208 1162.5,208 1162.5,136 740,136" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1585" cy="208" r="3" fill="#5c5c5c"/>
+  <circle cx="740" cy="136" r="3" fill="#5c5c5c"/>
+  <text x="1585" y="196" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="740" y="148" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1585,208 1357.5,208 1357.5,120 1130,120" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1585" cy="208" r="3" fill="#5c5c5c"/>
+  <circle cx="1130" cy="120" r="3" fill="#5c5c5c"/>
+  <text x="1585" y="196" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="1130" y="132" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <polyline points="730,530 730,553.5 740,553.5 740,577" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="730" cy="530" r="3" fill="#5c5c5c"/>
+  <circle cx="740" cy="577" r="3" fill="#5c5c5c"/>
+  <text x="730" y="518" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="740" y="589" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1580,751 1160,751 1160,577 740,577" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1580" cy="751" r="3" fill="#5c5c5c"/>
+  <circle cx="740" cy="577" r="3" fill="#5c5c5c"/>
+  <text x="1580" y="739" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="740" y="589" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1585,208 1162.5,208 1162.5,577 740,577" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1585" cy="208" r="3" fill="#5c5c5c"/>
+  <circle cx="740" cy="577" r="3" fill="#5c5c5c"/>
+  <text x="1585" y="196" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="740" y="589" text-anchor="middle" dominant-baseline="middle" class="note">0..1</text>
+  <polyline points="1015,530 1015,378.5 1190,378.5 1190,227" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1015" cy="530" r="3" fill="#5c5c5c"/>
+  <circle cx="1190" cy="227" r="3" fill="#5c5c5c"/>
+  <text x="1015" y="518" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="1190" y="239" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1722.5,460 1527.5,460 1527.5,329 1332.5,329" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1722.5" cy="460" r="3" fill="#5c5c5c"/>
+  <circle cx="1332.5" cy="329" r="3" fill="#5c5c5c"/>
+  <text x="1722.5" y="448" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="1332.5" y="341" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1015,530 1075,530 1075,611 1135,611" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1015" cy="530" r="3" fill="#5c5c5c"/>
+  <circle cx="1135" cy="611" r="3" fill="#5c5c5c"/>
+  <text x="1015" y="518" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="1135" y="623" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1580,751 1500,751 1500,611 1420,611" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1580" cy="751" r="3" fill="#5c5c5c"/>
+  <circle cx="1420" cy="611" r="3" fill="#5c5c5c"/>
+  <text x="1580" y="739" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="1420" y="623" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1135,611 725,611 725,209 315,209" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1135" cy="611" r="3" fill="#5c5c5c"/>
+  <circle cx="315" cy="209" r="3" fill="#5c5c5c"/>
+  <text x="1135" y="599" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="315" y="221" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1580,751 947.5,751 947.5,209 315,209" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1580" cy="751" r="3" fill="#5c5c5c"/>
+  <circle cx="315" cy="209" r="3" fill="#5c5c5c"/>
+  <text x="1580" y="739" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="315" y="221" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="342.5,1110 342.5,724 172.5,724 172.5,338" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="342.5" cy="1110" r="3" fill="#5c5c5c"/>
+  <circle cx="172.5" cy="338" r="3" fill="#5c5c5c"/>
+  <text x="342.5" y="1098" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="172.5" y="350" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1580,751 942.5,751 942.5,766 305,766" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1580" cy="751" r="3" fill="#5c5c5c"/>
+  <circle cx="305" cy="766" r="3" fill="#5c5c5c"/>
+  <text x="1580" y="739" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="305" y="778" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="342.5,1110 342.5,1016 162.5,1016 162.5,922" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="342.5" cy="1110" r="3" fill="#5c5c5c"/>
+  <circle cx="162.5" cy="922" r="3" fill="#5c5c5c"/>
+  <text x="342.5" y="1098" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="162.5" y="934" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1475,227 1530,227 1530,208 1585,208" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1475" cy="227" r="3" fill="#5c5c5c"/>
+  <circle cx="1585" cy="208" r="3" fill="#5c5c5c"/>
+  <text x="1475" y="215" text-anchor="middle" dominant-baseline="middle" class="note">0..1</text>
+  <text x="1585" y="220" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <polyline points="1015,530 1300,530 1300,208 1585,208" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1015" cy="530" r="3" fill="#5c5c5c"/>
+  <circle cx="1585" cy="208" r="3" fill="#5c5c5c"/>
+  <text x="1015" y="518" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="1585" y="220" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1722.5,460 1722.5,403 1727.5,403 1727.5,346" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1722.5" cy="460" r="3" fill="#5c5c5c"/>
+  <circle cx="1727.5" cy="346" r="3" fill="#5c5c5c"/>
+  <text x="1722.5" y="448" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="1727.5" y="358" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="872.5,650 1087.5,650 1087.5,1030 1302.5,1030" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="872.5" cy="650" r="3" fill="#5c5c5c"/>
+  <circle cx="1302.5" cy="1030" r="3" fill="#5c5c5c"/>
+  <text x="872.5" y="638" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="1302.5" y="1042" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1580,751 1580,959.5 1445,959.5 1445,1168" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1580" cy="751" r="3" fill="#5c5c5c"/>
+  <circle cx="1445" cy="1168" r="3" fill="#5c5c5c"/>
+  <text x="1580" y="739" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="1445" y="1180" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <polyline points="1727.5,346 1727.5,688 1302.5,688 1302.5,1030" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1727.5" cy="346" r="3" fill="#5c5c5c"/>
+  <circle cx="1302.5" cy="1030" r="3" fill="#5c5c5c"/>
+  <text x="1727.5" y="334" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="1302.5" y="1042" text-anchor="middle" dominant-baseline="middle" class="note">0..1</text>
+  <polyline points="1015,530 1492.5,530 1492.5,586 1970,586" fill="none" stroke="#878787" stroke-width="1.25"/>
+  <circle cx="1015" cy="530" r="3" fill="#5c5c5c"/>
+  <circle cx="1970" cy="586" r="3" fill="#5c5c5c"/>
+  <text x="1015" y="518" text-anchor="middle" dominant-baseline="middle" class="note">1</text>
+  <text x="1970" y="598" text-anchor="middle" dominant-baseline="middle" class="note">M</text>
+  <rect x="520" y="1185" width="285" height="150" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="520" y="1185" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="662.5" y="1197" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_roles</text>
+  <line x1="616" y1="1209" x2="616" y2="1335" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="773" y1="1209" x2="773" y2="1335" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="520" y1="1209" x2="805" y2="1209" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="524" y="1218" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="620" y="1218" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="789" y="1218" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="520" y1="1227" x2="805" y2="1227" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="524" y="1236" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="620" y="1236" text-anchor="start" dominant-baseline="middle" class="cell">name</text>
+  <text x="789" y="1236" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="520" y1="1245" x2="805" y2="1245" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="524" y="1254" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="620" y="1254" text-anchor="start" dominant-baseline="middle" class="cell">description</text>
+  <text x="789" y="1254" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="520" y1="1263" x2="805" y2="1263" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="524" y="1272" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="620" y="1272" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="789" y="1272" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="520" y1="1281" x2="805" y2="1281" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="524" y="1290" text-anchor="start" dominant-baseline="middle" class="cell">longtext</text>
+  <text x="620" y="1290" text-anchor="start" dominant-baseline="middle" class="cell">permissions</text>
+  <text x="789" y="1290" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="520" y1="1299" x2="805" y2="1299" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="524" y="1308" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="620" y="1308" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="789" y="1308" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="520" y1="1317" x2="805" y2="1317" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="524" y="1326" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="620" y="1326" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="789" y="1326" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="805" y="1105" width="285" height="222" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="805" y="1105" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="947.5" y="1117" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_users</text>
+  <line x1="901" y1="1129" x2="901" y2="1327" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1058" y1="1129" x2="1058" y2="1327" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="805" y1="1129" x2="1090" y2="1129" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="809" y="1138" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="905" y="1138" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="1074" y="1138" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="805" y1="1147" x2="1090" y2="1147" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="809" y="1156" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="905" y="1156" text-anchor="start" dominant-baseline="middle" class="key">role_id</text>
+  <text x="1074" y="1156" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="805" y1="1165" x2="1090" y2="1165" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="809" y="1174" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="905" y="1174" text-anchor="start" dominant-baseline="middle" class="cell">name</text>
+  <text x="1074" y="1174" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="805" y1="1183" x2="1090" y2="1183" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="809" y="1192" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="905" y="1192" text-anchor="start" dominant-baseline="middle" class="cell">email</text>
+  <text x="1074" y="1192" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="805" y1="1201" x2="1090" y2="1201" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="809" y="1210" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="905" y="1210" text-anchor="start" dominant-baseline="middle" class="cell">username</text>
+  <text x="1074" y="1210" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="805" y1="1219" x2="1090" y2="1219" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="809" y="1228" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="905" y="1228" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="1074" y="1228" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="805" y1="1237" x2="1090" y2="1237" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="809" y="1246" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="905" y="1246" text-anchor="start" dominant-baseline="middle" class="cell">email_verified_at</text>
+  <text x="1074" y="1246" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="805" y1="1255" x2="1090" y2="1255" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="809" y="1264" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="905" y="1264" text-anchor="start" dominant-baseline="middle" class="cell">password</text>
+  <text x="1074" y="1264" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="805" y1="1273" x2="1090" y2="1273" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="809" y="1282" text-anchor="start" dominant-baseline="middle" class="cell">varchar(100)</text>
+  <text x="905" y="1282" text-anchor="start" dominant-baseline="middle" class="cell">remember_token</text>
+  <text x="1074" y="1282" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="805" y1="1291" x2="1090" y2="1291" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="809" y="1300" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="905" y="1300" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="1074" y="1300" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="805" y1="1309" x2="1090" y2="1309" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="809" y="1318" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="905" y="1318" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="1074" y="1318" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="200" y="1110" width="285" height="222" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="200" y="1110" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="342.5" y="1122" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_staff</text>
+  <line x1="296" y1="1134" x2="296" y2="1332" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="453" y1="1134" x2="453" y2="1332" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="200" y1="1134" x2="485" y2="1134" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="204" y="1143" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="300" y="1143" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="469" y="1143" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="200" y1="1152" x2="485" y2="1152" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="204" y="1161" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="300" y="1161" text-anchor="start" dominant-baseline="middle" class="key">user_id</text>
+  <text x="469" y="1161" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="200" y1="1170" x2="485" y2="1170" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="204" y="1179" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="300" y="1179" text-anchor="start" dominant-baseline="middle" class="cell">name</text>
+  <text x="469" y="1179" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="200" y1="1188" x2="485" y2="1188" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="204" y="1197" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="300" y="1197" text-anchor="start" dominant-baseline="middle" class="cell">email</text>
+  <text x="469" y="1197" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="200" y1="1206" x2="485" y2="1206" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="204" y="1215" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="300" y="1215" text-anchor="start" dominant-baseline="middle" class="cell">contact</text>
+  <text x="469" y="1215" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="200" y1="1224" x2="485" y2="1224" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="204" y="1233" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="300" y="1233" text-anchor="start" dominant-baseline="middle" class="cell">position</text>
+  <text x="469" y="1233" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="200" y1="1242" x2="485" y2="1242" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="204" y="1251" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="300" y="1251" text-anchor="start" dominant-baseline="middle" class="cell">schedule</text>
+  <text x="469" y="1251" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="200" y1="1260" x2="485" y2="1260" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="204" y="1269" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="300" y="1269" text-anchor="start" dominant-baseline="middle" class="cell">activity</text>
+  <text x="469" y="1269" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="200" y1="1278" x2="485" y2="1278" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="204" y="1287" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="300" y="1287" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="469" y="1287" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="200" y1="1296" x2="485" y2="1296" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="204" y="1305" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="300" y="1305" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="469" y="1305" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="200" y1="1314" x2="485" y2="1314" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="204" y="1323" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="300" y="1323" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="469" y="1323" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="730" y="410" width="285" height="240" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="730" y="410" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="872.5" y="422" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_customers</text>
+  <line x1="826" y1="434" x2="826" y2="650" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="983" y1="434" x2="983" y2="650" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="730" y1="434" x2="1015" y2="434" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="734" y="443" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="830" y="443" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="999" y="443" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="730" y1="452" x2="1015" y2="452" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="734" y="461" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="830" y="461" text-anchor="start" dominant-baseline="middle" class="key">user_id</text>
+  <text x="999" y="461" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="730" y1="470" x2="1015" y2="470" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="734" y="479" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="830" y="479" text-anchor="start" dominant-baseline="middle" class="cell">name</text>
+  <text x="999" y="479" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="730" y1="488" x2="1015" y2="488" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="734" y="497" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="830" y="497" text-anchor="start" dominant-baseline="middle" class="cell">email</text>
+  <text x="999" y="497" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="730" y1="506" x2="1015" y2="506" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="734" y="515" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="830" y="515" text-anchor="start" dominant-baseline="middle" class="cell">contact</text>
+  <text x="999" y="515" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="730" y1="524" x2="1015" y2="524" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="734" y="533" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="830" y="533" text-anchor="start" dominant-baseline="middle" class="cell">address</text>
+  <text x="999" y="533" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="730" y1="542" x2="1015" y2="542" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="734" y="551" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="830" y="551" text-anchor="start" dominant-baseline="middle" class="cell">valid_id_type</text>
+  <text x="999" y="551" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="730" y1="560" x2="1015" y2="560" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="734" y="569" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="830" y="569" text-anchor="start" dominant-baseline="middle" class="cell">valid_id_number</text>
+  <text x="999" y="569" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="730" y1="578" x2="1015" y2="578" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="734" y="587" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="830" y="587" text-anchor="start" dominant-baseline="middle" class="cell">valid_id_url</text>
+  <text x="999" y="587" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="730" y1="596" x2="1015" y2="596" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="734" y="605" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="830" y="605" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="999" y="605" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="730" y1="614" x2="1015" y2="614" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="734" y="623" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="830" y="623" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="999" y="623" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="730" y1="632" x2="1015" y2="632" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="734" y="641" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="830" y="641" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="999" y="641" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="1580" y="460" width="285" height="582" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="1580" y="460" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1722.5" y="472" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_vehicles</text>
+  <line x1="1676" y1="484" x2="1676" y2="1042" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1833" y1="484" x2="1833" y2="1042" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1580" y1="484" x2="1865" y2="484" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="493" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1680" y="493" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="1849" y="493" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="1580" y1="502" x2="1865" y2="502" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="511" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="511" text-anchor="start" dominant-baseline="middle" class="cell">name</text>
+  <text x="1849" y="511" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="520" x2="1865" y2="520" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="529" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="529" text-anchor="start" dominant-baseline="middle" class="cell">stock_no</text>
+  <text x="1849" y="529" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="538" x2="1865" y2="538" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="547" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="547" text-anchor="start" dominant-baseline="middle" class="cell">brand</text>
+  <text x="1849" y="547" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="556" x2="1865" y2="556" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="565" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="565" text-anchor="start" dominant-baseline="middle" class="cell">model</text>
+  <text x="1849" y="565" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="574" x2="1865" y2="574" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="583" text-anchor="start" dominant-baseline="middle" class="cell">smallint unsigned</text>
+  <text x="1680" y="583" text-anchor="start" dominant-baseline="middle" class="cell">year</text>
+  <text x="1849" y="583" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="592" x2="1865" y2="592" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="601" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="601" text-anchor="start" dominant-baseline="middle" class="cell">variant</text>
+  <text x="1849" y="601" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="610" x2="1865" y2="610" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="619" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="619" text-anchor="start" dominant-baseline="middle" class="cell">color</text>
+  <text x="1849" y="619" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="628" x2="1865" y2="628" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="637" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="637" text-anchor="start" dominant-baseline="middle" class="cell">transmission</text>
+  <text x="1849" y="637" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="646" x2="1865" y2="646" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="655" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="655" text-anchor="start" dominant-baseline="middle" class="cell">fuel_type</text>
+  <text x="1849" y="655" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="664" x2="1865" y2="664" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="673" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="673" text-anchor="start" dominant-baseline="middle" class="cell">engine_number</text>
+  <text x="1849" y="673" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="682" x2="1865" y2="682" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="691" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="691" text-anchor="start" dominant-baseline="middle" class="cell">chassis_number</text>
+  <text x="1849" y="691" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="700" x2="1865" y2="700" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="709" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="709" text-anchor="start" dominant-baseline="middle" class="cell">plate_number</text>
+  <text x="1849" y="709" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="718" x2="1865" y2="718" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="727" text-anchor="start" dominant-baseline="middle" class="cell">int unsigned</text>
+  <text x="1680" y="727" text-anchor="start" dominant-baseline="middle" class="cell">mileage</text>
+  <text x="1849" y="727" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="736" x2="1865" y2="736" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="745" text-anchor="start" dominant-baseline="middle" class="cell">decimal(12,2)</text>
+  <text x="1680" y="745" text-anchor="start" dominant-baseline="middle" class="cell">purchase_price</text>
+  <text x="1849" y="745" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="754" x2="1865" y2="754" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="763" text-anchor="start" dominant-baseline="middle" class="cell">decimal(12,2)</text>
+  <text x="1680" y="763" text-anchor="start" dominant-baseline="middle" class="cell">selling_price</text>
+  <text x="1849" y="763" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="772" x2="1865" y2="772" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="781" text-anchor="start" dominant-baseline="middle" class="cell">decimal(12,2)</text>
+  <text x="1680" y="781" text-anchor="start" dominant-baseline="middle" class="cell">reservation_fee</text>
+  <text x="1849" y="781" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="790" x2="1865" y2="790" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="799" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="799" text-anchor="start" dominant-baseline="middle" class="cell">location</text>
+  <text x="1849" y="799" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="808" x2="1865" y2="808" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="817" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="817" text-anchor="start" dominant-baseline="middle" class="cell">condition</text>
+  <text x="1849" y="817" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="826" x2="1865" y2="826" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="835" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="835" text-anchor="start" dominant-baseline="middle" class="cell">or_cr_number</text>
+  <text x="1849" y="835" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="844" x2="1865" y2="844" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="853" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="1680" y="853" text-anchor="start" dominant-baseline="middle" class="cell">registration_expiry</text>
+  <text x="1849" y="853" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="862" x2="1865" y2="862" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="871" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="871" text-anchor="start" dominant-baseline="middle" class="cell">insurance</text>
+  <text x="1849" y="871" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="880" x2="1865" y2="880" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="889" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="889" text-anchor="start" dominant-baseline="middle" class="cell">photo_url</text>
+  <text x="1849" y="889" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="898" x2="1865" y2="898" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="907" text-anchor="start" dominant-baseline="middle" class="cell">longtext</text>
+  <text x="1680" y="907" text-anchor="start" dominant-baseline="middle" class="cell">interior_photo_urls</text>
+  <text x="1849" y="907" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="916" x2="1865" y2="916" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="925" text-anchor="start" dominant-baseline="middle" class="cell">longtext</text>
+  <text x="1680" y="925" text-anchor="start" dominant-baseline="middle" class="cell">exterior_photo_urls</text>
+  <text x="1849" y="925" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="934" x2="1865" y2="934" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="943" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="1680" y="943" text-anchor="start" dominant-baseline="middle" class="cell">description</text>
+  <text x="1849" y="943" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="952" x2="1865" y2="952" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="961" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="1680" y="961" text-anchor="start" dominant-baseline="middle" class="cell">features</text>
+  <text x="1849" y="961" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="970" x2="1865" y2="970" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="979" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="1680" y="979" text-anchor="start" dominant-baseline="middle" class="cell">remarks</text>
+  <text x="1849" y="979" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="988" x2="1865" y2="988" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="997" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1680" y="997" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="1849" y="997" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="1006" x2="1865" y2="1006" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="1015" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="1680" y="1015" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="1849" y="1015" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1580" y1="1024" x2="1865" y2="1024" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1584" y="1033" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="1680" y="1033" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="1849" y="1033" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="1190" y="125" width="285" height="204" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="1190" y="125" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1332.5" y="137" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_reservations</text>
+  <line x1="1286" y1="149" x2="1286" y2="329" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1443" y1="149" x2="1443" y2="329" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1190" y1="149" x2="1475" y2="149" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1194" y="158" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1290" y="158" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="1459" y="158" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="1190" y1="167" x2="1475" y2="167" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1194" y="176" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1290" y="176" text-anchor="start" dominant-baseline="middle" class="cell">reference</text>
+  <text x="1459" y="176" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1190" y1="185" x2="1475" y2="185" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1194" y="194" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1290" y="194" text-anchor="start" dominant-baseline="middle" class="key">customer_id</text>
+  <text x="1459" y="194" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="1190" y1="203" x2="1475" y2="203" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1194" y="212" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1290" y="212" text-anchor="start" dominant-baseline="middle" class="key">vehicle_id</text>
+  <text x="1459" y="212" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="1190" y1="221" x2="1475" y2="221" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1194" y="230" text-anchor="start" dominant-baseline="middle" class="cell">decimal(12,2)</text>
+  <text x="1290" y="230" text-anchor="start" dominant-baseline="middle" class="cell">amount</text>
+  <text x="1459" y="230" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1190" y1="239" x2="1475" y2="239" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1194" y="248" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="1290" y="248" text-anchor="start" dominant-baseline="middle" class="cell">reserved_at</text>
+  <text x="1459" y="248" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1190" y1="257" x2="1475" y2="257" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1194" y="266" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="1290" y="266" text-anchor="start" dominant-baseline="middle" class="cell">expires_at</text>
+  <text x="1459" y="266" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1190" y1="275" x2="1475" y2="275" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1194" y="284" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1290" y="284" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="1459" y="284" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1190" y1="293" x2="1475" y2="293" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1194" y="302" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="1290" y="302" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="1459" y="302" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1190" y1="311" x2="1475" y2="311" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1194" y="320" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="1290" y="320" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="1459" y="320" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="1585" y="70" width="285" height="276" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="1585" y="70" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1727.5" y="82" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_sales_transactions</text>
+  <line x1="1681" y1="94" x2="1681" y2="346" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1838" y1="94" x2="1838" y2="346" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1585" y1="94" x2="1870" y2="94" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="103" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1685" y="103" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="1854" y="103" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="1585" y1="112" x2="1870" y2="112" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="121" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1685" y="121" text-anchor="start" dominant-baseline="middle" class="cell">reference</text>
+  <text x="1854" y="121" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1585" y1="130" x2="1870" y2="130" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="139" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1685" y="139" text-anchor="start" dominant-baseline="middle" class="key">customer_id</text>
+  <text x="1854" y="139" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="1585" y1="148" x2="1870" y2="148" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="157" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1685" y="157" text-anchor="start" dominant-baseline="middle" class="key">vehicle_id</text>
+  <text x="1854" y="157" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="1585" y1="166" x2="1870" y2="166" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="175" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1685" y="175" text-anchor="start" dominant-baseline="middle" class="key">reservation_id</text>
+  <text x="1854" y="175" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="1585" y1="184" x2="1870" y2="184" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="193" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1685" y="193" text-anchor="start" dominant-baseline="middle" class="cell">payment_method</text>
+  <text x="1854" y="193" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1585" y1="202" x2="1870" y2="202" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="211" text-anchor="start" dominant-baseline="middle" class="cell">decimal(12,2)</text>
+  <text x="1685" y="211" text-anchor="start" dominant-baseline="middle" class="cell">total_amount</text>
+  <text x="1854" y="211" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1585" y1="220" x2="1870" y2="220" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="229" text-anchor="start" dominant-baseline="middle" class="cell">decimal(12,2)</text>
+  <text x="1685" y="229" text-anchor="start" dominant-baseline="middle" class="cell">paid_amount</text>
+  <text x="1854" y="229" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1585" y1="238" x2="1870" y2="238" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="247" text-anchor="start" dominant-baseline="middle" class="cell">decimal(12,2)</text>
+  <text x="1685" y="247" text-anchor="start" dominant-baseline="middle" class="cell">balance</text>
+  <text x="1854" y="247" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1585" y1="256" x2="1870" y2="256" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="265" text-anchor="start" dominant-baseline="middle" class="cell">longtext</text>
+  <text x="1685" y="265" text-anchor="start" dominant-baseline="middle" class="cell">financing_details</text>
+  <text x="1854" y="265" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1585" y1="274" x2="1870" y2="274" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="283" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1685" y="283" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="1854" y="283" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1585" y1="292" x2="1870" y2="292" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="301" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="1685" y="301" text-anchor="start" dominant-baseline="middle" class="cell">sold_at</text>
+  <text x="1854" y="301" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1585" y1="310" x2="1870" y2="310" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="319" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="1685" y="319" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="1854" y="319" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1585" y1="328" x2="1870" y2="328" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1589" y="337" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="1685" y="337" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="1854" y="337" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="455" y="25" width="285" height="222" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="455" y="25" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="597.5" y="37" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_payments</text>
+  <line x1="551" y1="49" x2="551" y2="247" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="708" y1="49" x2="708" y2="247" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="455" y1="49" x2="740" y2="49" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="58" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="555" y="58" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="724" y="58" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="455" y1="67" x2="740" y2="67" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="76" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="555" y="76" text-anchor="start" dominant-baseline="middle" class="cell">receipt_number</text>
+  <text x="724" y="76" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="85" x2="740" y2="85" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="94" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="555" y="94" text-anchor="start" dominant-baseline="middle" class="key">sales_transaction_id</text>
+  <text x="724" y="94" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="455" y1="103" x2="740" y2="103" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="112" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="555" y="112" text-anchor="start" dominant-baseline="middle" class="key">customer_id</text>
+  <text x="724" y="112" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="455" y1="121" x2="740" y2="121" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="130" text-anchor="start" dominant-baseline="middle" class="cell">decimal(12,2)</text>
+  <text x="555" y="130" text-anchor="start" dominant-baseline="middle" class="cell">amount</text>
+  <text x="724" y="130" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="139" x2="740" y2="139" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="148" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="555" y="148" text-anchor="start" dominant-baseline="middle" class="cell">method</text>
+  <text x="724" y="148" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="157" x2="740" y2="157" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="166" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="555" y="166" text-anchor="start" dominant-baseline="middle" class="cell">proof_url</text>
+  <text x="724" y="166" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="175" x2="740" y2="175" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="184" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="555" y="184" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="724" y="184" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="193" x2="740" y2="193" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="202" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="555" y="202" text-anchor="start" dominant-baseline="middle" class="cell">paid_at</text>
+  <text x="724" y="202" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="211" x2="740" y2="211" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="220" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="555" y="220" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="724" y="220" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="229" x2="740" y2="229" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="238" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="555" y="238" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="724" y="238" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="845" y="45" width="285" height="150" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="845" y="45" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="987.5" y="57" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_deed_of_sales</text>
+  <line x1="941" y1="69" x2="941" y2="195" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1098" y1="69" x2="1098" y2="195" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="845" y1="69" x2="1130" y2="69" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="849" y="78" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="945" y="78" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="1114" y="78" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="845" y1="87" x2="1130" y2="87" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="849" y="96" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="945" y="96" text-anchor="start" dominant-baseline="middle" class="cell">reference</text>
+  <text x="1114" y="96" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="845" y1="105" x2="1130" y2="105" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="849" y="114" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="945" y="114" text-anchor="start" dominant-baseline="middle" class="key">sales_transaction_id</text>
+  <text x="1114" y="114" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="845" y1="123" x2="1130" y2="123" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="849" y="132" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="945" y="132" text-anchor="start" dominant-baseline="middle" class="cell">generated_at</text>
+  <text x="1114" y="132" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="845" y1="141" x2="1130" y2="141" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="849" y="150" text-anchor="start" dominant-baseline="middle" class="cell">longtext</text>
+  <text x="945" y="150" text-anchor="start" dominant-baseline="middle" class="cell">document_data</text>
+  <text x="1114" y="150" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="845" y1="159" x2="1130" y2="159" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="849" y="168" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="945" y="168" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="1114" y="168" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="845" y1="177" x2="1130" y2="177" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="849" y="186" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="945" y="186" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="1114" y="186" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="455" y="430" width="285" height="294" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="455" y="430" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="597.5" y="442" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_financing_records</text>
+  <line x1="551" y1="454" x2="551" y2="724" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="708" y1="454" x2="708" y2="724" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="455" y1="454" x2="740" y2="454" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="463" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="555" y="463" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="724" y="463" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="455" y1="472" x2="740" y2="472" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="481" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="555" y="481" text-anchor="start" dominant-baseline="middle" class="cell">reference</text>
+  <text x="724" y="481" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="490" x2="740" y2="490" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="499" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="555" y="499" text-anchor="start" dominant-baseline="middle" class="key">customer_id</text>
+  <text x="724" y="499" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="455" y1="508" x2="740" y2="508" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="517" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="555" y="517" text-anchor="start" dominant-baseline="middle" class="key">vehicle_id</text>
+  <text x="724" y="517" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="455" y1="526" x2="740" y2="526" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="535" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="555" y="535" text-anchor="start" dominant-baseline="middle" class="key">sales_transaction_id</text>
+  <text x="724" y="535" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="455" y1="544" x2="740" y2="544" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="553" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="555" y="553" text-anchor="start" dominant-baseline="middle" class="cell">financing_company</text>
+  <text x="724" y="553" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="562" x2="740" y2="562" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="571" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="555" y="571" text-anchor="start" dominant-baseline="middle" class="cell">application_number</text>
+  <text x="724" y="571" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="580" x2="740" y2="580" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="589" text-anchor="start" dominant-baseline="middle" class="cell">decimal(12,2)</text>
+  <text x="555" y="589" text-anchor="start" dominant-baseline="middle" class="cell">approved_amount</text>
+  <text x="724" y="589" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="598" x2="740" y2="598" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="607" text-anchor="start" dominant-baseline="middle" class="cell">decimal(12,2)</text>
+  <text x="555" y="607" text-anchor="start" dominant-baseline="middle" class="cell">down_payment</text>
+  <text x="724" y="607" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="616" x2="740" y2="616" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="625" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="555" y="625" text-anchor="start" dominant-baseline="middle" class="cell">approved_at</text>
+  <text x="724" y="625" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="634" x2="740" y2="634" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="643" text-anchor="start" dominant-baseline="middle" class="cell">longtext</text>
+  <text x="555" y="643" text-anchor="start" dominant-baseline="middle" class="cell">documents</text>
+  <text x="724" y="643" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="652" x2="740" y2="652" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="661" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="555" y="661" text-anchor="start" dominant-baseline="middle" class="cell">remarks</text>
+  <text x="724" y="661" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="670" x2="740" y2="670" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="679" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="555" y="679" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="724" y="679" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="688" x2="740" y2="688" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="697" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="555" y="697" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="724" y="697" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="455" y1="706" x2="740" y2="706" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="459" y="715" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="555" y="715" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="724" y="715" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="1135" y="500" width="285" height="222" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="1135" y="500" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1277.5" y="512" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_service_requests</text>
+  <line x1="1231" y1="524" x2="1231" y2="722" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1388" y1="524" x2="1388" y2="722" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1135" y1="524" x2="1420" y2="524" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1139" y="533" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1235" y="533" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="1404" y="533" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="1135" y1="542" x2="1420" y2="542" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1139" y="551" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1235" y="551" text-anchor="start" dominant-baseline="middle" class="cell">reference</text>
+  <text x="1404" y="551" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1135" y1="560" x2="1420" y2="560" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1139" y="569" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1235" y="569" text-anchor="start" dominant-baseline="middle" class="key">customer_id</text>
+  <text x="1404" y="569" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="1135" y1="578" x2="1420" y2="578" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1139" y="587" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1235" y="587" text-anchor="start" dominant-baseline="middle" class="key">vehicle_id</text>
+  <text x="1404" y="587" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="1135" y1="596" x2="1420" y2="596" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1139" y="605" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1235" y="605" text-anchor="start" dominant-baseline="middle" class="cell">service_type</text>
+  <text x="1404" y="605" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1135" y1="614" x2="1420" y2="614" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1139" y="623" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="1235" y="623" text-anchor="start" dominant-baseline="middle" class="cell">issue</text>
+  <text x="1404" y="623" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1135" y1="632" x2="1420" y2="632" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1139" y="641" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1235" y="641" text-anchor="start" dominant-baseline="middle" class="cell">photo_url</text>
+  <text x="1404" y="641" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1135" y1="650" x2="1420" y2="650" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1139" y="659" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1235" y="659" text-anchor="start" dominant-baseline="middle" class="cell">progress</text>
+  <text x="1404" y="659" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1135" y1="668" x2="1420" y2="668" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1139" y="677" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1235" y="677" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="1404" y="677" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1135" y1="686" x2="1420" y2="686" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1139" y="695" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="1235" y="695" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="1404" y="695" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1135" y1="704" x2="1420" y2="704" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1139" y="713" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="1235" y="713" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="1404" y="713" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="30" y="80" width="285" height="258" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="30" y="80" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="172.5" y="92" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_job_orders</text>
+  <line x1="126" y1="104" x2="126" y2="338" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="283" y1="104" x2="283" y2="338" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="30" y1="104" x2="315" y2="104" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="113" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="130" y="113" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="299" y="113" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="30" y1="122" x2="315" y2="122" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="131" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="130" y="131" text-anchor="start" dominant-baseline="middle" class="cell">reference</text>
+  <text x="299" y="131" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="30" y1="140" x2="315" y2="140" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="149" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="130" y="149" text-anchor="start" dominant-baseline="middle" class="key">service_request_id</text>
+  <text x="299" y="149" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="30" y1="158" x2="315" y2="158" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="167" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="130" y="167" text-anchor="start" dominant-baseline="middle" class="key">vehicle_id</text>
+  <text x="299" y="167" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="30" y1="176" x2="315" y2="176" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="185" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="130" y="185" text-anchor="start" dominant-baseline="middle" class="key">assigned_staff_id</text>
+  <text x="299" y="185" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="30" y1="194" x2="315" y2="194" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="203" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="130" y="203" text-anchor="start" dominant-baseline="middle" class="cell">activity</text>
+  <text x="299" y="203" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="30" y1="212" x2="315" y2="212" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="221" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="130" y="221" text-anchor="start" dominant-baseline="middle" class="cell">repair_status</text>
+  <text x="299" y="221" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="30" y1="230" x2="315" y2="230" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="239" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="130" y="239" text-anchor="start" dominant-baseline="middle" class="cell">washing_status</text>
+  <text x="299" y="239" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="30" y1="248" x2="315" y2="248" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="257" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="130" y="257" text-anchor="start" dominant-baseline="middle" class="cell">maintenance_record</text>
+  <text x="299" y="257" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="30" y1="266" x2="315" y2="266" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="275" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="130" y="275" text-anchor="start" dominant-baseline="middle" class="cell">scheduled_at</text>
+  <text x="299" y="275" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="30" y1="284" x2="315" y2="284" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="293" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="130" y="293" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="299" y="293" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="30" y1="302" x2="315" y2="302" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="311" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="130" y="311" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="299" y="311" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="30" y1="320" x2="315" y2="320" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="34" y="329" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="130" y="329" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="299" y="329" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="20" y="610" width="285" height="312" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="20" y="610" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="162.5" y="622" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_pre_sale_repairs</text>
+  <line x1="116" y1="634" x2="116" y2="922" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="273" y1="634" x2="273" y2="922" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="20" y1="634" x2="305" y2="634" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="643" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="120" y="643" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="289" y="643" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="20" y1="652" x2="305" y2="652" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="661" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="120" y="661" text-anchor="start" dominant-baseline="middle" class="cell">reference</text>
+  <text x="289" y="661" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="20" y1="670" x2="305" y2="670" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="679" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="120" y="679" text-anchor="start" dominant-baseline="middle" class="key">vehicle_id</text>
+  <text x="289" y="679" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="20" y1="688" x2="305" y2="688" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="697" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="120" y="697" text-anchor="start" dominant-baseline="middle" class="key">assigned_staff_id</text>
+  <text x="289" y="697" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="20" y1="706" x2="305" y2="706" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="715" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="120" y="715" text-anchor="start" dominant-baseline="middle" class="cell">issue</text>
+  <text x="289" y="715" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="20" y1="724" x2="305" y2="724" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="733" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="120" y="733" text-anchor="start" dominant-baseline="middle" class="cell">affected_part</text>
+  <text x="289" y="733" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="20" y1="742" x2="305" y2="742" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="751" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="120" y="751" text-anchor="start" dominant-baseline="middle" class="cell">action_taken</text>
+  <text x="289" y="751" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="20" y1="760" x2="305" y2="760" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="769" text-anchor="start" dominant-baseline="middle" class="cell">decimal(12,2)</text>
+  <text x="120" y="769" text-anchor="start" dominant-baseline="middle" class="cell">cost</text>
+  <text x="289" y="769" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="20" y1="778" x2="305" y2="778" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="787" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="120" y="787" text-anchor="start" dominant-baseline="middle" class="cell">inspected_at</text>
+  <text x="289" y="787" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="20" y1="796" x2="305" y2="796" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="805" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="120" y="805" text-anchor="start" dominant-baseline="middle" class="cell">completed_at</text>
+  <text x="289" y="805" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="20" y1="814" x2="305" y2="814" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="823" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="120" y="823" text-anchor="start" dominant-baseline="middle" class="cell">before_photo_url</text>
+  <text x="289" y="823" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="20" y1="832" x2="305" y2="832" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="841" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="120" y="841" text-anchor="start" dominant-baseline="middle" class="cell">after_photo_url</text>
+  <text x="289" y="841" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="20" y1="850" x2="305" y2="850" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="859" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="120" y="859" text-anchor="start" dominant-baseline="middle" class="cell">remarks</text>
+  <text x="289" y="859" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="20" y1="868" x2="305" y2="868" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="877" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="120" y="877" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="289" y="877" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="20" y1="886" x2="305" y2="886" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="895" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="120" y="895" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="289" y="895" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="20" y1="904" x2="305" y2="904" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="24" y="913" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="120" y="913" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="289" y="913" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="1160" y="1030" width="285" height="276" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="1160" y="1030" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1302.5" y="1042" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_vehicle_releases</text>
+  <line x1="1256" y1="1054" x2="1256" y2="1306" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1413" y1="1054" x2="1413" y2="1306" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1160" y1="1054" x2="1445" y2="1054" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1063" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1260" y="1063" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="1429" y="1063" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="1160" y1="1072" x2="1445" y2="1072" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1081" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1260" y="1081" text-anchor="start" dominant-baseline="middle" class="cell">reference</text>
+  <text x="1429" y="1081" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1160" y1="1090" x2="1445" y2="1090" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1099" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1260" y="1099" text-anchor="start" dominant-baseline="middle" class="key">customer_id</text>
+  <text x="1429" y="1099" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="1160" y1="1108" x2="1445" y2="1108" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1117" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1260" y="1117" text-anchor="start" dominant-baseline="middle" class="key">vehicle_id</text>
+  <text x="1429" y="1117" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="1160" y1="1126" x2="1445" y2="1126" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1135" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="1260" y="1135" text-anchor="start" dominant-baseline="middle" class="key">sales_transaction_id</text>
+  <text x="1429" y="1135" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="1160" y1="1144" x2="1445" y2="1144" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1153" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1260" y="1153" text-anchor="start" dominant-baseline="middle" class="cell">checklist_status</text>
+  <text x="1429" y="1153" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1160" y1="1162" x2="1445" y2="1162" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1171" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1260" y="1171" text-anchor="start" dominant-baseline="middle" class="cell">document_status</text>
+  <text x="1429" y="1171" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1160" y1="1180" x2="1445" y2="1180" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1189" text-anchor="start" dominant-baseline="middle" class="cell">longtext</text>
+  <text x="1260" y="1189" text-anchor="start" dominant-baseline="middle" class="cell">checklist</text>
+  <text x="1429" y="1189" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1160" y1="1198" x2="1445" y2="1198" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1207" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="1260" y="1207" text-anchor="start" dominant-baseline="middle" class="cell">released_at</text>
+  <text x="1429" y="1207" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1160" y1="1216" x2="1445" y2="1216" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1225" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1260" y="1225" text-anchor="start" dominant-baseline="middle" class="cell">released_by</text>
+  <text x="1429" y="1225" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1160" y1="1234" x2="1445" y2="1234" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1243" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="1260" y="1243" text-anchor="start" dominant-baseline="middle" class="cell">remarks</text>
+  <text x="1429" y="1243" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1160" y1="1252" x2="1445" y2="1252" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1261" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="1260" y="1261" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="1429" y="1261" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1160" y1="1270" x2="1445" y2="1270" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1279" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="1260" y="1279" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="1429" y="1279" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1160" y1="1288" x2="1445" y2="1288" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1164" y="1297" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="1260" y="1297" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="1429" y="1297" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <rect x="1970" y="430" width="285" height="312" fill="#ffffff" stroke="#a5a5a5" stroke-width="1"/>
+  <rect x="1970" y="430" width="285" height="24" fill="#eeeeee" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="2112.5" y="442" text-anchor="middle" dominant-baseline="middle" class="title">cdo_car_trading_system_documents</text>
+  <line x1="2066" y1="454" x2="2066" y2="742" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="2223" y1="454" x2="2223" y2="742" stroke="#a5a5a5" stroke-width="1"/>
+  <line x1="1970" y1="454" x2="2255" y2="454" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="463" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="2070" y="463" text-anchor="start" dominant-baseline="middle" class="key">id</text>
+  <text x="2239" y="463" text-anchor="middle" dominant-baseline="middle" class="key">PK</text>
+  <line x1="1970" y1="472" x2="2255" y2="472" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="481" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="2070" y="481" text-anchor="start" dominant-baseline="middle" class="cell">reference</text>
+  <text x="2239" y="481" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="490" x2="2255" y2="490" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="499" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="2070" y="499" text-anchor="start" dominant-baseline="middle" class="cell">documentable_type</text>
+  <text x="2239" y="499" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="508" x2="2255" y2="508" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="517" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="2070" y="517" text-anchor="start" dominant-baseline="middle" class="cell">documentable_id</text>
+  <text x="2239" y="517" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="526" x2="2255" y2="526" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="535" text-anchor="start" dominant-baseline="middle" class="cell">bigint(20) unsigned</text>
+  <text x="2070" y="535" text-anchor="start" dominant-baseline="middle" class="key">customer_id</text>
+  <text x="2239" y="535" text-anchor="middle" dominant-baseline="middle" class="key">FK</text>
+  <line x1="1970" y1="544" x2="2255" y2="544" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="553" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="2070" y="553" text-anchor="start" dominant-baseline="middle" class="cell">title</text>
+  <text x="2239" y="553" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="562" x2="2255" y2="562" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="571" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="2070" y="571" text-anchor="start" dominant-baseline="middle" class="cell">type</text>
+  <text x="2239" y="571" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="580" x2="2255" y2="580" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="589" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="2070" y="589" text-anchor="start" dominant-baseline="middle" class="cell">owner_name</text>
+  <text x="2239" y="589" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="598" x2="2255" y2="598" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="607" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="2070" y="607" text-anchor="start" dominant-baseline="middle" class="cell">file_url</text>
+  <text x="2239" y="607" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="616" x2="2255" y2="616" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="625" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="2070" y="625" text-anchor="start" dominant-baseline="middle" class="cell">uploaded_at</text>
+  <text x="2239" y="625" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="634" x2="2255" y2="634" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="643" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="2070" y="643" text-anchor="start" dominant-baseline="middle" class="cell">verified_by</text>
+  <text x="2239" y="643" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="652" x2="2255" y2="652" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="661" text-anchor="start" dominant-baseline="middle" class="cell">date</text>
+  <text x="2070" y="661" text-anchor="start" dominant-baseline="middle" class="cell">verified_at</text>
+  <text x="2239" y="661" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="670" x2="2255" y2="670" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="679" text-anchor="start" dominant-baseline="middle" class="cell">text</text>
+  <text x="2070" y="679" text-anchor="start" dominant-baseline="middle" class="cell">remarks</text>
+  <text x="2239" y="679" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="688" x2="2255" y2="688" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="697" text-anchor="start" dominant-baseline="middle" class="cell">varchar(255)</text>
+  <text x="2070" y="697" text-anchor="start" dominant-baseline="middle" class="cell">status</text>
+  <text x="2239" y="697" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="706" x2="2255" y2="706" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="715" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="2070" y="715" text-anchor="start" dominant-baseline="middle" class="cell">created_at</text>
+  <text x="2239" y="715" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <line x1="1970" y1="724" x2="2255" y2="724" stroke="#a5a5a5" stroke-width="1"/>
+  <text x="1974" y="733" text-anchor="start" dominant-baseline="middle" class="cell">timestamp</text>
+  <text x="2070" y="733" text-anchor="start" dominant-baseline="middle" class="cell">updated_at</text>
+  <text x="2239" y="733" text-anchor="middle" dominant-baseline="middle" class="key"></text>
+  <text x="50" y="68" text-anchor="start" dominant-baseline="middle" class="note">Database schema ERD based on cdo_car_trading tables. PK = Primary Key, FK = Foreign Key.</text>
+  <text x="1175" y="1614" text-anchor="middle" dominant-baseline="middle" class="caption">Logical Entity-Relationship Diagram</text>
+</svg>

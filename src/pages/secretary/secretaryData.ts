@@ -66,7 +66,7 @@ export const secretaryModules: AdminModule[] = [
     columns: adminModuleMap.reservations.columns,
     recordsTitle: "Reservation History",
     recordsDescription:
-      "Reserve available vehicles before purchase and track fees, payment method, requirements, expiry, cancellation, and conversion to sale.",
+      "Reserve available vehicles before purchase and track fees, payment method, documents, expiry, cancellation, and conversion to sale.",
     defaultStatusFilter: "Active Reservations",
     statusNavigation: [
       { label: "Active Reservations", statuses: ["Pending", "Confirmed"] },

@@ -46,6 +46,7 @@ const routeLabels: Record<string, string> = {
   admin: "Admin",
   customer: "Customer",
   dashboard: "Dashboard",
+  documents: "Documents",
   "job-orders": "Job Orders",
   "job-orders-maintenance": "Job Orders",
   mechanic: "Mechanic & Carwasher",
@@ -53,7 +54,6 @@ const routeLabels: Record<string, string> = {
   profile: "History",
   reports: "Reports",
   reservations: "Reservations",
-  requirements: "Requirements",
   "role-management": "Role Management",
   secretary: "Secretary",
   "sales-payments": "Sales & Payments",
@@ -61,6 +61,7 @@ const routeLabels: Record<string, string> = {
   staff: "Staff",
   "user-management": "User Management",
   vehicles: "Vehicles",
+  "vehicle-release": "Vehicle Release",
   "vehicle-status": "Vehicle Status",
   customers: "Customers",
 }
